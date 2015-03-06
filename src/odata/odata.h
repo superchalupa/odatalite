@@ -659,7 +659,8 @@ OL_INLINE OL_Result OL_Scope_SendResult(
     OL_Result result)
 {
     OL_RETURN_IF_NULL(self, OL_Result_BadParameter);
-    return self->ft->SendResult(self, result, NULL, NULL);
+    va_list nulllist;
+    return self->ft->SendResult(self, result, NULL, nulllist);
 }
 
 OL_INLINE OL_Result OL_Scope_SendResultV(

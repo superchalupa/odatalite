@@ -180,7 +180,8 @@ void PostError(
     }
     else
     {
-        PostErrorV(context, result, NULL, NULL);
+        va_list nulllist;
+        PostErrorV(context, result, NULL, nulllist);
     }
 }
 
