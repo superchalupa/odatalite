@@ -28,8 +28,9 @@ AM_INIT_AUTOMAKE([subdir-objects foreign tar-ustar dist-bzip2 no-define])
 # enable pretty compile output, only works on automake 1.11, but this line
 # makes it not break for older.
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
-AC_GNU_SOURCE
-AC_CONFIG_HEADERS([config.h])
+AC_USE_SYSTEM_EXTENSIONS
+AC_SYS_LARGEFILE
+AC_CONFIG_HEADERS([src/config.h])
 AC_CANONICAL_HOST
 
 PKG_PROG_PKG_CONFIG
@@ -46,6 +47,9 @@ AC_ARG_ENABLE(debug,
     AS_HELP_STRING(--enable-debug,Enable debug build. default: disabled),
     [wantdebug=$enableval], [wantdebug=no])
 AM_CONDITIONAL(DEBUG, [test "$wantdebug" = "yes"])
+if test "$wantdebug" = "yes"; then
+    AC_DEFINE_UNQUOTED([ENABLE_DEBUG], [$debug], [debug enabled])
+fi
 
 # Checks for programs.
 AC_PROG_CC
@@ -74,37 +78,8 @@ AC_CONFIG_FILES([pkg/pc_template])
 
 AC_CHECK_FUNCS([vsnprintf])
 
-#odata debugging
-##==============================================================================
-##
-## --enable-debug
-##
-##==============================================================================
-
-AC_ARG_ENABLE(
-[debug],
-[  --enable-debug       Compile and link with debugging enabled],
-[case "${enableval}" in
-  yes)
-    debug=1
-    ;;
-  no)
-    debug=0
-    ;;
-  *)
-    AC_MSG_ERROR([bad value ${enableval} for --enable-debug])
-    ;;
-esac],
-[debug=0])
-
 # odata defines
-AC_DEFINE_UNQUOTED(SYSCONFDIR, "$__prefix", [prefix])
-AC_DEFINE_UNQUOTED(SYSCONFDIR, "$sysconfdir", [sysconfdir])
-AC_DEFINE_UNQUOTED(LOCALSTATEDIR, "$localstatedir", [localstatedir])
-AC_DEFINE_UNQUOTED(RUNSTATEDIR, "$runstatedir", [runstatedir])
-AC_DEFINE_UNQUOTED(LIBDIR, "$libdir", [libdir])
-#AC_DEFINE_UNQUOTED(DATAROOTDIR, "$datarootdir", [datarootdir])
-AC_DEFINE_UNQUOTED([CONFIG_DEBUG], $debug, [debug enabled])
+AC_DEFINE([RUNSTATEDIR], [PKGRUNDIR], [Where to keep socket and pid files.])
 
 # generate files and exit
 AC_OUTPUT
