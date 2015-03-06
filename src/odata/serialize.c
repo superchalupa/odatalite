@@ -26,7 +26,6 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include <common.h>
 #include <base/buf.h>
 #include "json.h"
