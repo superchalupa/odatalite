@@ -1,6 +1,5 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
-#EXTRA_DIST += src/odata-include
 odata_includes = src/plugins/odata src
 
 pkgconf_list+=libodata-static

@@ -63,6 +63,7 @@ AC_SUBST([SYSROOT_PATH])
 # put pkgconfig tests here
 if test "$BREAK_PKG_DEPS" != "1"; then
     PKG_CHECK_MODULES([PAM], [libpam])
+    PKG_CHECK_MODULES([EXPAT], [expat])
 fi
 
 

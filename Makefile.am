@@ -16,6 +16,10 @@ SUBDIRS =
 include pkg/Makefile-compileopts.inc
 include pkg/Makefile-functions.inc
 
+# most providers use same includes, so define it once
+provider_includes = src 
+bin_includes = src
+
 include pkg/Makefile-libodataplugin.inc
 include pkg/Makefile-libodata.inc
 include pkg/Makefile-libbase.inc
@@ -35,3 +39,4 @@ include pkg/Makefile-json.inc
 include pkg/Makefile-libclient.inc
 include pkg/Makefile-phitcli.inc
 include pkg/Makefile-olcli.inc
+include pkg/Makefile-csdl2c.inc
