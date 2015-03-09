@@ -19,6 +19,7 @@ VER_DEFAULT="0:0:3"
 AC_PREREQ(2.59)
 AC_CONFIG_AUX_DIR([pkg])
 AC_CONFIG_MACRO_DIR([pkg/m4])
+AC_PREFIX_DEFAULT([/opt/odatalite])
 
 # Generate header files with soname #defines
 AX_GENERATE_SONAME_HEADERS([LIB_LIST])
@@ -63,7 +64,7 @@ AC_SUBST([SYSROOT_PATH])
 
 # Checks for libraries.
 # YOCTO DEPENDENCY: libpam
-AC_CHECK_LIB([pam], [pam_start], [AUTH_PAM_LIBS="$PAM_LIBS -lpam"],
+AC_CHECK_LIB([pam], [pam_start], [PAM_LIBS="$PAM_LIBS -lpam"],
     AC_MSG_ERROR(
             [Unable to find PAM. Please install the PAM development libraries])
 )

@@ -16,6 +16,10 @@ SUBDIRS =
 include pkg/Makefile-compileopts.inc
 include pkg/Makefile-functions.inc
 
+# directory to install providers in
+providerdir=$(pkglibexecdir)
+provider_LTLIBRARIES=
+
 # most providers use same includes, so define it once
 provider_includes = src 
 bin_includes = src
