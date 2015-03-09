@@ -34,14 +34,11 @@ AC_CONFIG_HEADERS([src/config.h])
 AC_CANONICAL_HOST
 
 PKG_PROG_PKG_CONFIG
-PKG_CHECK_MODULES([SYSTEMD], [systemd])
 AC_ARG_WITH([systemdsystemunitdir],
         AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files]),
         [], [with_systemdsystemunitdir=$($PKG_CONFIG --variable=systemdsystemunitdir systemd)])
-if test "x$with_systemdsystemunitdir" != xno; then
-        AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
-fi
-AM_CONDITIONAL(HAVE_SYSTEMD, [test -n "$with_systemdsystemunitdir" -a "x$with_systemdsystemunitdir" != xno ])
+AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
+AM_CONDITIONAL(HAVE_SYSTEMD, [test -n "$with_systemdsystemunitdir" ])
 
 AC_ARG_ENABLE(debug,
     AS_HELP_STRING(--enable-debug,Enable debug build. default: disabled),
@@ -64,9 +61,16 @@ AC_ARG_VAR([PKG_CONFIG_PATH], [Additional pkg-config paths to search])
 AC_ARG_VAR([SYSROOT_PATH], [if we are doing a cross build, the path to the sysroot])
 AC_SUBST([SYSROOT_PATH])
 
+# Checks for libraries.
+# YOCTO DEPENDENCY: libpam
+AC_CHECK_LIB([pam], [pam_start], [AUTH_PAM_LIBS="$PAM_LIBS -lpam"],
+    AC_MSG_ERROR(
+            [Unable to find PAM. Please install the PAM development libraries])
+)
+AC_SUBST([PAM_LIBS])
+
 # put pkgconfig tests here
 if test "$BREAK_PKG_DEPS" != "1"; then
-    PKG_CHECK_MODULES([PAM], [libpam])
     PKG_CHECK_MODULES([EXPAT], [expat])
 fi
 
