@@ -4,13 +4,13 @@ odata_includes = src/plugins/odata src
 
 pkgconf_list+=libodata-static
 LIBODATA_STATIC_LIBS = -lodata
-LIBODATA_STATIC_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS) 
+LIBODATA_STATIC_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
 
 # this is a convenience library so we dont recompile
 # odata .c files repeatedly for each binary
 lib_LTLIBRARIES += out/libodata.la
-out_libodata_la_CPPFLAGS = \
-	$(addprefix -I$(top_srcdir)/,$(odata_includes)) $(AM_CPPFLAGS) 
+out_libodata_la_CPPFLAGS = $(addprefix -I$(top_srcdir)/,$(odata_includes)) $(AM_CPPFLAGS)
+out_libodata_la_LIBADD = out/libbase.la
 out_libodata_la_LDFLAGS = -static
 out_libodata_la_SOURCES = \
 	src/odata/setters.h \

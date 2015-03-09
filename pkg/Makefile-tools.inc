@@ -2,7 +2,7 @@
 
 bin_PROGRAMS += out/dlopen
 out_dlopen_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(bin_includes))
-out_dlopen_LDADD = out/libbase.la
+out_dlopen_LDADD = out/libbase.la -ldl
 out_dlopen_SOURCES = src/tools/dlopen/dlopen.c
 
 bin_PROGRAMS += out/gennstr

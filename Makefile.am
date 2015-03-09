@@ -24,6 +24,12 @@ provider_LTLIBRARIES=
 provider_includes = src 
 bin_includes = src
 
+# generate .c files from .metadata files
+# NOTE: version encoded in files, unfortunately...
+%.c: %.0.9.2.metadata out/csdl2c
+	PATH=$$PATH:$(top_builddir)/out csdl2c $<
+	mv $(notdir $@) $@
+
 include pkg/Makefile-libodataplugin.inc
 include pkg/Makefile-libodata.inc
 include pkg/Makefile-libbase.inc
@@ -44,3 +50,4 @@ include pkg/Makefile-libclient.inc
 include pkg/Makefile-phitcli.inc
 include pkg/Makefile-olcli.inc
 include pkg/Makefile-csdl2c.inc
+include pkg/Makefile-testcsdl.inc
