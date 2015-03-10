@@ -6,5 +6,11 @@ out_libmetadataprovider_la_LIBADD = out/libbase.la
 out_libmetadataprovider_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(provider_includes))
 
 out_libmetadataprovider_la_SOURCES = \
-	./src/odata/providers/metadata/metadataprovider.c \
-	./src/RedfishSchema/ServiceRoot.c
+	src/odata/providers/metadata/metadataprovider.c
+
+nodist_out_libmetadataprovider_la_SOURCES = \
+	src/RedfishSchema/ServiceRoot.c
+
+DISTCLEANFILES += $(nodist_out_libmetadataprovider_la_SOURCES)
+
+EXTRA_DIST += src/RedfishSchema/ServiceRoot.0.9.2.metadata

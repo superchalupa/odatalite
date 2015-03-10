@@ -33,8 +33,6 @@
 # include "winconfig.h"
 #else
 # include "config.h"
-/* ATTN: move into config.h */
-# define HAVE_POSIX
 #endif
 
 #include <stddef.h>

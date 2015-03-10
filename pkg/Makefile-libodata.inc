@@ -79,4 +79,6 @@ out_libodata_la_SOURCES = \
 	src/odata/jsonobject.c \
 	src/odata/odatacxxinlines.h \
 	src/odata/json.h \
-	src/odata/uri.c
+	src/odata/uri.c	\
+	src/phitfeatures.h	\
+	src/common.h

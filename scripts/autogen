@@ -1,3 +1,2 @@
 #!/bin/bash
-./scripts/autoclean
-aclocal ; autoconf ; autoheader; autoreconf -i; automake --add-missing
+autoreconf -f -i

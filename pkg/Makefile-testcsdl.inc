@@ -9,7 +9,9 @@ out_testcsdl_CPPFLAGS = \
 out_testcsdl_LDADD = out/libbase.la out/libodata.la
 
 out_testcsdl_SOURCES = \
-    src/tests/csdl/testcsdl.c \
+    src/tests/csdl/testcsdl.c
+
+nodist_out_testcsdl_SOURCES = \
     src/RedfishSchema/AccountService.c \
     src/RedfishSchema/Chassis.c \
     src/RedfishSchema/ComputerSystem.c \
@@ -40,3 +42,37 @@ out_testcsdl_SOURCES = \
     src/RedfishSchema/ThermalMetrics.c \
     src/RedfishSchema/VirtualMedia.c
 
+DISTCLEANFILES+= $(nodist_out_testcsdl_SOURCES)
+
+EXTRA_DIST += src/RedfishSchema/Chipwise src/RedfishSchema/Contoso src/RedfishSchema/Service
+
+EXTRA_DIST += 	\
+	src/RedfishSchema/IPAddresses.0.9.2.metadata	\
+	src/RedfishSchema/VirtualMedia.0.9.2.metadata	\
+	src/RedfishSchema/Errors.0.9.2.metadata	\
+	src/RedfishSchema/Task.0.9.2.metadata	\
+	src/RedfishSchema/Event.0.9.2.metadata	\
+	src/RedfishSchema/ManagerNetworkService.0.9.2.metadata	\
+	src/RedfishSchema/Manager.0.9.2.metadata	\
+	src/RedfishSchema/EthernetNetworkInterface.0.9.2.metadata	\
+	src/RedfishSchema/DMTFExtensions.0.9.2.metadata	\
+	src/RedfishSchema/ManagerAccount.0.9.2.metadata	\
+	src/RedfishSchema/SerialInterface.0.9.2.metadata	\
+	src/RedfishSchema/Firmware.0.9.2.metadata	\
+	src/RedfishSchema/SimpleStorage.0.9.2.metadata	\
+	src/RedfishSchema/AccountService.0.9.2.metadata	\
+	src/RedfishSchema/ComputerSystem.0.9.2.metadata	\
+	src/RedfishSchema/Contoso/Contoso.CustomTypes.metadata	\
+	src/RedfishSchema/LogService.0.9.2.metadata	\
+	src/RedfishSchema/Session.0.9.2.metadata	\
+	src/RedfishSchema/EventService.0.9.2.metadata	\
+	src/RedfishSchema/ThermalMetrics.0.9.2.metadata	\
+	src/RedfishSchema/Chassis.0.9.2.metadata	\
+	src/RedfishSchema/LogEntry.0.9.2.metadata	\
+	src/RedfishSchema/Redundancy.0.9.2.metadata	\
+	src/RedfishSchema/Messages.0.9.2.metadata	\
+	src/RedfishSchema/PowerMetrics.0.9.2.metadata	\
+	src/RedfishSchema/TaskService.0.9.2.metadata	\
+	src/RedfishSchema/ListenerDestination.0.9.2.metadata	\
+	src/RedfishSchema/Resource.0.9.2.metadata	\
+	src/RedfishSchema/MiscMetrics.0.9.2.metadata

@@ -51,3 +51,109 @@ include pkg/Makefile-phitcli.inc
 include pkg/Makefile-olcli.inc
 include pkg/Makefile-csdl2c.inc
 include pkg/Makefile-testcsdl.inc
+
+# config files
+phit_confdir=$(sysconfdir)/phit
+dist_phit_conf_DATA = etc/phit/phitd.conf  etc/phit/plugins.conf  etc/phit/providers.conf  etc/phit/roles.conf
+
+# PAM config
+pam_confdir=$(sysconfdir)/pam.d
+dist_pam_conf_DATA=src/base/phit.pam
+
+EXTRA_DIST += 	\
+./src/server/help.h	\
+./src/server/context.h	\
+./src/server/webpage.h	\
+./src/server/contextoptions.h	\
+./src/server/defaultplugin.h	\
+./src/server/listener.h	\
+./src/server/disp.h	\
+./src/server/connection.h	\
+./src/server/plugin.h	\
+./src/server/options.h	\
+./src/common.h	\
+./src/plugins/odata/scope.h	\
+./src/plugins/odata/post.h	\
+./src/plugins/odata/webpage.h	\
+./src/plugins/odata/providers.h	\
+./src/plugins/odata/options.h	\
+./src/plugins/odata/odataplugin.h	\
+./src/winconfig.h	\
+./src/json2schema/objects.h	\
+./src/phitfeatures.h	\
+./src/phitcli/options.h	\
+./src/tests/test.h	\
+./src/base/log.h	\
+./src/base/shlib.h	\
+./src/base/sock.h	\
+./src/base/base64.h	\
+./src/base/role.h	\
+./src/base/path.h	\
+./src/base/httpstatuscodes.h	\
+./src/base/buf.h	\
+./src/base/array.h	\
+./src/base/env.h	\
+./src/base/dump.h	\
+./src/base/plugininfo.h	\
+./src/base/html.h	\
+./src/base/user.h	\
+./src/base/alloc.h	\
+./src/base/conffile.h	\
+./src/base/format.h	\
+./src/base/ptrarray.h	\
+./src/base/addr.h	\
+./src/base/roundpow2.h	\
+./src/base/cleanup.h	\
+./src/base/auth.h	\
+./src/base/find.h	\
+./src/base/pam.h	\
+./src/base/datetime.h	\
+./src/base/process.h	\
+./src/base/str.h	\
+./src/base/err.h	\
+./src/base/iprintf.h	\
+./src/base/getopt.h	\
+./src/base/pidfile.h	\
+./src/base/parse.h	\
+./src/base/file.h	\
+./src/base/selector.h	\
+./src/base/http.h	\
+./src/base/chars.h	\
+./src/client/client.h	\
+./src/odata/providerentry.h	\
+./src/odata/uriparser.h	\
+./src/odata/jsonobject.h	\
+./src/odata/name.h	\
+./src/odata/types.h	\
+./src/odata/scope.h	\
+./src/odata/odatamacros.h	\
+./src/odata/providers/heap/HeapProvider.h	\
+./src/odata/providers/frog/FrogProvider.h	\
+./src/odata/providers/frog/strings.h	\
+./src/odata/providers/root/RootProvider.h	\
+./src/odata/queryoption.h	\
+./src/odata/scratchbuf.h	\
+./src/odata/alloc.h	\
+./src/odata/format.h	\
+./src/odata/jsonparser.h	\
+./src/odata/uri.h	\
+./src/odata/outstream.h	\
+./src/odata/getters.h	\
+./src/odata/pair.h	\
+./src/odata/odatacxx.h	\
+./src/odata/compare.h	\
+./src/odata/return.h	\
+./src/odata/csdl.h	\
+./src/odata/result.h	\
+./src/odata/destructors.h	\
+./src/odata/setters.h	\
+./src/odata/serialize.h	\
+./src/odata/jsonarray.h	\
+./src/odata/odatacxxinlines.h	\
+./src/odata/json.h	\
+./src/odata/odata.h	\
+./src/odata/chars.h	\
+./src/csdl2c/xml.h	\
+./src/olcli/options.h	\
+./src/config.h	\
+./src/phit.h

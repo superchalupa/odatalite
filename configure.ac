@@ -85,6 +85,7 @@ AC_CHECK_FUNCS([vsnprintf])
 
 # odata defines
 AC_DEFINE([RUNSTATEDIR], [PKGRUNDIR], [Where to keep socket and pid files.])
+AC_DEFINE([HAVE_POSIX], [], [Compiling on a posix system.])
 
 # generate files and exit
 AC_OUTPUT
