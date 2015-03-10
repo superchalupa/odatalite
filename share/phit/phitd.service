@@ -1,0 +1,47 @@
+[Unit]
+Description=phitd Web Server
+
+[Service]
+Type=simple
+#Type=notify
+ExecStart=/usr/bin/dfserver
+#WatchdogSec=5
+Restart=on-failure
+
+# we will run as an unprivileged user that has very limited filesystem privilege
+User=dfserver
+Group=dfserver
+UMask=0007
+
+# OPEN NETWORK ACCESS
+# this service needs to talk on the network
+PrivateNetwork=no
+
+# Should not share files with other services
+#PrivateTmp=yes
+
+# this daemon has very limited access to the filesystem. We need to explicitly l
+#ReadOnlyDirectories=/
+#ReadWriteDirectories=/var/run/priv_rpcserver
+#ReadWriteDirectories=/home/priv_rpcserver
+#InaccessibleDirectories=/home
+
+#pre-requisites
+#PermissionsStartOnly=true
+#ExecStartPre=-/bin/mkdir /var/run/fm
+#ExecStartPre=/bin/chown -R dfserver:dfserver /var/run/fm/
+
+
+DeviceAllow=/dev/null rw
+DeviceAllow=/dev/tty rw
+#DeviceAllow=/dev/crypto rw
+
+# CANNOT run setuid (suid) executables to gain privs back
+NoNewPrivileges=yes
+
+# END Security stuff
+##########################
+
+[Install]
+WantedBy=multi-user.target
+

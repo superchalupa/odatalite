@@ -1,0 +1,45 @@
+[Unit]
+Description=The PHIT Web Server
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/run.phitd
+#Restart=on-failure
+
+# we will run as an unprivileged user that has very limited filesystem privilege
+#User=phitd
+#Group=nogroup
+UMask=0007
+
+# OPEN NETWORK ACCESS
+# this service needs to talk on the network
+PrivateNetwork=no
+
+# Should not share files with other services
+#PrivateTmp=yes
+
+# this daemon has very limited access to the filesystem. We need to explicitly l
+#ReadOnlyDirectories=/
+#ReadWriteDirectories=/var/run/priv_rpcserver
+#ReadWriteDirectories=/home/priv_rpcserver
+#InaccessibleDirectories=/home
+
+#pre-requisites
+#PermissionsStartOnly=true
+#ExecStartPre=
+#ExecStartPre=
+
+
+DeviceAllow=/dev/null rw
+DeviceAllow=/dev/tty rw
+#DeviceAllow=/dev/crypto rw
+
+# CANNOT run setuid (suid) executables to gain privs back
+NoNewPrivileges=yes
+
+# END Security stuff
+##########################
+
+[Install]
+WantedBy=multi-user.target
+
