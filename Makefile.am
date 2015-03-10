@@ -73,6 +73,12 @@ dist_phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/
 install-data-hook:
 	$(INSTALL_COMMANDS)
 
+sdk_HEADERS += \
+src/odata/odatacxx.h	\
+src/odata/odatacxxinlines.h	\
+src/odata/odata.h	\
+src/phit.h
+
 EXTRA_DIST += 	\
 src/server/help.h	\
 src/server/context.h	\
@@ -153,7 +159,6 @@ src/odata/uri.h	\
 src/odata/outstream.h	\
 src/odata/getters.h	\
 src/odata/pair.h	\
-src/odata/odatacxx.h	\
 src/odata/compare.h	\
 src/odata/return.h	\
 src/odata/csdl.h	\
@@ -162,11 +167,8 @@ src/odata/destructors.h	\
 src/odata/setters.h	\
 src/odata/serialize.h	\
 src/odata/jsonarray.h	\
-src/odata/odatacxxinlines.h	\
 src/odata/json.h	\
-src/odata/odata.h	\
 src/odata/chars.h	\
 src/csdl2c/xml.h	\
 src/olcli/options.h	\
-src/config.h	\
-src/phit.h
+src/config.h
