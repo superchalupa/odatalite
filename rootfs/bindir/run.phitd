@@ -1,4 +1,0 @@
-#!/bin/sh
-
-export PHIT_PREFIX=/
-/usr/sbin/phitd -f -i -S -l VERBOSE

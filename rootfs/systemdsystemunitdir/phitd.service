@@ -3,12 +3,13 @@ Description=The PHIT Web Server
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/run.phitd
-#Restart=on-failure
+Environment= PHIT_PREFIX=/
+ExecStart=/usr/sbin/phitd -f -i -S -l VERBOSE
+Restart=on-failure
 
 # we will run as an unprivileged user that has very limited filesystem privilege
-#User=phitd
-#Group=nogroup
+User=phitd
+Group=phitd
 UMask=0007
 
 # OPEN NETWORK ACCESS
@@ -29,7 +30,6 @@ PrivateNetwork=no
 #ExecStartPre=
 #ExecStartPre=
 
-
 DeviceAllow=/dev/null rw
 DeviceAllow=/dev/tty rw
 #DeviceAllow=/dev/crypto rw
@@ -42,4 +42,3 @@ NoNewPrivileges=yes
 
 [Install]
 WantedBy=multi-user.target
-
