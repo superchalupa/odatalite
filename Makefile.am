@@ -64,11 +64,11 @@ dist_pam_conf_DATA=etc/pam.d/phit
 
 # tmpfiles
 tmpfiledir=$(libdir)/tmpfiles.d
-tmpfile_DATA = etc/tmpfiles.d/phit.conf
+dist_tmpfile_DATA = etc/tmpfiles.d/phit.conf
 
 # HTML stuff
 phit_datadir=$(datadir)/phit
-phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/phit/odata.html share/phit/preamble.html
+dist_phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/phit/odata.html share/phit/preamble.html
 
 install-data-hook:
 	$(INSTALL_COMMANDS)
