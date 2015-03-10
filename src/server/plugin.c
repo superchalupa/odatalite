@@ -122,13 +122,6 @@ static int _LoadPlugin(PluginInfo* info)
     char root[MAX_PATH_SIZE];
     char libname[MAX_PATH_SIZE];
 
-    /* Get full path of the library */
-    if (!MakePath(ID_PLUGIN_LIBDIR, root))
-    {
-        LOGW(("MakePath(ID_PLUGIN_LIBDIR) failed"));
-        return -1;
-    }
-
     /* Expand to full shared library name */
     if (MakeShlibName(libname, info->libname) != 0)
     {
@@ -136,19 +129,30 @@ static int _LoadPlugin(PluginInfo* info)
         return -1;
     }
 
-    /* Find the shared library */
-    if (FindFile(path, root, libname) != 0)
+    /* Try using normal library search paths first. */
+    if (!(handle = ShlibOpen(libname)))
     {
-        LOGW(("cannot find %s under %s", libname, root));
-        return -1;
-    }
+        /* Get full path of the library */
+        if (!MakePath(ID_PLUGIN_LIBDIR, root))
+        {
+            LOGW(("MakePath(ID_PLUGIN_LIBDIR) failed"));
+            return -1;
+        }
 
-    /* Open shared library */
-    if (!(handle = ShlibOpen(path)))
-    {
-        ShlibErr(err, sizeof(err));
-        LOGW(("failed to load: %s: %s", path, err));
-        goto failed;
+        /* Find the shared library */
+        if (FindFile(path, root, libname) != 0)
+        {
+            LOGW(("cannot find %s under %s", libname, root));
+            return -1;
+        }
+
+        /* Open shared library */
+        if (!(handle = ShlibOpen(path)))
+        {
+            ShlibErr(err, sizeof(err));
+            LOGW(("failed to load: %s: %s", path, err));
+            goto failed;
+        }
     }
 
     /* Find symbol */

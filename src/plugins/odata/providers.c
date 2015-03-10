@@ -44,13 +44,6 @@ static int _LoadProvider(ProviderEntry* entry)
     char libname[MAX_PATH_SIZE];
     OL_ProviderEntryPointProc proc;
 
-    /* Get full path of the library */
-    if (!MakePath(ID_PLUGIN_LIBDIR, root))
-    {
-        LOGW(("MakePath(ID_PLUGIN_LIBDIR) failed"));
-        return -1;
-    }
-
     /* Expand to full shared library name */
     if (MakeShlibName(libname, entry->libname) != 0)
     {
@@ -58,21 +51,32 @@ static int _LoadProvider(ProviderEntry* entry)
         return -1;
     }
 
-    /* Find the shared library */
-    if (FindFile(path, root, libname) != 0)
+    /* Try using normal library search paths first. */
+    if (!(entry->shlib = ShlibOpen(libname)))
     {
-        LOGW(("cannot find %s under %s", libname, root));
-        return -1;
-    }
+        /* Get full path of the library */
+        if (!MakePath(ID_PLUGIN_LIBDIR, root))
+        {
+            LOGW(("MakePath(ID_PLUGIN_LIBDIR) failed"));
+            return -1;
+        }
 
-    /* Open the shared library */
-    if (!(entry->shlib = ShlibOpen(path)))
-    {
-        char err[256];
-        ShlibErr(err, sizeof(err));
+        /* Find the shared library */
+        if (FindFile(path, root, libname) != 0)
+        {
+            LOGW(("cannot find %s under %s", libname, root));
+            return -1;
+        }
 
-        LOGW(("failed to load provider library %s: %s", path, err));
-        return -1;
+        /* Open the shared library */
+        if (!(entry->shlib = ShlibOpen(path)))
+        {
+            char err[256];
+            ShlibErr(err, sizeof(err));
+
+            LOGW(("failed to load provider library %s: %s", path, err));
+            return -1;
+        }
     }
 
     /* Find provider entry point */
