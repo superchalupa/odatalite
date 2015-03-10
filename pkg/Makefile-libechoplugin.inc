@@ -12,3 +12,7 @@ out_libechoplugin_la_LDFLAGS = -static
 
 out_libechoplugin_la_SOURCES = \
 	src/plugins/echo/echoplugin.c 
+
+INSTALL_COMMANDS += ;echo 'Echo:M-POST:/echo:echoplugin:echo/webpage' >> $(DESTDIR)/$(phit_confdir)/plugins.conf
+INSTALL_COMMANDS += ;echo 'Echo:POST:/echo:echoplugin:echo/webpage' >> $(DESTDIR)/$(phit_confdir)/plugins.conf
+INSTALL_COMMANDS += ;echo 'Echo:GET:/echo/webpage:echoplugin:echo/webpage' >> $(DESTDIR)/$(phit_confdir)/plugins.conf

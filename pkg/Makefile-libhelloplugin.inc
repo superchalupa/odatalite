@@ -12,3 +12,5 @@ out_libhelloplugin_la_LDFLAGS = -static
 
 out_libhelloplugin_la_SOURCES = \
 	src/plugins/hello/helloplugin.c
+
+INSTALL_COMMANDS += ;echo  'Hello:GET:/hello:helloplugin:hello' >> $(DESTDIR)/$(phit_confdir)/plugins.conf
