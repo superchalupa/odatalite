@@ -5,7 +5,7 @@ base_includes = src/base src
 
 pkgconf_list+=libbase-static
 LIBBASE_STATIC_LIBS = -lbase
-LIBBASE_STATIC_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS) 
+LIBBASE_STATIC_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
 
 # this is a convenience library so we dont recompile
 # base .c files repeatedly for each binary
@@ -14,8 +14,7 @@ out_libbase_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(base_includes)) \
  	$(PAM_CFLAGS)
 
-out_libbase_la_LDFLAGS = -static -Wl,--no-as-needed -ldl \
-	$(PAM_LIBS) 
+out_libbase_la_LDFLAGS = -ldl $(PAM_LIBS)
 
 out_libbase_la_SOURCES = \
 	src/base/pidfile.c \
@@ -60,9 +59,7 @@ out_libbase_la_SOURCES = \
 	src/base/array.h \
 	src/base/buf.h \
 	src/base/process.c \
-	src/base/genstrtbl/main.cpp \
 	src/base/base64enc.c \
-	src/base/base64/base64.c \
 	src/base/auth.c \
 	src/base/process.h \
 	src/base/conffile.h \
@@ -72,7 +69,6 @@ out_libbase_la_SOURCES = \
 	src/base/roundpow2.h \
 	src/base/str.h \
 	src/base/str.c \
-	src/base/chars/genchars.c \
 	src/base/pam.h \
 	src/base/addr.h \
 	src/base/pam.c \

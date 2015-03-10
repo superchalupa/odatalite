@@ -8,7 +8,8 @@ lib_LTLIBRARIES += out/libechoplugin.la
 out_libechoplugin_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(echoplugin_includes))
 
-out_libechoplugin_la_LDFLAGS = -static
+out_libechoplugin_la_LDFLAGS = -avoid-version $(AM_LDFLAGS) $(call STD_LDFLAGS_LIB,ECHOPLUGIN)
+out_libechoplugin_la_LIBADD = out/libbase.la
 
 out_libechoplugin_la_SOURCES = \
 	src/plugins/echo/echoplugin.c 

@@ -8,7 +8,8 @@ lib_LTLIBRARIES += out/libhelloplugin.la
 out_libhelloplugin_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(helloplugin_includes))
 
-out_libhelloplugin_la_LDFLAGS = -static
+out_libhelloplugin_la_LDFLAGS = -avoid-version $(AM_LDFLAGS) $(call STD_LDFLAGS_LIB,HELLOPLUGIN)
+out_libhelloplugin_la_LIBADD = out/libbase.la
 
 out_libhelloplugin_la_SOURCES = \
 	src/plugins/hello/helloplugin.c

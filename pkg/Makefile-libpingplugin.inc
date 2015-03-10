@@ -8,7 +8,8 @@ lib_LTLIBRARIES += out/libpingplugin.la
 out_libpingplugin_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(pingplugin_includes))
 
-out_libpingplugin_la_LDFLAGS = -static
+out_libpingplugin_la_LDFLAGS = -avoid-version $(AM_LDFLAGS) $(call STD_LDFLAGS_LIB,PINGPLUGIN)
+out_libpingplugin_la_LIBADD = out/libbase.la
 
 out_libpingplugin_la_SOURCES = \
 	src/plugins/ping/pingplugin.c
