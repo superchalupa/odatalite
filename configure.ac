@@ -63,17 +63,21 @@ AC_ARG_VAR([SYSROOT_PATH], [if we are doing a cross build, the path to the sysro
 AC_SUBST([SYSROOT_PATH])
 
 # Checks for libraries.
-# YOCTO DEPENDENCY: libpam
+
+# put pkgconfig tests here
+if test "$BREAK_PKG_DEPS" != "1"; then
+    PKG_CHECK_MODULES([PAM], [libpam],,
+[
+# fallback for native compile where libpam.pc may not exist
 AC_CHECK_LIB([pam], [pam_start], [PAM_LIBS="$PAM_LIBS -lpam"],
     AC_MSG_ERROR(
             [Unable to find PAM. Please install the PAM development libraries])
 )
 AC_SUBST([PAM_LIBS])
-
-# put pkgconfig tests here
-if test "$BREAK_PKG_DEPS" != "1"; then
+])
+    # yocto calls it expat.pc
     PKG_CHECK_MODULES([EXPAT], [expat],,
-        # RHEL 6 can call it expat21, so look for that as an alternative.
+        # RHEL 6 can call it expat21.pc, so look for that as an alternative.
         # note the m4 quote [] around this protects it from yocto autodeps expansion, don't change this
         [PKG_CHECK_MODULES([EXPAT], [expat21])]
         )
