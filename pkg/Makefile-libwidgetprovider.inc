@@ -7,3 +7,5 @@ out_libwidgetprovider_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,
 
 out_libwidgetprovider_la_SOURCES = \
 	./src/odata/providers/widget/widgetprovider.c
+
+INSTALL_COMMANDS += ;echo  'widgetprovider:/Widgets:' >> $(DESTDIR)/$(phit_confdir)/providers.conf

@@ -8,3 +8,5 @@ out_librootprovider_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(
 out_librootprovider_la_SOURCES = \
 	./src/odata/providers/root/RootProvider.h \
 	./src/odata/providers/root/RootProvider.cpp
+
+INSTALL_COMMANDS += ;echo  'rootprovider:/:' >> $(DESTDIR)/$(phit_confdir)/providers.conf

@@ -8,3 +8,5 @@ out_libheapprovider_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(
 out_libheapprovider_la_SOURCES = \
 	./src/odata/providers/heap/HeapProvider.cpp \
 	./src/odata/providers/heap/HeapProvider.h
+
+INSTALL_COMMANDS += ;echo  'heapprovider:/GetHeapUsage:' >> $(DESTDIR)/$(phit_confdir)/providers.conf

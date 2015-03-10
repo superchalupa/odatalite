@@ -8,3 +8,4 @@ out_libgadgetprovider_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,
 out_libgadgetprovider_la_SOURCES = \
 	./src/odata/providers/gadget/gadgetprovider.c
 
+INSTALL_COMMANDS += ;echo  'gadgetprovider:/Gadgets,/Gadgets/Widgets:count,top,skip' >> $(DESTDIR)/$(phit_confdir)/providers.conf

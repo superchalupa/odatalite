@@ -10,3 +10,4 @@ out_libfrogprovider_la_SOURCES = \
 	./src/odata/providers/frog/FrogProvider.h \
 	./src/odata/providers/frog/strings.h
 
+INSTALL_COMMANDS += ;echo  'frogprovider:/Frogs:' >> $(DESTDIR)/$(phit_confdir)/providers.conf

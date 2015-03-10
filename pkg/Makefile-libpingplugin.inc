@@ -13,3 +13,5 @@ out_libpingplugin_la_LIBADD = out/libbase.la
 
 out_libpingplugin_la_SOURCES = \
 	src/plugins/ping/pingplugin.c
+
+INSTALL_COMMANDS += ;echo  'Ping:GET:/ping:pingplugin:ping' >> $(DESTDIR)/$(phit_confdir)/plugins.conf

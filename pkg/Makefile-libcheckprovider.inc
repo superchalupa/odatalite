@@ -7,3 +7,5 @@ out_libcheckprovider_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$
 
 out_libcheckprovider_la_SOURCES = \
 	./src/odata/providers/check/checkprovider.c
+
+INSTALL_COMMANDS += ;echo  'checkprovider:/Check:' >> $(DESTDIR)/$(phit_confdir)/providers.conf
