@@ -1,5 +1,0 @@
-#!/bin/sh
-./scripts/autogen
-./scripts/conf32
-make clean
-make

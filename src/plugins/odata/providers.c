@@ -54,6 +54,8 @@ static int _LoadProvider(ProviderEntry* entry)
     /* Try using normal library search paths first. */
     if (!(entry->shlib = ShlibOpen(libname)))
     {
+        LOGW(("ShlibOpen(%s) failed, falling back to path search.", libname));
+
         /* Get full path of the library */
         if (!MakePath(ID_PLUGIN_LIBDIR, root))
         {

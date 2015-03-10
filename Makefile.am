@@ -71,6 +71,7 @@ phit_datadir=$(datadir)/phit
 dist_phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/phit/odata.html share/phit/preamble.html
 
 install-data-hook:
+	mkdir -p $(DESTDIR)/$(pkgrundir)
 	$(INSTALL_COMMANDS)
 
 sdk_HEADERS += \

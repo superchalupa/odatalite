@@ -72,7 +72,11 @@ AC_SUBST([PAM_LIBS])
 
 # put pkgconfig tests here
 if test "$BREAK_PKG_DEPS" != "1"; then
-    PKG_CHECK_MODULES([EXPAT], [expat])
+    PKG_CHECK_MODULES([EXPAT], [expat],,
+        # RHEL 6 can call it expat21, so look for that as an alternative.
+        # note the m4 quote [] around this protects it from yocto autodeps expansion, don't change this
+        [PKG_CHECK_MODULES([EXPAT], [expat21])]
+        )
 fi
 
 
