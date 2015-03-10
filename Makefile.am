@@ -32,9 +32,9 @@ bin_includes = src
 
 INSTALL_COMMANDS=:
 
-include pkg/Makefile-libodataplugin.inc
-include pkg/Makefile-libodata.inc
 include pkg/Makefile-libbase.inc
+include pkg/Makefile-libodata.inc
+include pkg/Makefile-libodataplugin.inc
 include pkg/Makefile-phitd.inc
 include pkg/Makefile-libechoplugin.inc
 include pkg/Makefile-libpingplugin.inc
