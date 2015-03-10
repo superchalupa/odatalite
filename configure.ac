@@ -49,6 +49,21 @@ if test "$wantdebug" = "yes"; then
     AC_DEFINE_UNQUOTED([ENABLE_DEBUG], [$debug], [debug enabled])
 fi
 
+AC_ARG_ENABLE(hello-plugin,
+    AS_HELP_STRING(--enable-hello-plugin,Enable hello-plugin build/install. default: disabled),
+    [wanthello=$enableval], [wanthello=no])
+AM_CONDITIONAL(BUILD_HELLO_PLUGIN, [test "$wanthello" = "yes"])
+
+AC_ARG_ENABLE(ping-plugin,
+    AS_HELP_STRING(--enable-ping-plugin,Enable ping-plugin build/install. default: disabled),
+    [wantping=$enableval], [wantping=no])
+AM_CONDITIONAL(BUILD_PING_PLUGIN, [test "$wantping" = "yes"])
+
+AC_ARG_ENABLE(echo-plugin,
+    AS_HELP_STRING(--enable-echo-plugin,Enable echo-plugin build/install. default: disabled),
+    [wantecho=$enableval], [wantecho=no])
+AM_CONDITIONAL(BUILD_ECHO_PLUGIN, [test "$wantecho" = "yes"])
+
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O

@@ -36,9 +36,15 @@ include pkg/Makefile-libbase.inc
 include pkg/Makefile-libodata.inc
 include pkg/Makefile-libodataplugin.inc
 include pkg/Makefile-phitd.inc
+if BUILD_ECHO_PLUGIN
 include pkg/Makefile-libechoplugin.inc
+endif
+if BUILD_PING_PLUGIN
 include pkg/Makefile-libpingplugin.inc
+endif
+if BUILD_HELLO_PLUGIN
 include pkg/Makefile-libhelloplugin.inc
+endif
 include pkg/Makefile-tools.inc
 include pkg/Makefile-libmetadataprovider.inc
 include pkg/Makefile-librootprovider.inc
