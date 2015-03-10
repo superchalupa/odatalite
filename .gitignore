@@ -41,3 +41,34 @@ pkg/m4/ltsugar.m4
 pkg/m4/ltversion.m4
 pkg/m4/lt~obsolete.m4
 
+# ignore generated c sources
+src/RedfishSchema/AccountService.c
+src/RedfishSchema/Chassis.c
+src/RedfishSchema/ComputerSystem.c
+src/RedfishSchema/DMTFExtensions.c
+src/RedfishSchema/Errors.c
+src/RedfishSchema/EthernetNetworkInterface.c
+src/RedfishSchema/Event.c
+src/RedfishSchema/EventService.c
+src/RedfishSchema/Firmware.c
+src/RedfishSchema/IPAddresses.c
+src/RedfishSchema/ListenerDestination.c
+src/RedfishSchema/LogEntry.c
+src/RedfishSchema/LogService.c
+src/RedfishSchema/Manager.c
+src/RedfishSchema/ManagerAccount.c
+src/RedfishSchema/ManagerNetworkService.c
+src/RedfishSchema/Messages.c
+src/RedfishSchema/MiscMetrics.c
+src/RedfishSchema/PowerMetrics.c
+src/RedfishSchema/Redundancy.c
+src/RedfishSchema/Resource.c
+src/RedfishSchema/SerialInterface.c
+src/RedfishSchema/ServiceRoot.c
+src/RedfishSchema/Session.c
+src/RedfishSchema/SimpleStorage.c
+src/RedfishSchema/Task.c
+src/RedfishSchema/TaskService.c
+src/RedfishSchema/ThermalMetrics.c
+src/RedfishSchema/VirtualMedia.c
+
