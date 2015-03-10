@@ -49,6 +49,11 @@ if test "$wantdebug" = "yes"; then
     AC_DEFINE_UNQUOTED([ENABLE_DEBUG], [$debug], [debug enabled])
 fi
 
+AC_ARG_ENABLE(phitd,
+    AS_HELP_STRING(--enable-phitd,Enable phitd build/install. default: disabled),
+    [wantphitd=$enableval], [wantphitd=no])
+AM_CONDITIONAL(BUILD_PHITD, [test "$wantphitd" = "yes"])
+
 AC_ARG_ENABLE(hello-plugin,
     AS_HELP_STRING(--enable-hello-plugin,Enable hello-plugin build/install. default: disabled),
     [wanthello=$enableval], [wanthello=no])
@@ -63,6 +68,42 @@ AC_ARG_ENABLE(echo-plugin,
     AS_HELP_STRING(--enable-echo-plugin,Enable echo-plugin build/install. default: disabled),
     [wantecho=$enableval], [wantecho=no])
 AM_CONDITIONAL(BUILD_ECHO_PLUGIN, [test "$wantecho" = "yes"])
+
+
+AC_ARG_ENABLE(metadata-provider,
+    AS_HELP_STRING(--enable-metadata-provider,Enable metadata-provider build/install. default: disabled),
+    [wantmetadata=$enableval], [wantmetadata=no])
+AM_CONDITIONAL(BUILD_METADATA_PROVIDER, [test "$wantmetadata" = "yes"])
+
+AC_ARG_ENABLE(root-provider,
+    AS_HELP_STRING(--enable-root-provider,Enable root-provider build/install. default: disabled),
+    [wantroot=$enableval], [wantroot=no])
+AM_CONDITIONAL(BUILD_ROOT_PROVIDER, [test "$wantroot" = "yes"])
+
+AC_ARG_ENABLE(widget-provider,
+    AS_HELP_STRING(--enable-widget-provider,Enable widget-provider build/install. default: disabled),
+    [wantwidget=$enableval], [wantwidget=no])
+AM_CONDITIONAL(BUILD_WIDGET_PROVIDER, [test "$wantwidget" = "yes"])
+
+AC_ARG_ENABLE(frog-provider,
+    AS_HELP_STRING(--enable-frog-provider,Enable frog-provider build/install. default: disabled),
+    [wantfrog=$enableval], [wantfrog=no])
+AM_CONDITIONAL(BUILD_FROG_PROVIDER, [test "$wantfrog" = "yes"])
+
+AC_ARG_ENABLE(gadget-provider,
+    AS_HELP_STRING(--enable-gadget-provider,Enable gadget-provider build/install. default: disabled),
+    [wantgadget=$enableval], [wantgadget=no])
+AM_CONDITIONAL(BUILD_GADGET_PROVIDER, [test "$wantgadget" = "yes"])
+
+AC_ARG_ENABLE(heap-provider,
+    AS_HELP_STRING(--enable-heap-provider,Enable heap-provider build/install. default: disabled),
+    [wantheap=$enableval], [wantheap=no])
+AM_CONDITIONAL(BUILD_HEAP_PROVIDER, [test "$wantheap" = "yes"])
+
+AC_ARG_ENABLE(check-provider,
+    AS_HELP_STRING(--enable-check-provider,Enable check-provider build/install. default: disabled),
+    [wantcheck=$enableval], [wantcheck=no])
+AM_CONDITIONAL(BUILD_CHECK_PROVIDER, [test "$wantcheck" = "yes"])
 
 # Checks for programs.
 AC_PROG_CC

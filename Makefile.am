@@ -21,7 +21,7 @@ providerdir=$(pkglibexecdir)
 provider_LTLIBRARIES=
 
 # most providers use same includes, so define it once
-provider_includes = src 
+provider_includes = src
 bin_includes = src
 
 # generate .c files from .metadata files
@@ -34,8 +34,20 @@ INSTALL_COMMANDS=:
 
 include pkg/Makefile-libbase.inc
 include pkg/Makefile-libodata.inc
+include pkg/Makefile-libclient.inc
+
+include pkg/Makefile-tools.inc
+include pkg/Makefile-json.inc
+include pkg/Makefile-phitcli.inc
+include pkg/Makefile-olcli.inc
+include pkg/Makefile-csdl2c.inc
+include pkg/Makefile-testcsdl.inc
+
+if BUILD_PHITD
+# can't build phitd without the odata plugin due to static linking
 include pkg/Makefile-libodataplugin.inc
 include pkg/Makefile-phitd.inc
+endif
 if BUILD_ECHO_PLUGIN
 include pkg/Makefile-libechoplugin.inc
 endif
@@ -45,20 +57,29 @@ endif
 if BUILD_HELLO_PLUGIN
 include pkg/Makefile-libhelloplugin.inc
 endif
-include pkg/Makefile-tools.inc
+
+if BUILD_METADATA_PROVIDER
 include pkg/Makefile-libmetadataprovider.inc
+endif
+
+if BUILD_ROOT_PROVIDER
 include pkg/Makefile-librootprovider.inc
+endif
+if BUILD_WIDGET_PROVIDER
 include pkg/Makefile-libwidgetprovider.inc
+endif
+if BUILD_FROG_PROVIDER
 include pkg/Makefile-libfrogprovider.inc
+endif
+if BUILD_GADGET_PROVIDER
 include pkg/Makefile-libgadgetprovider.inc
+endif
+if BUILD_HEAP_PROVIDER
 include pkg/Makefile-libheapprovider.inc
+endif
+if BUILD_CHECK_PROVIDER
 include pkg/Makefile-libcheckprovider.inc
-include pkg/Makefile-json.inc
-include pkg/Makefile-libclient.inc
-include pkg/Makefile-phitcli.inc
-include pkg/Makefile-olcli.inc
-include pkg/Makefile-csdl2c.inc
-include pkg/Makefile-testcsdl.inc
+endif
 
 # config files
 phit_confdir=$(sysconfdir)/phit
