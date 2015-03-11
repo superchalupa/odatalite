@@ -3,7 +3,6 @@ Description=The PHIT Web Server
 
 [Service]
 Type=simple
-Environment= PHIT_PREFIX=/
 ExecStart=/usr/sbin/phitd -f -i -S -l VERBOSE
 Restart=on-failure
 

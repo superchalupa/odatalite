@@ -55,30 +55,30 @@ static PathEntry _entries[] =
     { SYSCONFDIR, "/phit/providers.conf" },
     { DATAROOTDIR, "/phit" },
     { LIBDIR, NULL }, /* ID_LIBDIR */
-    { LIBDIR, NULL } /* ID_PLUGIN_LIBDIR */
+    { PKGLIBEXECDIR, NULL } /* ID_PLUGIN_LIBDIR */
 };
 
 /* Points to heap memory or PREFIX macro */
 static const char* _prefix;
 
-static int _runningFromSourceDirectory = 0;
-
 const char* GetPrefix()
 {
     if (!_prefix)
     {
-        if ((_prefix = GetEnv("PHIT_PREFIX")))
+        _prefix = GetEnv("PHIT_PREFIX");
+        if(!_prefix)
         {
-            char path[MAX_PATH_SIZE];
-
-            Strlcpy2(path, _prefix, "/configure.ac", sizeof(path));
-
-            if (access(path, F_OK) == 0)
-                _runningFromSourceDirectory = 1;
-        }
-        else
-        {
-            _prefix = PREFIX;
+            /* Changed from previous: defining PREFIX and other directories in
+             * configure.ac results in them having variables embedded in them,
+             * such as ${prefix} and ${exec_prefix}. This was changed to have
+             * them be passed in the Makefiles, were they are automatically
+             * expanded. THUS, RUNSTATEDIR, LOCALSTATEDIR, SYSCONFDIR, etc all
+             * are defined with their full paths now.
+             *
+             * So, Prefix is generally not used now unless you define
+             * PHIT_PREFIX, to run from the build directory.
+             */
+            _prefix = "";
         }
     }
 
@@ -94,10 +94,6 @@ const char* MakePath(
     /* Copy prefix */
     if (Strlcpy(buf, GetPrefix(), MAX_PATH_SIZE) >= MAX_PATH_SIZE)
         return NULL;
-
-    /* If running from source directory */
-    if (_runningFromSourceDirectory && id == ID_PLUGIN_LIBDIR)
-        return buf;
 
     /* Copy the LHS */
     {
