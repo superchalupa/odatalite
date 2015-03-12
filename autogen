@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# the purpose of this script is to set up the project to build on an initial
+# source control checkout.  we don't check generated files into source control,
+# so you need to run autoreconf to set up the configure script. Since configure
+# is generally run next, this script runs a default configure. Pass in any
+# options to this script that you want passed to configure if you want
+# non-default options.
+#
+# if you specifically want to configure for a 32 bit build on a 64-bit system,
+# use the conf32 script as a guide.
+
+cd $(dirname $0)/
+autoreconf -f -i
+./configure "$@"
+
+
+# Example configure script to configure odatalite to compile for 32-bit when
+# running on a 64-bit system.
+#
+#./configure --build=i686-pc-linux-gnu "CFLAGS=-m32" "CXXFLAGS=-m32" "LDFLAGS=-m32" "$@"

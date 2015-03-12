@@ -2,9 +2,7 @@
 All commands below are assumed to be run from the top of the source tree unless otherwise specified
 
 To set up autotools (one time)
-$ ./scripts/autogen
-
-If you are running on RHEL6, it may 
+$ ./autogen
 
 To build:
 $ make -j
@@ -12,7 +10,6 @@ $ make -j
 To run a build out of the source tree:
 $ make install DESTDIR=$PWD/runtime
 $ PHIT_PREFIX=$PWD/runtime ./out/phitd -i -S -l VERBOSE
-
 
 
 
