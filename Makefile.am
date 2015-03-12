@@ -58,10 +58,14 @@ if BUILD_HELLO_PLUGIN
 include pkg/Makefile-libhelloplugin.inc
 endif
 
+if BUILD_ODATA_FASTCGI
+include pkg/Makefile-odata-fastcgi.inc
+include pkg/Makefile-fcgitest.inc
+endif
+
 if BUILD_METADATA_PROVIDER
 include pkg/Makefile-libmetadataprovider.inc
 endif
-
 if BUILD_ROOT_PROVIDER
 include pkg/Makefile-librootprovider.inc
 endif

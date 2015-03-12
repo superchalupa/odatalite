@@ -70,6 +70,12 @@ AC_ARG_ENABLE(echo-plugin,
 AM_CONDITIONAL(BUILD_ECHO_PLUGIN, [test "$wantecho" = "yes"])
 
 
+AC_ARG_ENABLE(odata-fastcgi,
+    AS_HELP_STRING(--enable-odata-fastcgi,Enable odata-fastcgi build/install. default: disabled),
+    [wantodatafastcgi=$enableval], [wantodatafastcgi=no])
+AM_CONDITIONAL(BUILD_ODATA_FASTCGI, [test "$wantodatafastcgi" = "yes"])
+
+
 AC_ARG_ENABLE(metadata-provider,
     AS_HELP_STRING(--enable-metadata-provider,Enable metadata-provider build/install. default: disabled),
     [wantmetadata=$enableval], [wantmetadata=no])
@@ -137,6 +143,20 @@ AC_SUBST([PAM_LIBS])
         # note the m4 quote [] around this protects it from yocto autodeps expansion, don't change this
         [PKG_CHECK_MODULES([EXPAT], [expat21])]
         )
+
+if test "$wantodatafastcgi" = "yes"
+then
+    # activate dell yocto autodeps
+    PKG_CHECK_MODULES([FASTCGI], [libfcgi],,
+[ # fallback for native compile where libfcgi.pc probably does not exist
+AC_CHECK_LIB([fcgi], [FCGI_Accept], [FASTCGI_LIBS="$FASTCGI_LIBS -lfcgi"],
+    AC_MSG_ERROR(
+            [Unable to find the fastcgi library. Please install the fastcgi development libraries])
+)
+AC_SUBST([FASTCGI_LIBS])
+])
+fi
+
 fi
 
 
