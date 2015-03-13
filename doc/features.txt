@@ -13,16 +13,18 @@ Macro features:
     Basic operations                            (A)             (X)
     Client-driven paging                        (A)             (X)
     Get single property/value                   (A)             (X)
-    Server-driven paging                        (A)             ( )
-    Schema-based providers (generator)          (A)             ( )
+    Server-driven paging                        (A)             (X)
+    Schema-based providers (generator)          (A)             (X)
     Expand query options ($expand)              (A)             ( )
     Handle etags                                (A)             ( )
     Edit links                                  (A)             ( )
-    Actions                                     (A)             ( )
+    Actions                                     (A)             (X)
+    Apache Support - FastCGI                    (A)             ( )
+    Privilege Authentication- New Redfish Spec  (A)             ( )
+    Provider Metadata -- aggregation            (A)             ( )
     -------------------------------------------------------------------------
     Out-of-process providers                    (B)             ( )
     Events                                      (B)             ( )
-    Command-line execution plugin               (B)             ( )
     Provider timed unload                       (B)             ( )
     HTTPS (SSL)                                 (B)             ( )
     Provider logging support                    (B)             ( )
@@ -30,14 +32,7 @@ Macro features:
     Thread safety                               (B)             ( )
     -------------------------------------------------------------------------
     IPV6                                        (C)             ( )
-    Client API                                  (C)             ( )
     HTTP digest authentication                  (C)             ( )
     Kerberos authentication                     (C)             ( )
-    Password file authentication                (C)             ( )
     Syslog logging                              (C)             ( )
-    Windows support                             (C)             ( )
-
-Micro features:
-
-    (*) Support PUT (in addition to PATCH)
 
