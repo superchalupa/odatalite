@@ -101,6 +101,14 @@ dist_tmpfile_DATA = etc/tmpfiles.d/phit.conf
 phit_datadir=$(datadir)/phit
 dist_phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/phit/odata.html share/phit/preamble.html
 
+# Apache2 conf file for fastcgi
+apache_confdir=$(sysconfdir)/apache2/conf.d
+dist_apache_conf_DATA = share/apache/odata.conf
+
+# odata service install
+systemddir=$(base_libdir)/systemd/system
+dist_systemd_DATA = share/apache/odata.service
+
 install-data-hook:
 	mkdir -p $(DESTDIR)/$(pkgrundir)
 	$(INSTALL_COMMANDS)

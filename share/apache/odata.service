@@ -1,0 +1,12 @@
+[Unit]
+Description=odatalite server
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgitest -p 4000
+ExecStop= /usr/bin/killall -9 /usr/bin/fcgitest
+RestartSec=10s
+
+[Install]  
+WantedBy=multi-user.target network.target
+
