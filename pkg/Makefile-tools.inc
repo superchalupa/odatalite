@@ -22,7 +22,7 @@ out_base64dec_SOURCES = src/tools/base64dec/base64dec.c
 
 bin_PROGRAMS += out/file2c
 out_file2c_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(bin_includes))
-out_file2c_LDADD = 
+out_file2c_LDADD =
 out_file2c_SOURCES = src/tools/file2c/file2c.c
 
 bin_PROGRAMS += out/octstr

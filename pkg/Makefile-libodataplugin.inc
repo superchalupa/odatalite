@@ -4,7 +4,7 @@ odataplugin_includes = src/plugins/odataplugin src/odata src
 
 pkgconf_list+=libodataplugin-static
 LIBODATAPLUGIN_STATIC_LIBS = -lodataplugin
-LIBODATAPLUGIN_STATIC_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS) 
+LIBODATAPLUGIN_STATIC_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
 
 # this is a convenience library so we dont recompile
 # odataplugin .c files repeatedly for each binary

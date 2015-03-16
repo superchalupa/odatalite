@@ -12,7 +12,7 @@ out_libechoplugin_la_LDFLAGS = -avoid-version $(AM_LDFLAGS) $(call STD_LDFLAGS_L
 out_libechoplugin_la_LIBADD = out/libbase.la
 
 out_libechoplugin_la_SOURCES = \
-	src/plugins/echo/echoplugin.c 
+	src/plugins/echo/echoplugin.c
 
 INSTALL_COMMANDS += ;echo 'Echo:M-POST:/echo:echoplugin:echo/webpage' >> $(DESTDIR)/$(phit_confdir)/plugins.conf
 INSTALL_COMMANDS += ;echo 'Echo:POST:/echo:echoplugin:echo/webpage' >> $(DESTDIR)/$(phit_confdir)/plugins.conf
