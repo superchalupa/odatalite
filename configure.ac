@@ -128,6 +128,10 @@ AC_SUBST([SYSROOT_PATH])
 
 # put pkgconfig tests here
 if test "$BREAK_PKG_DEPS" != "1"; then
+    PKG_CHECK_MODULES([SYSTEMD], [systemd],,
+[
+:
+])
     PKG_CHECK_MODULES([PAM], [libpam],,
 [
 # fallback for native compile where libpam.pc may not exist
