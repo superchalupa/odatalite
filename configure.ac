@@ -51,7 +51,7 @@ fi
 
 AC_ARG_ENABLE(phitd,
     AS_HELP_STRING(--enable-phitd,Enable phitd build/install. default: disabled),
-    [wantphitd=$enableval], [wantphitd=no])
+    [wantphitd=$enableval], [wantphitd=yes])
 AM_CONDITIONAL(BUILD_PHITD, [test "$wantphitd" = "yes"])
 
 AC_ARG_ENABLE(hello-plugin,
@@ -72,18 +72,18 @@ AM_CONDITIONAL(BUILD_ECHO_PLUGIN, [test "$wantecho" = "yes"])
 
 AC_ARG_ENABLE(odata-fastcgi,
     AS_HELP_STRING(--enable-odata-fastcgi,Enable odata-fastcgi build/install. default: disabled),
-    [wantodatafastcgi=$enableval], [wantodatafastcgi=no])
+    [wantodatafastcgi=$enableval], [wantodatafastcgi=yes])
 AM_CONDITIONAL(BUILD_ODATA_FASTCGI, [test "$wantodatafastcgi" = "yes"])
 
 
 AC_ARG_ENABLE(metadata-provider,
     AS_HELP_STRING(--enable-metadata-provider,Enable metadata-provider build/install. default: disabled),
-    [wantmetadata=$enableval], [wantmetadata=no])
+    [wantmetadata=$enableval], [wantmetadata=yes])
 AM_CONDITIONAL(BUILD_METADATA_PROVIDER, [test "$wantmetadata" = "yes"])
 
 AC_ARG_ENABLE(root-provider,
     AS_HELP_STRING(--enable-root-provider,Enable root-provider build/install. default: disabled),
-    [wantroot=$enableval], [wantroot=no])
+    [wantroot=$enableval], [wantroot=yes])
 AM_CONDITIONAL(BUILD_ROOT_PROVIDER, [test "$wantroot" = "yes"])
 
 AC_ARG_ENABLE(widget-provider,
@@ -93,7 +93,7 @@ AM_CONDITIONAL(BUILD_WIDGET_PROVIDER, [test "$wantwidget" = "yes"])
 
 AC_ARG_ENABLE(frog-provider,
     AS_HELP_STRING(--enable-frog-provider,Enable frog-provider build/install. default: disabled),
-    [wantfrog=$enableval], [wantfrog=no])
+    [wantfrog=$enableval], [wantfrog=yes])
 AM_CONDITIONAL(BUILD_FROG_PROVIDER, [test "$wantfrog" = "yes"])
 
 AC_ARG_ENABLE(gadget-provider,
