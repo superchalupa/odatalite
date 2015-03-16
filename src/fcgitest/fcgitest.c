@@ -14,13 +14,9 @@
 static const char rcsid[] = "$Id: echo.c,v 1.5 1999/07/28 00:29:37 roberts Exp $";
 #endif /* not lint */
 
-#include "fcgi_config.h"
-
-#include <stdlib.h>
-
-#ifdef HAVE_UNISTD_H
+#include <sys/types.h>
 #include <unistd.h>
-#endif
+#include <stdlib.h>
 
 #ifdef _WIN32
 #include <process.h>
@@ -28,28 +24,34 @@ static const char rcsid[] = "$Id: echo.c,v 1.5 1999/07/28 00:29:37 roberts Exp $
 extern char **environ;
 #endif
 
+#define NO_FCGI_DEFINES
 #include "fcgi_stdio.h"
-
+#include "src/plugins/odata/odataplugin.h"
 
 static void PrintEnv(char *label, char **envp)
 {
-    printf("%s:<br>\n<pre>\n", label);
+    FCGI_printf("%s:<br>\n<pre>\n", label);
     for ( ; *envp != NULL; envp++) {
-        printf("%s\n", *envp);
+        FCGI_printf("%s\n", *envp);
     }
-    printf("</pre><p>\n");
+    FCGI_printf("</pre><p>\n");
 }
+
 
 int main ()
 {
     char **initialEnv = environ;
     int count = 0;
 
+    // initialization
+    __odataPlugin.base.Load(&__odataPlugin.base);
+
+
     while (FCGI_Accept() >= 0) {
         char *contentLength = getenv("CONTENT_LENGTH");
         int len;
 
-	printf("Content-type: text/html\r\n"
+	FCGI_printf("Content-type: text/html\r\n"
 	    "\r\n"
 	    "<title>FastCGI echo</title>"
 	    "<h1>FastCGI echo</h1>\n"
@@ -63,25 +65,28 @@ int main ()
         }
 
         if (len <= 0) {
-	    printf("No data from standard input.<p>\n");
+	    FCGI_printf("No data from standard input.<p>\n");
         }
         else {
             int i, ch;
 
-	    printf("Standard input:<br>\n<pre>\n");
+	    FCGI_printf("Standard input:<br>\n<pre>\n");
             for (i = 0; i < len; i++) {
                 if ((ch = getchar()) < 0) {
-                    printf("Error: Not enough bytes received on standard input<p>\n");
+                    FCGI_printf("Error: Not enough bytes received on standard input<p>\n");
                     break;
 		}
                 putchar(ch);
             }
-            printf("\n</pre><p>\n");
+            FCGI_printf("\n</pre><p>\n");
         }
 
         PrintEnv("Request environment", environ);
         PrintEnv("Initial environment", initialEnv);
     } /* while */
+
+    // cleanup
+    __odataPlugin.base.Unload(&__odataPlugin.base);
 
     return 0;
 }
