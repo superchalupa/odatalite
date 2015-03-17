@@ -37,6 +37,100 @@ static void PrintEnv(char *label, char **envp)
     FCGI_printf("</pre><p>\n");
 }
 
+/* Post HTTP status line */
+void PostStatusLine(
+        PHIT_Context* context,
+        PHIT_StatusCode statusCode,
+        const char* statusMsg)
+{}
+
+/* Post HTTP header field */
+void PostHeader(
+        PHIT_Context* context,
+        const char* name,
+        const char* value)
+{}
+
+/* Post HTTP header field */
+void PostHeaderUL(
+        PHIT_Context* context,
+        const char* name,
+        unsigned long value)
+{}
+
+/* Post HTTP header field */
+void PostTrailerField(
+        PHIT_Context* context,
+        const char* name,
+        const char* value)
+{}
+
+/* Post end of headers */
+void PostEOH(
+        PHIT_Context* context)
+{}
+
+/* Post HTTP content */
+void PostContent(
+        PHIT_Context* context,
+        const char* data,
+        size_t size)
+{}
+
+/* Post end of content */
+void PostEOC(
+        PHIT_Context* context)
+{}
+
+/* Post an error message */
+void PostError(
+        PHIT_Context* context,
+        PHIT_StatusCode statusCode,
+        const char* statusMsg,
+        const char* detail)
+{}
+
+/* Set client data */
+void* SetPluginData(
+        PHIT_Context* context,
+        void* pluginData)
+{}
+
+/* Get client data */
+void* GetPluginData(
+        PHIT_Context* context)
+{}
+
+/* Get option */
+int GetOption(
+        const PHIT_Context* context,
+        int option,
+        void* value,
+        size_t valueSize)
+{}
+
+PHIT_Context fastcgi_context = {
+    .PostStatusLine = &PostStatusLine,
+    .PostHeader = &PostHeader,
+    .PostHeaderUL = &PostHeaderUL,
+    .PostTrailerField = &PostTrailerField,
+    .PostEOH = &PostEOH,
+    .PostContent = &PostContent,
+    .PostEOC = &PostEOC,
+    .PostError = &PostError,
+    .SetPluginData = &SetPluginData,
+    .GetPluginData = &GetPluginData,
+    .GetOption = &GetOption,
+};
+
+void (*HandleRequest)(
+        PHIT_Plugin* plugin,
+        PHIT_Context* context,
+        PHIT_Method method,
+        const char* requestURI,
+        const PHIT_Headers* headers,
+        const char* content,
+        size_t contentLength);
 
 int main ()
 {
