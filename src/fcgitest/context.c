@@ -82,7 +82,7 @@ static void* _SetPluginData(
     void* oldPluginData;
 
     DEBUG_ASSERT(context->magic == PHIT_CONTEXT_MAGIC);
-    
+
     oldPluginData = self->pluginData;
     self->pluginData = pluginData;
     return oldPluginData;

@@ -90,29 +90,29 @@ int main ()
 
         /* Content-Length: */
         PHIT_ContentLengthHeader contentLength = {.found=1, .value=len};
-    
+
         /* User-Agent: */
         PHIT_UserAgentHeader userAgent;
-    
+
         /* Host: */
         PHIT_HostHeader host;
-    
+
         /* Authorization: */
         PHIT_AuthorizationHeader authorization;
-    
+
         /* TE: */
         PHIT_TEHeader te;
-    
+
         /* Transfer-Encoding: */
         PHIT_TransferEncodingHeader transferEncoding;
-    
+
         /* Trailer */
         PHIT_TrailerHeader trailer;
-    
+
         /* Other headers */
         PHIT_Headers headers={{0},};
         size_t nheaders = 0;
-    
+
 
         int count=0;
         for(; environ[count]; count++) /*empty*/ ;
