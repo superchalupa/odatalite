@@ -26,7 +26,10 @@ extern char **environ;
 
 #define NO_FCGI_DEFINES
 #include "fcgi_stdio.h"
-#include "src/plugins/odata/odataplugin.h"
+#include "plugins/odata/odataplugin.h"
+#include "fcgitest/context.h"
+#include "fcgitest/connection.h"
+#include "base/http.h"
 
 static void PrintEnv(char *label, char **envp)
 {
@@ -36,101 +39,6 @@ static void PrintEnv(char *label, char **envp)
     }
     FCGI_printf("</pre><p>\n");
 }
-
-/* Post HTTP status line */
-void PostStatusLine(
-        PHIT_Context* context,
-        PHIT_StatusCode statusCode,
-        const char* statusMsg)
-{}
-
-/* Post HTTP header field */
-void PostHeader(
-        PHIT_Context* context,
-        const char* name,
-        const char* value)
-{}
-
-/* Post HTTP header field */
-void PostHeaderUL(
-        PHIT_Context* context,
-        const char* name,
-        unsigned long value)
-{}
-
-/* Post HTTP header field */
-void PostTrailerField(
-        PHIT_Context* context,
-        const char* name,
-        const char* value)
-{}
-
-/* Post end of headers */
-void PostEOH(
-        PHIT_Context* context)
-{}
-
-/* Post HTTP content */
-void PostContent(
-        PHIT_Context* context,
-        const char* data,
-        size_t size)
-{}
-
-/* Post end of content */
-void PostEOC(
-        PHIT_Context* context)
-{}
-
-/* Post an error message */
-void PostError(
-        PHIT_Context* context,
-        PHIT_StatusCode statusCode,
-        const char* statusMsg,
-        const char* detail)
-{}
-
-/* Set client data */
-void* SetPluginData(
-        PHIT_Context* context,
-        void* pluginData)
-{}
-
-/* Get client data */
-void* GetPluginData(
-        PHIT_Context* context)
-{}
-
-/* Get option */
-int GetOption(
-        const PHIT_Context* context,
-        int option,
-        void* value,
-        size_t valueSize)
-{}
-
-PHIT_Context fastcgi_context = {
-    .PostStatusLine = &PostStatusLine,
-    .PostHeader = &PostHeader,
-    .PostHeaderUL = &PostHeaderUL,
-    .PostTrailerField = &PostTrailerField,
-    .PostEOH = &PostEOH,
-    .PostContent = &PostContent,
-    .PostEOC = &PostEOC,
-    .PostError = &PostError,
-    .SetPluginData = &SetPluginData,
-    .GetPluginData = &GetPluginData,
-    .GetOption = &GetOption,
-};
-
-void (*HandleRequest)(
-        PHIT_Plugin* plugin,
-        PHIT_Context* context,
-        PHIT_Method method,
-        const char* requestURI,
-        const PHIT_Headers* headers,
-        const char* content,
-        size_t contentLength);
 
 int main ()
 {
@@ -142,41 +50,90 @@ int main ()
 
 
     while (FCGI_Accept() >= 0) {
-        char *contentLength = getenv("CONTENT_LENGTH");
+        char *contentLengthStr = getenv("CONTENT_LENGTH");
+        char *requestUri = getenv("REQUEST_URI");
+        char *method = getenv("REQUEST_METHOD");
         int len;
 
-	FCGI_printf("Content-type: text/html\r\n"
-	    "\r\n"
-	    "<title>FastCGI echo</title>"
-	    "<h1>FastCGI echo</h1>\n"
-            "Request number %d,  Process ID: %d<p>\n", ++count, getpid());
-
-        if (contentLength != NULL) {
-            len = strtol(contentLength, NULL, 10);
+        if (contentLengthStr != NULL) {
+            len = strtol(contentLengthStr, NULL, 10);
         }
         else {
             len = 0;
         }
 
-        if (len <= 0) {
-	    FCGI_printf("No data from standard input.<p>\n");
-        }
-        else {
-            int i, ch;
+        Connection* c = ConnectionNew();
+        char * content = NULL;
+        PHIT_Method phit_method;
+        ParseHTTPMethod(method, &phit_method);
 
-	    FCGI_printf("Standard input:<br>\n<pre>\n");
+        if (len>0){
+            int i;
+            content = calloc(len+1, 1);
+            char *c = content;
+
             for (i = 0; i < len; i++) {
-                if ((ch = getchar()) < 0) {
-                    FCGI_printf("Error: Not enough bytes received on standard input<p>\n");
+                if ((*c++ = getchar()) < 0) {
                     break;
-		}
-                putchar(ch);
+		        }
             }
-            FCGI_printf("\n</pre><p>\n");
         }
 
-        PrintEnv("Request environment", environ);
-        PrintEnv("Initial environment", initialEnv);
+        /* Content-Type: */
+        PHIT_ContentTypeHeader contentType = {
+            .found=0,
+            .mediaType="",
+            .mediaSubType="",
+            .parameters=NULL,
+            .nparameters=0,
+            };
+
+        /* Content-Length: */
+        PHIT_ContentLengthHeader contentLength = {.found=1, .value=len};
+    
+        /* User-Agent: */
+        PHIT_UserAgentHeader userAgent;
+    
+        /* Host: */
+        PHIT_HostHeader host;
+    
+        /* Authorization: */
+        PHIT_AuthorizationHeader authorization;
+    
+        /* TE: */
+        PHIT_TEHeader te;
+    
+        /* Transfer-Encoding: */
+        PHIT_TransferEncodingHeader transferEncoding;
+    
+        /* Trailer */
+        PHIT_TrailerHeader trailer;
+    
+        /* Other headers */
+        PHIT_Headers headers={{0},};
+        size_t nheaders = 0;
+    
+
+        int count=0;
+        for(; environ[count]; count++) /*empty*/ ;
+
+
+#if 0
+        __odataPlugin.base.HandleRequest(
+            __odataPlugin.base,
+            c->context,
+            phit_method,
+            requestUri,
+            /*todo*/ headers,
+            content,
+            len);
+#endif
+
+        if(content) {
+            free(content);
+            content=NULL;
+        }
+
     } /* while */
 
     // cleanup
