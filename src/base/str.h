@@ -31,6 +31,7 @@
 
 #include "common.h"
 #include "alloc.h"
+#include <string.h>
 
 #define STRLIT(STR) STR, sizeof(STR)-1
 #define STRN(STR) (sizeof(STR)-1)
