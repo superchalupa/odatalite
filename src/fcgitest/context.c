@@ -25,45 +25,63 @@ static void _PostStatusLine(
         PHIT_Context* context,
         PHIT_StatusCode statusCode,
         const char* statusMsg)
-{}
+{
+    /* TODO */
+    printf("STATUSMSG: %s\n", statusMsg);
+}
 
 /* Post HTTP header field */
 static void _PostHeader(
         PHIT_Context* context,
         const char* name,
         const char* value)
-{}
+{
+    /* TODO */
+   printf("%s: %s\n", name, value);
+}
 
 /* Post HTTP header field */
 static void _PostHeaderUL(
         PHIT_Context* context,
         const char* name,
         unsigned long value)
-{}
+{
+    /* TODO */
+   printf("%s: %lu\n", name, value);
+}
 
 /* Post HTTP header field */
 static void _PostTrailerField(
         PHIT_Context* context,
         const char* name,
         const char* value)
-{}
+{
+    /* TODO */
+   printf("%s: %s\n", name, value);
+}
 
 /* Post end of headers */
 static void _PostEOH(
         PHIT_Context* context)
-{}
+{
+   printf("END OF HEADERS\n");
+}
 
 /* Post HTTP content */
 static void _PostContent(
         PHIT_Context* context,
         const char* data,
         size_t size)
-{}
+{
+    printf("%s\n", data);
+}
 
 /* Post end of content */
 static void _PostEOC(
         PHIT_Context* context)
-{}
+{
+   printf("END OF CONTENT\n");
+}
 
 /* Post an error message */
 static void _PostError(
@@ -71,7 +89,10 @@ static void _PostError(
         PHIT_StatusCode statusCode,
         const char* statusMsg,
         const char* detail)
-{}
+{
+    /* TODO */
+    printf("ERROR: %s: %s\n", statusMsg, detail);
+}
 
 /* Set client data */
 static void* _SetPluginData(
