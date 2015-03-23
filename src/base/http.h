@@ -83,7 +83,7 @@ typedef enum _HTTPState
 HTTPState;
 
 
-#define HEADERS_BUFSIZE 16
+#define HEADERS_BUFSIZE 256
 #define TRAILERS_BUFSIZE 8
 
 typedef struct _HTTPBuf

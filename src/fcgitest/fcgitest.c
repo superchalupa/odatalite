@@ -31,6 +31,11 @@ extern char **environ;
 #include "fcgitest/connection.h"
 #include "base/http.h"
 
+int FASTCGI_HeadersParse(
+    PHIT_Headers* self,
+    HTTPBuf* buf,
+    char **env);
+
 static void PrintEnv(char *label, char **envp)
 {
     FCGI_printf("%s:<br>\n<pre>\n", label);
@@ -42,8 +47,7 @@ static void PrintEnv(char *label, char **envp)
 
 int main ()
 {
-    char **initialEnv = environ;
-    int count = 0;
+    //char **initialEnv = environ;
 
     // initialization
     __odataPlugin.base.Load(&__odataPlugin.base);
@@ -52,8 +56,11 @@ int main ()
     while (FCGI_Accept() >= 0) {
         char *contentLengthStr = getenv("CONTENT_LENGTH");
         char *requestUri = getenv("REQUEST_URI");
-        char *method = getenv("REQUEST_METHOD");
+        char *methodStr = getenv("REQUEST_METHOD");
         int len;
+
+        PrintEnv("REQUEST", environ);
+        FCGI_printf("hello world 1\n");
 
         if (contentLengthStr != NULL) {
             len = strtol(contentLengthStr, NULL, 10);
@@ -62,10 +69,17 @@ int main ()
             len = 0;
         }
 
+        FCGI_printf("hello world 2\n");
+
         Connection* c = ConnectionNew();
+
+        FCGI_printf("hello world 3 '%s'\n", methodStr);
         char * content = NULL;
         PHIT_Method phit_method;
-        ParseHTTPMethod(method, &phit_method);
+        const char * ret = ParseHTTPMethod(methodStr, &phit_method);
+
+        FCGI_printf("hello world 4: method '%d'\n", phit_method);
+        FCGI_printf("hello world 4: ret '%s'\n", ret);
 
         if (len>0){
             int i;
@@ -79,44 +93,13 @@ int main ()
             }
         }
 
-        /* Content-Type: */
-        PHIT_ContentTypeHeader contentType = {
-            .found=0,
-            .mediaType="",
-            .mediaSubType="",
-            .parameters=NULL,
-            .nparameters=0,
-            };
+        FCGI_printf("hello world 5: parsing headers\n");
+        PHIT_Headers headers={};
+        HTTPBuf buf={};
+        FASTCGI_HeadersParse( &headers, &buf, environ);
+        FCGI_printf("hello world 5: parsed headers\n");
 
-        /* Content-Length: */
-        PHIT_ContentLengthHeader contentLength = {.found=1, .value=len};
-
-        /* User-Agent: */
-        PHIT_UserAgentHeader userAgent;
-
-        /* Host: */
-        PHIT_HostHeader host;
-
-        /* Authorization: */
-        PHIT_AuthorizationHeader authorization;
-
-        /* TE: */
-        PHIT_TEHeader te;
-
-        /* Transfer-Encoding: */
-        PHIT_TransferEncodingHeader transferEncoding;
-
-        /* Trailer */
-        PHIT_TrailerHeader trailer;
-
-        /* Other headers */
-        PHIT_Headers headers={{0},};
-        size_t nheaders = 0;
-
-
-        int count=0;
-        for(; environ[count]; count++) /*empty*/ ;
-
+        PHIT_HeadersDump(&headers, 1);
 
 #if 0
         __odataPlugin.base.HandleRequest(
@@ -124,7 +107,7 @@ int main ()
             c->context,
             phit_method,
             requestUri,
-            /*todo*/ headers,
+            headers,
             content,
             len);
 #endif

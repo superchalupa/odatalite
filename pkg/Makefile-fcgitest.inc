@@ -6,4 +6,5 @@ out_fcgitest_LDADD = out/libbase.la out/libclient.la $(FASTCGI_LIBS) out/libodat
 out_fcgitest_SOURCES = \
 	src/fcgitest/connection.c	\
 	src/fcgitest/context.c	\
+	src/fcgitest/http.c	\
 	src/fcgitest/fcgitest.c
