@@ -102,18 +102,14 @@ int main ()
 
         PHIT_HeadersDump(&headers, 1);
 
-#if 0
         __odataPlugin.base.HandleRequest(
-            __odataPlugin.base,
-            c->context,
+            &__odataPlugin.base,
+            (PHIT_Context *)(&c->context),
             phit_method,
             requestUri,
-            headers,
+            &headers,
             content,
             len);
-#else  
-        (void)requestUri; /*unused, supress warning */
-#endif
 
         if(content) {
             free(content);
