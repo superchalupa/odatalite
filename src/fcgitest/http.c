@@ -345,7 +345,7 @@ int FASTCGI_HeadersParse(
         char *value = equal+1;
         size_t len=strlen(value);
 
-        printf("i=%d, env=%s\n", i, p);
+//        printf("i=%d, env=%s\n", i, p);
 
 
         /* Match the header */

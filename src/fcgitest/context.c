@@ -18,6 +18,7 @@ extern char **environ;
 #include "src/plugins/odata/odataplugin.h"
 #include "fcgitest/context.h"
 #include "fcgitest/connection.h"
+#include "server/contextoptions.h"
 
 
 /* Post HTTP status line */
@@ -102,6 +103,8 @@ static void* _SetPluginData(
     Context* self = (Context*)context;
     void* oldPluginData;
 
+    printf("_SetPluginData\n");
+
     DEBUG_ASSERT(context->magic == PHIT_CONTEXT_MAGIC);
 
     oldPluginData = self->pluginData;
@@ -115,6 +118,7 @@ static void* _GetPluginData(
         PHIT_Context* context)
 {
     Context* self = (Context*)context;
+    printf("_GetPluginData\n");
     DEBUG_ASSERT(context->magic == PHIT_CONTEXT_MAGIC);
     return self->pluginData;
 }
@@ -127,7 +131,61 @@ static int _GetOption(
         void* value,
         size_t valueSize)
 {
-return 0;
+    Context* self = (Context*)context;
+    int ret = -1;
+
+    if (option == CONTEXT_OPTION_BUF)
+    {
+        printf("_GetOption: CONTEXT_OPTION_BUF\n");
+        Buf* x;
+
+
+        if (valueSize < sizeof(x) || !self->connection)
+            goto error_out;
+
+        x = &self->out;
+        memcpy(value, &x, sizeof(x));
+
+        printf("DEBUG CURRENT BUF: %s\n", x->data);
+        ret = 0;
+        goto out;
+    }
+
+    else if (option == CONTEXT_OPTION_CHUNKED_ENCODING)
+    {
+        printf("_GetOption: CONTEXT_OPTION_CHUNKED_ENCODING\n");
+        int x = self->chunkedEncoding;
+
+        if (valueSize < sizeof(x))
+            goto error_out;
+
+        memcpy(value, &x, sizeof(x));
+        ret = 0;
+        goto out;
+    }
+
+    else if (option == PHIT_CONTEXT_OPTION_ROLE && self->connection)
+    {
+        PHIT_Role x = self->connection->role;
+        printf("_GetOption: PHIT_CONTEXT_OPTION_ROLE\n");
+
+        if (valueSize < sizeof(x))
+            goto error_out;
+
+        memcpy(value, &x, sizeof(x));
+        ret = 0;
+        goto out;
+    }
+
+    printf("_GetOption: unknown option\n");
+
+error_out:
+    ret = -1;
+    printf("_GetOption error\n");
+
+out:
+    /* Unknown option */
+    return ret;
 }
 
 static PHIT_Context _fastcgi_context = {
@@ -152,6 +210,8 @@ void ContextInit(
     memset(self, 0, sizeof(*self));
     self->base = _fastcgi_context;
     self->connection = connection;
+    AllocInit(&self->outAlloc, self->outBuffer, sizeof(self->outBuffer));
+    BufInit(&self->out, &self->outAlloc);
 }
 
 void ContextReset(
@@ -160,10 +220,13 @@ void ContextReset(
     self->plugin = NULL;
     self->postedEOH = 0;
     self->postedEOC = 0;
+    BufDestroy(&self->out);
+    BufInit(&self->out, &self->outAlloc);
 }
 
 void ContextDestroy(
     Context* self)
 {
+    BufDestroy(&self->out);
     memset(self, 0xDD, sizeof(Context));
 }

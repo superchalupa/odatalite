@@ -46,6 +46,11 @@ typedef struct _Context
     /* Back pointer to the connection */
     Connection* connection;
 
+    /* Interim buffer (eventually copied to wbuf) */
+    Buf out;
+    Alloc outAlloc;
+    char outBuffer[1024];
+
     /* Plugin for this context */
     PHIT_Plugin* plugin;
 

@@ -30,6 +30,7 @@ extern char **environ;
 #include "fcgitest/context.h"
 #include "fcgitest/connection.h"
 #include "base/http.h"
+#include "base/log.h"
 
 int FASTCGI_HeadersParse(
     PHIT_Headers* self,
@@ -52,6 +53,14 @@ int main ()
     // initialization
     __odataPlugin.base.Load(&__odataPlugin.base);
 
+    LogLevelFromString("INFO", &__logLevel);
+
+    //LOGF(("TEST LOGF\n"));
+    LOGE(("TEST LOGE\n"));
+    LOGW(("TEST LOGW\n"));
+    LOGI(("TEST LOGI\n"));
+    LOGD(("TEST LOGD\n"));
+    LOGV(("TEST LOGV\n"));
 
     while (FCGI_Accept() >= 0) {
         char *contentLengthStr = getenv("CONTENT_LENGTH");
@@ -59,7 +68,7 @@ int main ()
         char *methodStr = getenv("REQUEST_METHOD");
         int len;
 
-        PrintEnv("REQUEST", environ);
+        //PrintEnv("REQUEST", environ);
         FCGI_printf("hello world 1\n");
 
         if (contentLengthStr != NULL) {
@@ -100,7 +109,7 @@ int main ()
         FASTCGI_HeadersParse( &headers, &buf, environ);
         FCGI_printf("hello world 5: parsed headers\n");
 
-        PHIT_HeadersDump(&headers, 1);
+        //PHIT_HeadersDump(&headers, 1);
 
         __odataPlugin.base.HandleRequest(
             &__odataPlugin.base,
