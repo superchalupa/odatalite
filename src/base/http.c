@@ -271,17 +271,29 @@ const char* PHIT_HeadersFind(
     size_t len)
 {
     size_t i;
+    const char *ret = NULL;
+    char * search = calloc(len+1, 1);
+    strcpy(search, name);
+    for(i=0; i<len; i++)
+        if (!isalnum(search[i]))
+            search[i] = '_';
 
     for (i = 0; i < self->nheaders; i++)
     {
         const char* s = self->headers[i].name;
 
-        if (Strncaseeq(s, name, len) == 0 && s[len] == '\0')
-            return self->headers[i].value;
+        if (Strncaseeq(s, search, len) == 0 && s[len] == '\0'){
+            ret = self->headers[i].value;
+            goto out;
+        }
     }
 
+out:
+    if (search)
+        free(search);
+
     /* Not found! */
-    return NULL;
+    return ret;
 }
 
 static int _ParseTokenList(
