@@ -328,8 +328,6 @@ int FASTCGI_HeadersParse(
 {
     /*HOTSPOT*/
     char* p = NULL;
-    char* crlf;
-    char* start;
     int foundContentType = 0;
     int foundTE = 0;
 

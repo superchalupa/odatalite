@@ -72,6 +72,7 @@ int main ()
         FCGI_printf("hello world 2\n");
 
         Connection* c = ConnectionNew();
+        (void)c;
 
         FCGI_printf("hello world 3 '%s'\n", methodStr);
         char * content = NULL;
@@ -110,6 +111,8 @@ int main ()
             headers,
             content,
             len);
+#else  
+        (void)requestUri; /*unused, supress warning */
 #endif
 
         if(content) {

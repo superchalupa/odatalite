@@ -105,7 +105,9 @@ static int _GetOption(
         int option,
         void* value,
         size_t valueSize)
-{}
+{
+return 0;
+}
 
 static PHIT_Context _fastcgi_context = {
     .magic = PHIT_CONTEXT_MAGIC,
