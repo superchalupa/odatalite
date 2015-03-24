@@ -31,6 +31,12 @@
 #include "base/log.h"
 #include "fcgi_connection.h"
 
+static void _PostStatusLine_NOOP(
+    PHIT_Context* context,
+    PHIT_StatusCode statusCode,
+    const char* statusMsg)
+{}
+
 Connection* FCGI_ConnectionNew()
 {
     Connection* self;
@@ -50,6 +56,9 @@ Connection* FCGI_ConnectionNew()
     BufInit(&self->wbuf, &self->wbufAlloc);
 
     ContextInit(&self->context, self);
+    // anybody care to explain why I can't do the below two lines as one line?
+    PHIT_Context *base = &self->context.base;
+    base->PostStatusLine = &_PostStatusLine_NOOP;
 
     return self;
 }
