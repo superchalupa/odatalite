@@ -3,8 +3,8 @@ Description=odatalite server
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgitest -p 4000
-ExecStop= /usr/bin/killall -9 /usr/bin/fcgitest
+ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgiodata -p 4000
+ExecStop= /usr/bin/killall -9 /usr/bin/fcgiodata
 RestartSec=10s
 
 [Install]  
