@@ -3,10 +3,11 @@ Description=odatalite server
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgiodata -p 4000
-ExecStop= /usr/bin/killall -9 /usr/bin/fcgiodata
+ExecStart=/bin/sh -c '/usr/sbin/fcgistarter -c /usr/bin/fcgiodata -p 4000; \
+                      /usr/sbin/fcgistarter -c /usr/bin/fcgitest -p 4100'
+ExecStop= /bin/sh -c '/usr/bin/killall -9 /usr/bin/fcgiodata; \
+                      /usr/bin/killall -9 /usr/bin/fcgitest'
 RestartSec=10s
 
-[Install]  
+[Install]
 WantedBy=multi-user.target network.target
-

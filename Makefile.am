@@ -59,6 +59,7 @@ include pkg/Makefile-libhelloplugin.inc
 endif
 
 if BUILD_ODATA_FASTCGI
+include pkg/Makefile-fcgitest.inc
 include pkg/Makefile-fcgiodata.inc
 endif
 
