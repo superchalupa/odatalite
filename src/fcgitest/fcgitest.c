@@ -116,6 +116,8 @@ int main ()
         FCGI_printf("%s", c->wbuf.data);
         FCGI_printf("%s", c->out.data);
 
+        FCGI_ConnectionDelete(c);
+
     } /* while */
 
     // cleanup (crashes, so comment out for now)
