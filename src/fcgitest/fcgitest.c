@@ -27,10 +27,12 @@ extern char **environ;
 #define NO_FCGI_DEFINES
 #include "fcgi_stdio.h"
 #include "plugins/odata/odataplugin.h"
-#include "fcgitest/context.h"
-#include "fcgitest/connection.h"
+#include "fcgi_connection.h"
 #include "base/http.h"
 #include "base/log.h"
+
+#define D(X)
+
 
 int FASTCGI_HeadersParse(
     PHIT_Headers* self,
@@ -53,14 +55,7 @@ int main ()
     // initialization
     __odataPlugin.base.Load(&__odataPlugin.base);
 
-    LogLevelFromString("INFO", &__logLevel);
-
-    //LOGF(("TEST LOGF\n"));
-    LOGE(("TEST LOGE\n"));
-    LOGW(("TEST LOGW\n"));
-    LOGI(("TEST LOGI\n"));
-    LOGD(("TEST LOGD\n"));
-    LOGV(("TEST LOGV\n"));
+    //LogLevelFromString("VERBOSE", &__logLevel);
 
     while (FCGI_Accept() >= 0) {
         char *contentLengthStr = getenv("CONTENT_LENGTH");
@@ -69,8 +64,6 @@ int main ()
         int len;
 
         //PrintEnv("REQUEST", environ);
-        FCGI_printf("hello world 1\n");
-
         if (contentLengthStr != NULL) {
             len = strtol(contentLengthStr, NULL, 10);
         }
@@ -78,18 +71,15 @@ int main ()
             len = 0;
         }
 
-        FCGI_printf("hello world 2\n");
+        Connection* c = FCGI_ConnectionNew();
 
-        Connection* c = ConnectionNew();
-        (void)c;
-
-        FCGI_printf("hello world 3 '%s'\n", methodStr);
+        D(FCGI_printf("hello world 3 '%s'\n", methodStr);)
         char * content = NULL;
         PHIT_Method phit_method;
-        const char * ret = ParseHTTPMethod(methodStr, &phit_method);
+        D(const char * ret =) ParseHTTPMethod(methodStr, &phit_method);
 
-        FCGI_printf("hello world 4: method '%d'\n", phit_method);
-        FCGI_printf("hello world 4: ret '%s'\n", ret);
+        D(FCGI_printf("hello world 4: method '%d'\n", phit_method);)
+        D(FCGI_printf("hello world 4: ret '%s'\n", ret);)
 
         if (len>0){
             int i;
@@ -103,13 +93,11 @@ int main ()
             }
         }
 
-        FCGI_printf("hello world 5: parsing headers\n");
         PHIT_Headers headers={};
         HTTPBuf buf={};
         FASTCGI_HeadersParse( &headers, &buf, environ);
-        FCGI_printf("hello world 5: parsed headers\n");
 
-        //PHIT_HeadersDump(&headers, 1);
+        D( PHIT_HeadersDump(&headers, 1); )
 
         __odataPlugin.base.HandleRequest(
             &__odataPlugin.base,
@@ -125,10 +113,13 @@ int main ()
             content=NULL;
         }
 
+        FCGI_printf("%s", c->wbuf.data);
+        FCGI_printf("%s", c->out.data);
+
     } /* while */
 
-    // cleanup
-    __odataPlugin.base.Unload(&__odataPlugin.base);
+    // cleanup (crashes, so comment out for now)
+    // __odataPlugin.base.Unload(&__odataPlugin.base);
 
     return 0;
 }

@@ -26,49 +26,13 @@
 **
 **==============================================================================
 */
-#include "common.h"
+#ifndef _fcgi_connection_h
+#define _fcgi_connection_h
 
-#include "fcgitest/connection.h"
-#include "phit.h"
+#include "server/connection.h"
+#include "server/context.h"
 
-#if 0
+Connection* FCGI_ConnectionNew();
+void FCGI_ConnectionDelete( Connection* self);
 
-    /* Resolve the role for this user */
-    {
-        *role = RoleResolve(headers->username);
-
-        if (*role == PHIT_ROLE_NONE)
-        {
-            LOGW(("Role authentication failed: %s", headers->username));
-            goto AccessDenied;
-        }
-
-        LOGI(("authenticated %s as %s", headers->username, RoleName(*role)));
-    }
-
-#endif /* defined(ENABLE_PAM_AUTH) */
-
-Connection* ConnectionNew()
-{
-    Connection* self;
-
-    if (!(self = (Connection*)Calloc(1, sizeof(Connection))))
-        return NULL;
-
-    self->magic = CONNECTION_MAGIC;
-
-    ContextInit(&self->context, self);
-
-    return self;
-}
-
-void ConnectionDelete(
-    Connection* self)
-{
-    LOGD(("ConnectionDelete(%p)", self));
-
-    ContextDestroy(&self->context);
-
-    self->magic = 0xDDDDDDDD;
-    Free(self);
-}
+#endif /* _connection_h */

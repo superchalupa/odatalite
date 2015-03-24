@@ -15,6 +15,7 @@ $ PHIT_PREFIX=$PWD/runtime ./out/phitd -i -S -l VERBOSE
 TODO:
     - modified PHIT_HeadersFind to change all non-alnum in search string to "_" to support cgi. Need to do the same in PHIT when parsing headers.
     - Ask Mike Brasher about buf.h.new
+    - Ask about using connection buf in odataplugin, why not context?
 
 
 Some old scripts/ were removed as unneeded anymore:

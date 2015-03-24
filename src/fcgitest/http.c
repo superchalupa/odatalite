@@ -36,6 +36,7 @@
 #include "base/dump.h"
 
 # define T(X)
+# define D(X)
 
 static int _AppendHeader(
     PHIT_Header* headers,
@@ -334,8 +335,6 @@ int FASTCGI_HeadersParse(
     memset(self, 0, sizeof(*self));
     memset(buf, 0, sizeof(*buf));
 
-    printf("happy\n");
-
     int i=0;
     for(i=0; env[i]; i++)
     {
@@ -347,12 +346,11 @@ int FASTCGI_HeadersParse(
 
 //        printf("i=%d, env=%s\n", i, p);
 
-
         /* Match the header */
         if (!foundContentType && c == 'C' &&
             strncasecmp(p, STRLIT("Content_Type=")) == 0)
         {
-            printf("Content_type\n");
+            D(printf("Content_type\n");)
             if (_HTTPParseContentType(self, buf, value, len) != 0)
                 return -1;
 
@@ -360,7 +358,7 @@ int FASTCGI_HeadersParse(
         }
         else if (c == 'C' && strncasecmp(p, STRLIT("Content_Length=")) == 0)
         {
-            printf("Content_length\n");
+            D(printf("Content_length\n");)
             if (_HTTPParseContentLength(self, value, len) != 0)
             {
                 return -1;
@@ -370,7 +368,7 @@ int FASTCGI_HeadersParse(
             ((p[0] == 'T' && p[1] == 'E' && p[2] == ':') ||
             Strncaseeq(p, STRLIT("TE:")) == 0))
         {
-            printf("TE\n");
+            D(printf("TE\n");)
             p = value;
 
             self->te.found = 1;
@@ -394,7 +392,7 @@ int FASTCGI_HeadersParse(
         }
         else if (c == 'T' && strncasecmp(p, STRLIT("Transfer_Encoding=")) == 0)
         {
-            printf("Transfer_Encoding\n");
+            D(printf("Transfer_Encoding\n");)
             p = value;
 
             self->transferEncoding.found = 1;
@@ -410,19 +408,19 @@ int FASTCGI_HeadersParse(
         }
         else if (c == 'U' && strncasecmp(p, STRLIT("User_Agent=")) == 0)
         {
-            printf("user agent\n");
+            D(printf("user agent\n");)
             self->userAgent.found = 1;
             self->userAgent.value = TrimLeadingAndTrailingLWS(value, len);
         }
         else if (c == 'H' && strncasecmp(p, STRLIT("Host=")) == 0)
         {
-            printf("host\n");
+            D(printf("host\n");)
             self->host.found = 1;
             self->host.value = TrimLeadingAndTrailingLWS(value, len);
         }
         else if (c == 'A' && strncasecmp(p, STRLIT("Authorization=")) == 0)
         {
-            printf("authorization\n");
+            D(printf("authorization\n");)
             self->authorization.found = 1;
 
             if (strncasecmp(value, STRLIT("Basic")) == 0)
@@ -438,7 +436,7 @@ int FASTCGI_HeadersParse(
         }
         else if (c == 'T' && strncasecmp(p, STRLIT("Trailer=")) == 0)
         {
-            printf("trailer\n");
+            D(printf("trailer\n");)
             self->trailer.found = 1;
 
             if (_ParseTokenList(value, buf->trailersBuf, TRAILERS_BUFSIZE,
@@ -454,7 +452,7 @@ int FASTCGI_HeadersParse(
         }
         else
         {
-            printf("generic\n");
+            D(printf("generic\n");)
             /* Process a generic header */
             while (*p && *p != '=')
                 p++;
