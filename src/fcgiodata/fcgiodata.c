@@ -61,6 +61,8 @@ int main ()
         char *contentLengthStr = getenv("CONTENT_LENGTH");
         char *requestUri = getenv("REQUEST_URI");
         char *methodStr = getenv("REQUEST_METHOD");
+        if(!methodStr)
+            methodStr = "GET";
         int len;
 
         //PrintEnv("REQUEST", environ);
