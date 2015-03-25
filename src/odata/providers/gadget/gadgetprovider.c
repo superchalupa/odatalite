@@ -34,7 +34,7 @@
 #include <base/format.h>
 #include <odata/odata.h>
 
-#define D(X) X
+#define D(X)
 
 typedef struct _Gadget
 {

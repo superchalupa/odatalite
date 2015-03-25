@@ -36,7 +36,7 @@
 
 extern const EDMX_Edmx ServiceRoot_Edmx;
 
-#define D(X) X
+#define D(X)
 
 typedef struct _Provider 
 {
