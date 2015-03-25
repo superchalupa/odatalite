@@ -347,7 +347,20 @@ int FASTCGI_HeadersParse(
 //        printf("i=%d, env=%s\n", i, p);
 
         /* Match the header */
-        if (!foundContentType && c == 'C' &&
+        // Translate Fast CGI headers to match PHIT ones...
+        if (strncasecmp(p, STRLIT("HTTP_HOST")) == 0)
+        {
+          D(printf("HTTP_HOST\n");)
+          self->host.found = 1;
+          self->host.value = value;
+        }
+        else if (strncasecmp(p, STRLIT("HTTP_USER_AGENT")) == 0)
+        {
+          D(printf("HTTP_USER_AGENT\n");)
+          self->userAgent.found = 1;
+          self->userAgent.value = value;
+        }
+        else if (!foundContentType && c == 'C' &&
             strncasecmp(p, STRLIT("Content_Type=")) == 0)
         {
             D(printf("Content_type\n");)
@@ -464,7 +477,31 @@ int FASTCGI_HeadersParse(
             /* Null terminate the header */
             *p++ = '\0';
 
-            _AppendHeader(buf->headersBuf, &buf->headersBufSize, env[i], value);
+            // Translate standard Fast CGI strings to their PHIT counterparts
+            if (strncasecmp(env[i], STRLIT("HTTP_ACCEPT")) == 0)
+            {
+              D(printf("HTTP_ACCEPT\n");)
+              _AppendHeader(buf->headersBuf, &buf->headersBufSize, "Accept", value);
+            }
+            else if (strncasecmp(env[i], STRLIT("HTTP_ACCEPT_LANGUAGE")) == 0)
+            {
+              D(printf("HTTP_ACCEPT_LANGUAGE\n");)
+              _AppendHeader(buf->headersBuf, &buf->headersBufSize, "Accept-Language", value);
+            }
+            else if (strncasecmp(env[i], STRLIT("HTTP_ACCEPT_LANGUAGE")) == 0)
+            {
+              D(printf("HTTP_ACCEPT_ENCODING\n");)
+              _AppendHeader(buf->headersBuf, &buf->headersBufSize, "Accept-Encoding", value);
+            }
+            else if (strncasecmp(env[i], STRLIT("HTTP_ACCEPT_LANGUAGE")) == 0)
+            {
+              D(printf("HTTP_CONNECTION\n");)
+              _AppendHeader(buf->headersBuf, &buf->headersBufSize, "Connection", value);
+            }
+            else
+            {
+              _AppendHeader(buf->headersBuf, &buf->headersBufSize, env[i], value);
+            }
         }
 
     }
