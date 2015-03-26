@@ -1,0 +1,10 @@
+[Unit]
+Description=odatalite fcgi process on port 4000
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgiodata -p 4000
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target network.target

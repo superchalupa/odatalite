@@ -61,6 +61,7 @@ endif
 if BUILD_ODATA_FASTCGI
 include pkg/Makefile-fcgitest.inc
 include pkg/Makefile-fcgiodata.inc
+#include pkg/Makefile-fcgiodata-async.inc
 endif
 
 if BUILD_METADATA_PROVIDER
@@ -103,11 +104,11 @@ dist_phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/
 
 # Apache2 conf file for fastcgi
 apache_confdir=$(sysconfdir)/apache2/conf.d
-dist_apache_conf_DATA = share/apache/odata.conf
+dist_apache_conf_DATA = share/apache/fcgiodata-async.conf  share/apache/fcgiodata.conf  share/apache/fcgitest.conf share/apache/load-proxy.conf
 
 # odata service install
 systemddir=$(base_libdir)/systemd/system
-dist_systemd_DATA = share/apache/odata.service
+dist_systemd_DATA = share/apache/fcgiodata-async.service  share/apache/fcgiodata.service  share/apache/fcgitest.service
 
 install-data-hook:
 	mkdir -p $(DESTDIR)/$(pkgrundir)
