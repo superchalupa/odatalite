@@ -92,7 +92,6 @@ out_libbase_la_SOURCES = \
 	src/base/selector.c \
 	src/base/allocprint.c \
 	src/base/user.h \
-	src/base/buf.h.new \
 	src/base/find.h \
 	src/base/getopt.c \
 	src/base/strlcat.c \
