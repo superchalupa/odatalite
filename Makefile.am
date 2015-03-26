@@ -61,7 +61,7 @@ endif
 if BUILD_ODATA_FASTCGI
 include pkg/Makefile-fcgitest.inc
 include pkg/Makefile-fcgiodata.inc
-#include pkg/Makefile-fcgiodata-async.inc
+include pkg/Makefile-fcgiodata-async.inc
 endif
 
 if BUILD_METADATA_PROVIDER

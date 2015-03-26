@@ -17,6 +17,10 @@ TODO:
     - Ask Mike Brasher about buf.h.new
     - Ask about using connection buf in odataplugin, why not context?
 
+connection initializes -> context
+lifetime rules around connection and context
+dont look pluggable at all in current incarnation (connection)
+
 
 Some old scripts/ were removed as unneeded anymore:
 # autoclean - not needed: run "make distclean" and everything should be cleaned up

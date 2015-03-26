@@ -150,6 +150,7 @@ AC_SUBST([PAM_LIBS])
 
 if test "$wantodatafastcgi" = "yes"
 then
+    PKG_CHECK_MODULES([CZMQ], [libczmq])
     # activate dell yocto autodeps
     PKG_CHECK_MODULES([FASTCGI], [libfcgi],,
 [ # fallback for native compile where libfcgi.pc probably does not exist
