@@ -7,5 +7,6 @@ out_fcgiodata_SOURCES = \
 	src/server/context.c	\
 	src/server/connection.c	\
 	src/fcgiodata/fcgi_connection.c	\
+	src/fcgiodata/fcgi_connection.h	\
 	src/fcgiodata/http.c	\
 	src/fcgiodata/fcgiodata.c
