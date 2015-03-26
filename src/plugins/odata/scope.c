@@ -308,10 +308,12 @@ static OL_Result _Scope_SendEntityAux(
     Scope* self = (Scope*)self_;
     PHIT_Context* context = (PHIT_Context*)self->privateData;
     Buf* out;
+    Buf buf = BUF_INITIALIZER;
     size_t indent;
     size_t chunkPrefixOffset = 0;
     int chunkedEncoding = 0;
     const char* propertyName;
+
 
     /* Bail out if in error state already */
     if (self->error)
@@ -383,17 +385,16 @@ static OL_Result _Scope_SendEntityAux(
         self->postHTTPPreamble++;
     }
 
-    /* Initialize OutStream from the internal PHIT buffer */
+    /* Initialize OutStream from the internal PHIT buffer if supported */
+    if (PHIT_Context_GetOption(context, CONTEXT_OPTION_BUF, &out,
+        sizeof(Buf)) == 0)
     {
-        if (PHIT_Context_GetOption(context, CONTEXT_OPTION_BUF, &out,
-            sizeof(Buf)) != 0)
-        {
-            LOGE(("PHIT_Context_GetOption(BUF)"));
-            self->error = OL_TRUE;
-            return OL_Result_Failed;
-        }
-
         self->out = out;
+    }
+    else
+    {
+        /* Use the local buffer since this option is unsupported */
+        self->out = &buf;
     }
 
     /* Get whether chunked encoding was requested */
@@ -407,9 +408,9 @@ static OL_Result _Scope_SendEntityAux(
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
-
+    
     /* Write the HTTP chunk prefix (if any) */
-    if (chunkedEncoding)
+    if (self->out != &buf && chunkedEncoding)
     {
         chunkPrefixOffset = out->size;
         HTTPFormatNullChunkPrefix(out);
@@ -480,7 +481,7 @@ static OL_Result _Scope_SendEntityAux(
         }
     }
 
-    if (chunkedEncoding)
+    if (self->out != &buf && chunkedEncoding)
     {
         /* Now that we have the chunk size, update the null chunk prefix */
         UIntToHexStr8(
@@ -490,6 +491,10 @@ static OL_Result _Scope_SendEntityAux(
         /* Write the HTTP chunk suffix */
         HTTPFormatChunkSuffix(out);
     }
+
+    /* If using the local buffer, then post the context */
+    if (out == &buf)
+        PHIT_Context_PostContent(context, buf.data, buf.size);
 
     self->postEntity++;
 
