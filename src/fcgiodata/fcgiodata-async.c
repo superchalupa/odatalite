@@ -13,6 +13,9 @@
 #define zstr_sendm(dest, string) zstr_sendfm(dest, "%s", string)
 #endif
 
+
+#define DEBUG_PRINTF(X, ...)
+
 int running;
 
 static void *handle_request(void *a)
@@ -33,7 +36,7 @@ static void *handle_request(void *a)
 
     FCGX_InitRequest(&request, 0, 0);
 
-    printf( "Thread %ld (%d) started\n", thread_id, pid);
+    DEBUG_PRINTF( "Thread %ld (%d) started\n", thread_id, pid);
 
     for (;;)
     {
@@ -89,7 +92,7 @@ static void *handle_request(void *a)
         FCGX_Finish_r(&request);
     }
 
-    printf( "Thread %ld (%d) exiting\n", thread_id, pid);
+    DEBUG_PRINTF( "Thread %ld (%d) exiting\n", thread_id, pid);
     zctx_destroy (&ctx);
     running=0;
 
@@ -102,7 +105,7 @@ void *server_task (void *args)
     zctx_t *ctx = zctx_new ();
     void *cgiserver = zsocket_new (ctx, ZMQ_ROUTER);
     zsocket_bind (cgiserver, "tcp://*:5570");
-    printf("Starting up server task\n");
+    DEBUG_PRINTF("Starting up server task\n");
 
     zmq_pollitem_t items [] = { { cgiserver, 0, ZMQ_POLLIN, 0 } };
     while (running) {
@@ -117,22 +120,22 @@ void *server_task (void *args)
     }
 
     zctx_destroy (&ctx);
-    printf("Shut down server task\n");
+    DEBUG_PRINTF("Shut down server task\n");
     return NULL;
 }
 
 int main(void)
 {
-    printf("Hello world.\n");
+    DEBUG_PRINTF("Hello world.\n");
     FCGX_Init();
-    printf("Init complete.\n");
+    DEBUG_PRINTF("Init complete.\n");
 
     for (long i = 0; i < THREAD_COUNT; i++) {
-        printf("Creating thread %ld\n", i);
+        DEBUG_PRINTF("Creating thread %ld\n", i);
         zthread_new(handle_request, (void*)i);
     }
 
-    printf("Creating thread 0\n");
+    DEBUG_PRINTF("Creating thread 0\n");
     running=1;
     server_task(0);
 
