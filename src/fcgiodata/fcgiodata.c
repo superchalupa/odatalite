@@ -27,7 +27,7 @@ extern char **environ;
 #define NO_FCGI_DEFINES
 #include "fcgi_stdio.h"
 #include "plugins/odata/odataplugin.h"
-#include "fcgi_connection.h"
+#include "connection-fcgi.h"
 #include "base/http.h"
 #include "base/log.h"
 
@@ -115,8 +115,8 @@ int main ()
             content=NULL;
         }
 
-        FCGI_printf("%s", c->wbuf.data);
-        FCGI_printf("%s", c->out.data);
+        FCGI_fwrite(c->wbuf.data, sizeof(char), c->wbuf.size, FCGI_stdout);
+        FCGI_fwrite(c->out.data, sizeof(char), c->out.size, FCGI_stdout);
 
         FCGI_ConnectionDelete(c);
 
