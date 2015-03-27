@@ -37,6 +37,9 @@
 
 # define T(X)
 # define D(X)
+#include <syslog.h>
+#define DEBUG_OUT(fd, prio, args...) syslog(prio, args)
+#define DEBUG_PRINTF(args...) DEBUG_OUT(stderr, LOG_INFO, args)
 
 static int _AppendHeader(
     PHIT_Header* headers,
@@ -348,22 +351,22 @@ int FASTCGI_HeadersParse(
 
         /* Match the header */
         // Translate Fast CGI headers to match PHIT ones...
-        if (strncasecmp(p, STRLIT("HTTP_HOST")) == 0)
+        if (strncasecmp(p, STRLIT("HTTP_HOST=")) == 0)
         {
-          D(printf("HTTP_HOST\n");)
+          DEBUG_PRINTF("HTTP_HOST\n");
           self->host.found = 1;
           self->host.value = value;
         }
-        else if (strncasecmp(p, STRLIT("HTTP_USER_AGENT")) == 0)
+        else if (strncasecmp(p, STRLIT("HTTP_USER_AGENT=")) == 0)
         {
-          D(printf("HTTP_USER_AGENT\n");)
+          DEBUG_PRINTF("HTTP_USER_AGENT\n");
           self->userAgent.found = 1;
           self->userAgent.value = value;
         }
         else if (!foundContentType && c == 'C' &&
             strncasecmp(p, STRLIT("Content_Type=")) == 0)
         {
-            D(printf("Content_type\n");)
+            DEBUG_PRINTF("Content_type\n");
             if (_HTTPParseContentType(self, buf, value, len) != 0)
                 return -1;
 
@@ -371,7 +374,7 @@ int FASTCGI_HeadersParse(
         }
         else if (c == 'C' && strncasecmp(p, STRLIT("Content_Length=")) == 0)
         {
-            D(printf("Content_length\n");)
+            DEBUG_PRINTF("Content_length\n");
             if (_HTTPParseContentLength(self, value, len) != 0)
             {
                 return -1;
@@ -381,7 +384,7 @@ int FASTCGI_HeadersParse(
             ((p[0] == 'T' && p[1] == 'E' && p[2] == ':') ||
             Strncaseeq(p, STRLIT("TE:")) == 0))
         {
-            D(printf("TE\n");)
+            DEBUG_PRINTF("TE\n");
             p = value;
 
             self->te.found = 1;
@@ -475,7 +478,7 @@ int FASTCGI_HeadersParse(
                 return -1;
 
             /* Null terminate the header */
-            *p++ = '\0';
+            *p = '\0';
 
             // Translate standard Fast CGI strings to their PHIT counterparts
             if (strncasecmp(env[i], STRLIT("HTTP_ACCEPT")) == 0)

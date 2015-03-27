@@ -55,6 +55,15 @@
 
 #define D(X)
 
+#ifdef ENABLE_DEBUG
+#include <syslog.h>
+#define DEBUG_OUT(fd, prio, args...) syslog(prio, args)
+#define DEBUG_PRINTF(args...) DEBUG_OUT(stderr, LOG_INFO, args)
+#else
+#define DEBUG_OUT(fd, prio, args...)
+#define DEBUG_PRINTF(args...)
+#endif
+
 /* Defined ENABLE_LOGP to log provider errors when calling into scope */
 #if defined(ENABLE_LOGP)
 # define LOGP LOGW
@@ -226,7 +235,7 @@ static int _ProcessVersionHeader(
 static void _ODATAPlugin_Load(
     PHIT_Plugin* plugin)
 {
-    D( printf("=== OL_Load()\n"); )
+    DEBUG_PRINTF("=== OL_Load()\n");
 
     /* Load all providers */
     ProvidersLoad();
@@ -235,7 +244,7 @@ static void _ODATAPlugin_Load(
 static void _ODATAPlugin_Unload(
     PHIT_Plugin* plugin)
 {
-    D( printf("=== OL_Unload()\n"); )
+    DEBUG_PRINTF("=== OL_Unload()\n");
 
     /* Unload all providers */
     ProvidersUnload();
@@ -264,7 +273,7 @@ static void _ODATAPlugin_HandleRequest(
     OL_MetadataType metadataType = OL_MetadataType_Minimal;
     unsigned short version;
 
-    D( printf("=== OL_HandleRequest()\n"); )
+    DEBUG_PRINTF("=== OL_HandleRequest(%s)\n", requestURI);
 
     /* Check whether requestor wants a web page */
     if (strcmp(requestURI, "/odata/webpage") == 0)
@@ -295,7 +304,7 @@ static void _ODATAPlugin_HandleRequest(
         goto failed;
     }
 
-    D( printf("metadataType{%u}\n", metadataType); )
+    DEBUG_PRINTF("metadataType{%u}\n", metadataType);
 
     /* Create context for this request */
     if (!(scope = ScopeCache_Get()))
@@ -326,6 +335,8 @@ static void _ODATAPlugin_HandleRequest(
         PostError(context, OL_Result_InternalError, "failed to create URI");
         goto failed;
     }
+
+    DEBUG_PRINTF("=== scope uri(%s)\n", uri);
 
     /* The two contexts will refer to each other */
     PHIT_Context_SetPluginData(context, scope);
@@ -365,7 +376,9 @@ static void _ODATAPlugin_HandleRequest(
         /* Find provider for this request */
         if (!(entry = FindProviderEntry(uri, &numMatchingSegments)))
         {
-            PostError(context, OL_Result_NotFound, "no provider for URI");
+            char errstr[1024] = {0};
+            snprintf(errstr, 1023, "no provider for URI: '%s'", requestURI);
+            PostError(context, OL_Result_NotFound, errstr);
             goto failed;
         }
 
@@ -380,7 +393,9 @@ static void _ODATAPlugin_HandleRequest(
         {
             if (uri->segments.size - numMatchingSegments > 1)
             {
-                PostError(context, OL_Result_NotFound, "no provider for URI");
+                char errstr[1024] = {0};
+                snprintf(errstr, 1023, "no provider for URI: '%s'", requestURI);
+                PostError(context, OL_Result_NotFound, errstr);
                 goto failed;
             }
 
@@ -583,7 +598,7 @@ static void _ODATAPlugin_HandlePull(
 {
 }
 
-ODATAPlugin __odataPlugin =
+EXPORT ODATAPlugin __odataPlugin =
 {
     {
         _ODATAPlugin_Load,
