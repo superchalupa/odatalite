@@ -33,6 +33,8 @@
 #include <base/str.h>
 #include <odata/odatamacros.h>
 
+#include <time.h>
+
 const StrLit __metadataV3[] = 
 {
     { STRLIT("nometadata") },  
@@ -191,12 +193,19 @@ void PostStatusLineAndHeaders(
     const char* statusMsg,
     const char* contextType)
 {
+    struct tm tm = *localtime(&(time_t){time(NULL)});
+    char buf[50] = "";
     const Scope* scope = (const Scope*)PHIT_Context_GetPluginData(context);
 
     PHIT_Context_PostStatusLine(context, statusCode, statusMsg);
 
     if (statusCode != PHIT_STATUSCODE_204_NO_CONTENT)
     {
+        PHIT_Context_PostHeader(context, "Server", "PHIT Web Server");
+        strncpy(buf, asctime(&tm), sizeof(buf));
+        buf[strlen(buf)-1] = '\0';
+        PHIT_Context_PostHeader(context, "Date", buf);
+
         _PostHTTPContentTypeField(context, contextType);
 
         if (scope)
