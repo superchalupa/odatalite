@@ -111,7 +111,7 @@ systemddir=$(base_libdir)/systemd/system
 dist_systemd_DATA = share/apache/fcgiodata-async.service  share/apache/fcgiodata.service  share/apache/fcgitest.service
 
 install-data-hook:
-	mkdir -p $(DESTDIR)/$(pkgrundir)
+	mkdir -p $(DESTDIR)/$(pkgrundir) ||:
 	$(INSTALL_COMMANDS)
 
 sdk_HEADERS += \
