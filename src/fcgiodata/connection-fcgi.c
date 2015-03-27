@@ -29,7 +29,7 @@
 #include "common.h"
 
 #include "base/log.h"
-#include "fcgi_connection.h"
+#include "connection-fcgi.h"
 
 static void _PostStatusLine_NOOP(
     PHIT_Context* context,

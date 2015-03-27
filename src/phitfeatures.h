@@ -57,7 +57,7 @@
 **==============================================================================
 */
 
-#define ENABLE_STATIC_BUFFERS
+/* #define ENABLE_STATIC_BUFFERS */
 #define ENABLE_ALLOCATOR
 #define ENABLE_LOGGING
 #define ENABLE_SPEED_OPTIMIZATIONS

@@ -6,7 +6,7 @@
 #include <czmq.h>
 #include <fcgiapp.h>
 #include "plugins/odata/odataplugin.h"
-#include "fcgi_connection.h"
+#include "connection-fcgi.h"
 #include "base/http.h"
 
 #define THREAD_COUNT 20
@@ -17,7 +17,6 @@
 static int counts[THREAD_COUNT];
 static int running;
 
-void TESTME();
 int FASTCGI_HeadersParse(
     PHIT_Headers* self,
     HTTPBuf* buf,
@@ -25,9 +24,8 @@ int FASTCGI_HeadersParse(
 
 static void *handle_cgi_request(void *a)
 {
-    int rc, i; 
+    int rc;
     long thread_id = (long)a;
-    pid_t pid = getpid();
     FCGX_Request request;
 
     // create ZMQ context for IPC to our server task
@@ -103,12 +101,12 @@ static void *handle_cgi_request(void *a)
         char *headers = NULL;
         content = NULL;
         zstr_recvx(cgiserver, &headers, &content);
-        DEBUG_PRINTF("GOT HEADERS: %s\n", headers);
-        DEBUG_PRINTF("GOT CONTENT: %s\n", content);
         if(headers)
+        {
             FCGX_FPrintF(request.out, "%s", headers);
-        if(content)
-            FCGX_FPrintF(request.out, "%s", content);
+            if(content)
+                FCGX_FPrintF(request.out, "%s", content);
+        }
         zstr_free(&headers);
         zstr_free(&content);
 
@@ -121,10 +119,13 @@ static void *handle_cgi_request(void *a)
     return NULL;
 }
 
-void process_msg(void *socket, zmsg_t *msg)
+int process_msg(void *socket, Connection *c, zmsg_t *msg)
 {
-    zframe_t *identity = zmsg_first (msg);
+    int ret = -1;
+
+    zframe_t *identity = zmsg_first (msg); // client identity frame
     zframe_t *frame = zmsg_next(msg); // empty frame
+    assert( zframe_size(frame) == 0 ); // make sure it's empty
 
     size_t num_frames = zmsg_size(msg);
     size_t num_http_headers = num_frames - 4;
@@ -132,13 +133,20 @@ void process_msg(void *socket, zmsg_t *msg)
     // allocate an array of chars to hold headers. This will look remarkably
     // similar to the fcgi envp stuff and so should be completely compatible.
     char **envp = calloc(num_http_headers + 1, sizeof(char *));
+    if (!envp) {
+        DEBUG_PRINTF("ERROR allocating memory to hold headers. Needed %d bytes.\n", (num_http_headers + 1) * sizeof(char *));
+        goto out_free_envp;
+    }
 
     // dup the strings into our new array
     for (int i=0; i<num_http_headers; i++)
     {
         frame = zmsg_next(msg);
         envp[i] = zframe_strdup(frame);
-        DEBUG_PRINTF("COPY ENV: %s\n", envp[i]);
+        if(!envp[i]) {
+            DEBUG_PRINTF("ERROR allocating memory to hold env pointer.\n");
+            goto out_free_envp_i;
+        }
     }
 
     // extract HTTP content
@@ -147,31 +155,28 @@ void process_msg(void *socket, zmsg_t *msg)
     assert( zframe_size(frame) == 0 ); // damn well better be an empty frame
     frame = zmsg_next(msg); // the actual content frame
     content = zframe_strdup(frame); // convert it to a string with null termination
-
-    Connection* c = FCGI_ConnectionNew();
-
-    DEBUG_PRINTF("method parse. Content len(%d)\n", strlen(content));
-    char *requestUri = FCGX_GetParam("REQUEST_URI", envp);
-    DEBUG_PRINTF("request uri: '%s'", requestUri);
-    char fallbackUri[] = "/INVALID_URI/";
-    if (!requestUri)
-        requestUri = fallbackUri;
+    if(!content) {
+        DEBUG_PRINTF("ERROR allocating memory to hold content pointer.\n");
+        goto out_free_content;
+    }
 
     char *methodStr = FCGX_GetParam("REQUEST_METHOD", envp);
-    DEBUG_PRINTF("method: '%s'", methodStr);
     if(!methodStr)
         methodStr = "GET";
     PHIT_Method phit_method;
     ParseHTTPMethod(methodStr, &phit_method);
-    DEBUG_PRINTF("method: %d\n", (int)phit_method);
+    DEBUG_PRINTF("method: %s(%d)\n", methodStr, (int)phit_method);
 
-    DEBUG_PRINTF("FASTCGI_HeadersParse\n");
+    char *requestUri = FCGX_GetParam("REQUEST_URI", envp);
+    if (!requestUri) {
+        DEBUG_PRINTF("ERROR requestUri was NULL\n");
+        goto error_request_uri;
+    }
+
     PHIT_Headers headers={};
     HTTPBuf buf={};
-    // IMPORTANT: no more FCGX_GetParam after this point!
     FASTCGI_HeadersParse( &headers, &buf, envp);
 
-    DEBUG_PRINTF("request uri (again): '%s'", requestUri);
     DEBUG_PRINTF("HandleRequest\n");
     __odataPlugin.base.HandleRequest(
         &__odataPlugin.base,
@@ -182,27 +187,78 @@ void process_msg(void *socket, zmsg_t *msg)
         content,
         strlen(content));
 
-    DEBUG_PRINTF("FCGI_ConnectionDelete\n");
+    zmsg_t *response = zmsg_new();
 
-    DEBUG_PRINTF("HEADERS: %s\nCONTENT: %s\n", c->wbuf.data, c->out.data);
-    zframe_send(&identity, socket, ZFRAME_MORE | ZFRAME_REUSE );
-    zstr_sendfm(socket, "%s", "");
-    zstr_sendfm(socket, "%s", c->wbuf.data);
-    zstr_sendf(socket, "%s", c->out.data);
+    // IDENTITY frame (dup existing because the original message still owns it)
+    zframe_t *response_dest = zframe_dup(identity);
+    if(!response_dest)
+        goto error_sending;
 
-    FCGI_ConnectionDelete(c);
+    int z_ret = zmsg_append( response, &response_dest );
+    if(z_ret)
+        goto error_sending;
 
-    for(int i=0; envp[i]; i++) free(envp[i]);
-    free(envp);
+    // NULL separator frame
+    z_ret = zmsg_addstr( response, "" );
+    if(z_ret)
+        goto error_sending;
+
+    // HEADER frame
+    z_ret = zmsg_addmem( response, c->wbuf.data, c->wbuf.size );
+    if(z_ret)
+        goto error_sending;
+
+    // CONTENT frame
+    z_ret = zmsg_addmem( response, c->out.data, c->out.size );
+    if(z_ret)
+        goto error_sending;
+
+    z_ret = zmsg_send(&response, socket);
+    if(z_ret)
+        goto error_sending;
+
+    ret = 0;
+    goto out_free_content;
+
+error_sending:
+    DEBUG_PRINTF("ERROR sending message, destroying it.\n");
+    zmsg_destroy(&response);
+
+error_request_uri:
+out_free_content:
+    if(content) {
+        free(content);
+        content = NULL;
+    }
+
+out_free_envp_i:
+    for(int i=0; envp[i]; i++) {
+        if (envp[i])
+            free(envp[i]);
+        envp[i] = NULL;
+    }
+
+out_free_envp:
+    if (envp)
+        free(envp);
+    envp=NULL;
+
+    goto out;
+out:
+    DEBUG_PRINTF("Processed message. Ret=%d\n", ret);
+    return ret;
 }
 
 void *server_task (void *args)
 {
-    //  cgiserver socket talks to clients over TCP
+    DEBUG_PRINTF("Starting up server task\n");
+
+    // Listen for incoming requests on localhost:5570
     zctx_t *ctx = zctx_new ();
     void *cgiserver = zsocket_new (ctx, ZMQ_ROUTER);
-    zsocket_bind (cgiserver, "tcp://*:5570");
-    DEBUG_PRINTF("Starting up server task\n");
+    zsocket_bind (cgiserver, "tcp://lo:5570");
+
+    // let all the zmq printing functions use syslog since it's not safe to use printf()
     zsys_set_logsystem(1);
 
     zmq_pollitem_t items [] = { { cgiserver, 0, ZMQ_POLLIN, 0 } };
@@ -210,7 +266,10 @@ void *server_task (void *args)
         zmq_poll (items, 1, 100 * ZMQ_POLL_MSEC);
             if (items [0].revents & ZMQ_POLLIN) {
                 zmsg_t *msg = zmsg_recv (cgiserver);
-                process_msg(cgiserver, msg);
+                Connection* c = FCGI_ConnectionNew();
+                process_msg(cgiserver, c, msg);
+                DEBUG_PRINTF("FCGI_ConnectionDelete\n");
+                FCGI_ConnectionDelete(c);
                 zmsg_destroy (&msg);
            }
     }
@@ -226,12 +285,10 @@ int main(void)
     int i;
     pthread_t id[THREAD_COUNT];
 
-    DEBUG_OUT(stderr, LOG_INFO, "hello world\n");
+    DEBUG_PRINTF("Async odata fastcgi server starting up.\n");
 
     // initialization of odata
-    DEBUG_PRINTF("load\n");
     __odataPlugin.base.Load(&__odataPlugin.base);
-    DEBUG_PRINTF("load done\n");
 
     running=1;
 

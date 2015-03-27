@@ -37,9 +37,14 @@
 
 # define T(X)
 # define D(X)
+#define DEBUG_PRINTF(args...) DEBUG_OUT(stderr, LOG_INFO, args)
+#if 0
 #include <syslog.h>
 #define DEBUG_OUT(fd, prio, args...) syslog(prio, args)
-#define DEBUG_PRINTF(args...) DEBUG_OUT(stderr, LOG_INFO, args)
+#else
+#define DEBUG_OUT(fd, prio, args...)
+#endif
+
 
 static int _AppendHeader(
     PHIT_Header* headers,

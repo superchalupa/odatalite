@@ -6,7 +6,7 @@ out_fcgiodata_async_LDADD = out/libbase.la out/libclient.la $(FASTCGI_LIBS) out/
 out_fcgiodata_async_SOURCES = \
 	src/server/context.c	\
 	src/server/connection.c	\
-	src/fcgiodata/fcgi_connection.h	\
-	src/fcgiodata/fcgi_connection.c	\
+	src/fcgiodata/connection-fcgi.h	\
+	src/fcgiodata/connection-fcgi.c	\
 	src/fcgiodata/http.c	\
 	src/fcgiodata/fcgiodata-async.c
