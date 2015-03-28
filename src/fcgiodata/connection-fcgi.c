@@ -31,11 +31,17 @@
 #include "base/log.h"
 #include "connection-fcgi.h"
 
-static void _PostStatusLine_NOOP(
+static void FCGI_PostStatusLine(
     PHIT_Context* context,
     PHIT_StatusCode statusCode,
     const char* statusMsg)
-{}
+{
+  char *name = "Status";
+  char value[50] = "";
+
+  snprintf(value, sizeof(value)-1, "%d %s", statusCode, statusMsg);
+  context->PostHeader(context, name, value);
+}
 
 Connection* FCGI_ConnectionNew()
 {
@@ -58,7 +64,7 @@ Connection* FCGI_ConnectionNew()
     ContextInit(&self->context, self);
     // anybody care to explain why I can't do the below two lines as one line?
     PHIT_Context *base = &self->context.base;
-    base->PostStatusLine = &_PostStatusLine_NOOP;
+    base->PostStatusLine = &FCGI_PostStatusLine;
 
     return self;
 }
