@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -552,7 +554,7 @@ typedef struct _OL_ScopeFT
 }
 OL_ScopeFT;
 
-struct _OL_Scope 
+struct _OL_Scope
 {
     OL_ScopeFT* ft;
 };
@@ -747,24 +749,24 @@ typedef struct _OL_ArrayFT
         const OL_Array* self);
 
     OL_Result (*Append)(
-        OL_Array* self, 
+        OL_Array* self,
         const OL_Value* value,
         unsigned int flags);
 
     OL_Result (*Set)(
-        OL_Array* self, 
+        OL_Array* self,
         size_t index,
         const OL_Value* value,
         unsigned int flags);
 
     OL_Result (*Get)(
-        const OL_Array* self, 
+        const OL_Array* self,
         size_t index,
         OL_Value* value,
         unsigned int* flags);
 
     OL_Result (*Remove)(
-        OL_Array* self, 
+        OL_Array* self,
         size_t index);
 
     OL_Result (*Print)(
@@ -773,7 +775,7 @@ typedef struct _OL_ArrayFT
 }
 OL_ArrayFT;
 
-struct _OL_Array 
+struct _OL_Array
 {
     OL_ArrayFT* ft;
 };
@@ -822,7 +824,7 @@ OL_INLINE size_t OL_Array_Count(
 }
 
 OL_INLINE OL_Result OL_Array_Append(
-    OL_Array* self, 
+    OL_Array* self,
     const OL_Value* value)
 {
     OL_RETURN_IF_NULL(self, OL_Result_BadParameter);
@@ -830,7 +832,7 @@ OL_INLINE OL_Result OL_Array_Append(
 }
 
 OL_INLINE OL_Result OL_Array_AppendF(
-    OL_Array* self, 
+    OL_Array* self,
     const OL_Value* value,
     unsigned int flags)
 {
@@ -839,7 +841,7 @@ OL_INLINE OL_Result OL_Array_AppendF(
 }
 
 OL_INLINE OL_Result OL_Array_Set(
-    OL_Array* self, 
+    OL_Array* self,
     size_t index,
     const OL_Value* value)
 {
@@ -848,7 +850,7 @@ OL_INLINE OL_Result OL_Array_Set(
 }
 
 OL_INLINE OL_Result OL_Array_SetF(
-    OL_Array* self, 
+    OL_Array* self,
     size_t index,
     const OL_Value* value,
     unsigned int flags)
@@ -858,7 +860,7 @@ OL_INLINE OL_Result OL_Array_SetF(
 }
 
 OL_INLINE OL_Result OL_Array_Get(
-    const OL_Array* self, 
+    const OL_Array* self,
     size_t index,
     OL_Value* value)
 {
@@ -867,7 +869,7 @@ OL_INLINE OL_Result OL_Array_Get(
 }
 
 OL_INLINE OL_Result OL_Array_GetF(
-    const OL_Array* self, 
+    const OL_Array* self,
     size_t index,
     OL_Value* value,
     unsigned int* flags)
@@ -877,7 +879,7 @@ OL_INLINE OL_Result OL_Array_GetF(
 }
 
 OL_INLINE OL_Result OL_Array_GetAs(
-    const OL_Array* self, 
+    const OL_Array* self,
     size_t index,
     unsigned short type,
     OL_Value* value)
@@ -889,7 +891,7 @@ OL_INLINE OL_Result OL_Array_GetAs(
 }
 
 OL_INLINE OL_Result OL_Array_Remove(
-    OL_Array* self, 
+    OL_Array* self,
     size_t index)
 {
     OL_RETURN_IF_NULL(self, OL_Result_BadParameter);
@@ -967,43 +969,43 @@ typedef struct _OL_ObjectFT
         const OL_Object* self);
 
     OL_Result (*Add)(
-        OL_Object* self, 
+        OL_Object* self,
         const OL_Char* name,
         const OL_Value* value,
         unsigned int flags);
 
     OL_Result (*Set)(
-        OL_Object* self, 
+        OL_Object* self,
         const OL_Char* name,
         const OL_Value* value,
         unsigned int flags);
 
     OL_Result (*Get)(
-        const OL_Object* self, 
+        const OL_Object* self,
         const OL_Char* name,
         OL_Value* value,
         unsigned int* flags);
 
     OL_Result (*Remove)(
-        OL_Object* self, 
+        OL_Object* self,
         const OL_Char* name,
         unsigned int flags);
 
     OL_Result (*SetAt)(
-        OL_Object* self, 
+        OL_Object* self,
         size_t pos,
         const OL_Value* value,
         unsigned int flags);
 
     OL_Result (*GetAt)(
-        const OL_Object* self, 
+        const OL_Object* self,
         size_t pos,
         const OL_Char** name,
         OL_Value* value,
         unsigned int* flags);
 
     OL_Result (*RemoveAt)(
-        OL_Object* self, 
+        OL_Object* self,
         size_t pos,
         unsigned int flags);
 
@@ -1024,7 +1026,7 @@ typedef struct _OL_ObjectFT
 }
 OL_ObjectFT;
 
-struct _OL_Object 
+struct _OL_Object
 {
     OL_ObjectFT* ft;
 };
@@ -1073,7 +1075,7 @@ OL_INLINE size_t OL_Object_Count(
 }
 
 OL_INLINE OL_Result OL_Object_Add(
-    OL_Object* self, 
+    OL_Object* self,
     const OL_Char* name,
     const OL_Value* value)
 {
@@ -1082,7 +1084,7 @@ OL_INLINE OL_Result OL_Object_Add(
 }
 
 OL_INLINE OL_Result OL_Object_AddF(
-    OL_Object* self, 
+    OL_Object* self,
     const OL_Char* name,
     const OL_Value* value,
     unsigned int flags)
@@ -1092,7 +1094,7 @@ OL_INLINE OL_Result OL_Object_AddF(
 }
 
 OL_INLINE OL_Result OL_Object_Set(
-    OL_Object* self, 
+    OL_Object* self,
     const OL_Char* name,
     const OL_Value* value)
 {
@@ -1101,7 +1103,7 @@ OL_INLINE OL_Result OL_Object_Set(
 }
 
 OL_INLINE OL_Result OL_Object_SetF(
-    OL_Object* self, 
+    OL_Object* self,
     const OL_Char* name,
     const OL_Value* value,
     unsigned int flags)
@@ -1111,7 +1113,7 @@ OL_INLINE OL_Result OL_Object_SetF(
 }
 
 OL_INLINE OL_Result OL_Object_Get(
-    const OL_Object* self, 
+    const OL_Object* self,
     const OL_Char* name,
     OL_Value* value)
 {
@@ -1120,7 +1122,7 @@ OL_INLINE OL_Result OL_Object_Get(
 }
 
 OL_INLINE OL_Result OL_Object_GetF(
-    const OL_Object* self, 
+    const OL_Object* self,
     const OL_Char* name,
     OL_Value* value,
     unsigned int* flags)
@@ -1130,7 +1132,7 @@ OL_INLINE OL_Result OL_Object_GetF(
 }
 
 OL_INLINE OL_Result OL_Object_GetAs(
-    const OL_Object* self, 
+    const OL_Object* self,
     const OL_Char* name,
     unsigned short type,
     OL_Value* value)
@@ -1142,7 +1144,7 @@ OL_INLINE OL_Result OL_Object_GetAs(
 }
 
 OL_INLINE OL_Result OL_Object_Remove(
-    OL_Object* self, 
+    OL_Object* self,
     const OL_Char* name,
     unsigned int flags)
 {
@@ -1151,7 +1153,7 @@ OL_INLINE OL_Result OL_Object_Remove(
 }
 
 OL_INLINE OL_Result OL_Object_SetAt(
-    OL_Object* self, 
+    OL_Object* self,
     size_t pos,
     const OL_Value* value)
 {
@@ -1160,7 +1162,7 @@ OL_INLINE OL_Result OL_Object_SetAt(
 }
 
 OL_INLINE OL_Result OL_Object_SetAtF(
-    OL_Object* self, 
+    OL_Object* self,
     size_t pos,
     const OL_Value* value,
     unsigned int flags)
@@ -1170,7 +1172,7 @@ OL_INLINE OL_Result OL_Object_SetAtF(
 }
 
 OL_INLINE OL_Result OL_Object_GetAt(
-    const OL_Object* self, 
+    const OL_Object* self,
     size_t pos,
     const OL_Char** name,
     OL_Value* value)
@@ -1180,7 +1182,7 @@ OL_INLINE OL_Result OL_Object_GetAt(
 }
 
 OL_INLINE OL_Result OL_Object_GetAtF(
-    const OL_Object* self, 
+    const OL_Object* self,
     size_t pos,
     const OL_Char** name,
     OL_Value* value,
@@ -1191,7 +1193,7 @@ OL_INLINE OL_Result OL_Object_GetAtF(
 }
 
 OL_INLINE OL_Result OL_Object_GetAtAs(
-    const OL_Object* self, 
+    const OL_Object* self,
     size_t pos,
     const OL_Char** name,
     unsigned short type,
@@ -1204,7 +1206,7 @@ OL_INLINE OL_Result OL_Object_GetAtAs(
 }
 
 OL_INLINE OL_Result OL_Object_RemoveAt(
-    OL_Object* self, 
+    OL_Object* self,
     size_t pos,
     unsigned int flags)
 {
@@ -1288,7 +1290,7 @@ typedef struct _OL_URIFT
 
     size_t (*Count)(
         const OL_URI* self);
-       
+
     size_t (*KeyCount)(
         const OL_URI* self,
         size_t index);
@@ -1298,13 +1300,13 @@ typedef struct _OL_URIFT
         size_t index);
 
     OL_Result (*GetKey)(
-        const OL_URI* self, 
+        const OL_URI* self,
         size_t index,
         const OL_Char* name,
         OL_Value* value);
 
     OL_Result (*GetKeyAt)(
-        const OL_URI* self, 
+        const OL_URI* self,
         size_t index,
         size_t keyIndex,
         const OL_Char** name,
@@ -1336,7 +1338,7 @@ typedef struct _OL_URIFT
 }
 OL_URIFT;
 
-struct _OL_URI 
+struct _OL_URI
 {
     OL_URIFT* ft;
 };
@@ -1402,7 +1404,7 @@ OL_INLINE const OL_Char* OL_URI_GetName(
 }
 
 OL_INLINE OL_Result OL_URI_GetKey(
-    const OL_URI* self, 
+    const OL_URI* self,
     size_t index,
     const OL_Char* name,
     OL_Value* value)
@@ -1412,7 +1414,7 @@ OL_INLINE OL_Result OL_URI_GetKey(
 }
 
 OL_INLINE OL_Result OL_URI_GetKeyAt(
-    const OL_URI* self, 
+    const OL_URI* self,
     size_t index,
     size_t keyIndex,
     const OL_Char** name,
@@ -1580,7 +1582,7 @@ typedef struct _OL_ProviderFT
 }
 OL_ProviderFT;
 
-struct _OL_Provider 
+struct _OL_Provider
 {
     OL_ProviderFT* ft;
 };

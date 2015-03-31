@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -825,7 +827,7 @@ BEGINTEST(TestRoleLoad)
 {
     char err[64];
     int r;
-    
+
     if ((r = RolesLoad(TESTDIR "/roles.conf", err, sizeof(err))) != 0)
     {
         fprintf(stderr, "err{%s}\n", err);
@@ -873,7 +875,7 @@ BEGINTEST(TestRoleLoadFailed)
 {
     char err[256];
     const char* p;
-    
+
     TEST(RolesLoad(TESTDIR "/rolesbad.conf", err, sizeof(err)) == -1);
 
     TEST((p = strchr(err, '(')) != NULL);
@@ -1109,7 +1111,7 @@ ENDTEST(TestPluginInfo)
 
 BEGINTEST(TestStatusCodeStrings)
 {
-    
+
     /* Test 417 */
     {
         int r;
@@ -1323,11 +1325,11 @@ BEGINTEST(TestConf)
     MyFileCallbackData data;
 
     if (ConfFileLoad(
-        TESTDIR "/myfile.conf", 
+        TESTDIR "/myfile.conf",
         "=",
         _MyFileCallback,
         &data,
-        err, 
+        err,
         sizeof(err)) != 0)
     {
         fprintf(stderr, "err{%s}\n", err);
@@ -1402,11 +1404,11 @@ BEGINTEST(TestConfFile)
     char err[128];
 
     if (ConfFileLoad(
-        TESTDIR "/conffile.conf", 
+        TESTDIR "/conffile.conf",
         ":",
         _ConfFileCallback,
         NULL,
-        err, 
+        err,
         sizeof(err)) != 0)
     {
         fprintf(stderr, "err{%s}\n", err);

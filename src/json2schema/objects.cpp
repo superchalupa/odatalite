@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -206,7 +208,7 @@ void JSONProperty::GenerateSchema(
             flags |= JSON_PROPERTY_FLAG_ENTITYTYPE;
         else
         {
-            fprintf(stderr, "%s(%u): unknown TypeClass: %s\n", 
+            fprintf(stderr, "%s(%u): unknown TypeClass: %s\n",
                 __FILE__, __LINE__, TypeClass.c_str());
             exit(1);
         }
@@ -234,7 +236,7 @@ void JSONProperty::GenerateSchema(
                 type = JSON_Type_Boolean;
             else
             {
-                fprintf(stderr, "%s(%u): unknown Type: %s.%s: %s\n", 
+                fprintf(stderr, "%s(%u): unknown Type: %s.%s: %s\n",
                     __FILE__, __LINE__, prefix.c_str(), Name.c_str(),
                     Type.c_str());
                 exit(1);
@@ -255,14 +257,14 @@ void JSONProperty::GenerateSchema(
 
                 if (n == (size_t)-1)
                 {
-                    fprintf(stderr, "%s(%u): unknown ComplexType: %s\n", 
+                    fprintf(stderr, "%s(%u): unknown ComplexType: %s\n",
                         __FILE__, __LINE__, Type.c_str());
                     exit(1);
                 }
 
                 if (n > 255)
                 {
-                    fprintf(stderr, "%s(%u): too many ComplexType: %s\n", 
+                    fprintf(stderr, "%s(%u): too many ComplexType: %s\n",
                         __FILE__, __LINE__, Type.c_str());
                     exit(1);
                 }
@@ -285,14 +287,14 @@ void JSONProperty::GenerateSchema(
 
                 if (n == (size_t)-1)
                 {
-                    fprintf(stderr, "%s(%u): unknown EntityType: %s\n", 
+                    fprintf(stderr, "%s(%u): unknown EntityType: %s\n",
                         __FILE__, __LINE__, Type.c_str());
                     exit(1);
                 }
 
                 if (n > 255)
                 {
-                    fprintf(stderr, "%s(%u): too many EntityType: %s\n", 
+                    fprintf(stderr, "%s(%u): too many EntityType: %s\n",
                         __FILE__, __LINE__, Type.c_str());
                     exit(1);
                 }
@@ -308,14 +310,14 @@ void JSONProperty::GenerateSchema(
 
             if (n == (size_t)-1)
             {
-                fprintf(stderr, "%s(%u): unknown EnumType: %s\n", 
+                fprintf(stderr, "%s(%u): unknown EnumType: %s\n",
                     __FILE__, __LINE__, Type.c_str());
                 exit(1);
             }
 
             if (n > 255)
             {
-                fprintf(stderr, "%s(%u): too many EnumType: %s\n", 
+                fprintf(stderr, "%s(%u): too many EnumType: %s\n",
                     __FILE__, __LINE__, Type.c_str());
                 exit(1);
             }
@@ -324,7 +326,7 @@ void JSONProperty::GenerateSchema(
         }
         else
         {
-            fprintf(stderr, "%s(%u): unknown TypeClass: %s\n", 
+            fprintf(stderr, "%s(%u): unknown TypeClass: %s\n",
                 __FILE__, __LINE__, TypeClass.c_str());
             exit(1);
         }
@@ -391,7 +393,7 @@ void JSONEnumType::GenerateSchema(
             };
         */
 
-        printf("static const JSON_Member %s_%s_member =\n", 
+        printf("static const JSON_Member %s_%s_member =\n",
             prefix.c_str(), tag.c_str());
         printf("{\n");
         printf("  \"\\%03o%s\", /* name */\n", (int)tag.size(), tag.c_str());
@@ -493,7 +495,7 @@ void JSONComplexType::GenerateSchema(
             Properties[i]->GenerateSchema(schema, prefix);
         }
 
-        printf("static const JSON_Property* _%s_properties[] =\n", 
+        printf("static const JSON_Property* _%s_properties[] =\n",
             prefix.c_str());
         printf("{\n");
 
@@ -501,7 +503,7 @@ void JSONComplexType::GenerateSchema(
         for (size_t i = 0; i < Properties.size(); i++)
         {
             const JSONProperty* prop = Properties[i];
-            string tmp = 
+            string tmp =
                 "_" + prefix + "_" + prop->Name + "_property";
             printf("  (const JSON_Property*)&%s,\n", tmp.c_str());
         }
@@ -521,7 +523,7 @@ void JSONComplexType::GenerateSchema(
         };
     */
     {
-        printf("static const JSON_ComplexType _%s_complexType =\n", 
+        printf("static const JSON_ComplexType _%s_complexType =\n",
             prefix.c_str());
         printf("{\n");
 
@@ -539,7 +541,7 @@ void JSONComplexType::GenerateSchema(
         if (Properties.size())
         {
             printf("  _%s_properties, /* properties */\n", prefix.c_str());
-            printf("  ODATA_ARRAYSIZE(_%s_properties), /* propertiesSize */\n", 
+            printf("  ODATA_ARRAYSIZE(_%s_properties), /* propertiesSize */\n",
                 prefix.c_str());
         }
         else
@@ -611,7 +613,7 @@ void JSONEntityType::GenerateSchema(
             Properties[i]->GenerateSchema(schema, prefix);
         }
 
-        printf("static const JSON_Property* _%s_properties[] =\n", 
+        printf("static const JSON_Property* _%s_properties[] =\n",
             prefix.c_str());
         printf("{\n");
 
@@ -619,7 +621,7 @@ void JSONEntityType::GenerateSchema(
         for (size_t i = 0; i < Properties.size(); i++)
         {
             const JSONProperty* prop = Properties[i];
-            string tmp = 
+            string tmp =
                 "_" + prefix + "_" + prop->Name + "_property";
             printf("  (const JSON_Property*)&%s,\n", tmp.c_str());
         }
@@ -647,7 +649,7 @@ void JSONEntityType::GenerateSchema(
         };
     */
     {
-        printf("static const JSON_EntityType _%s_entityType =\n", 
+        printf("static const JSON_EntityType _%s_entityType =\n",
             prefix.c_str());
         printf("{\n");
 
@@ -671,7 +673,7 @@ void JSONEntityType::GenerateSchema(
         if (Properties.size())
         {
             printf("  _%s_properties, /* properties */\n", prefix.c_str());
-            printf("  ODATA_ARRAYSIZE(_%s_properties), /* propertiesSize */\n", 
+            printf("  ODATA_ARRAYSIZE(_%s_properties), /* propertiesSize */\n",
                 prefix.c_str());
         }
         else
@@ -807,7 +809,7 @@ void JSONSchema::GenerateSchema(const string& prefix) const
             EntityTypes[i]->GenerateSchema(*this, prefix);
         }
 
-        printf("static const JSON_EntityType* _%s_entityTypes[] =\n", 
+        printf("static const JSON_EntityType* _%s_entityTypes[] =\n",
             prefix.c_str());
         printf("{\n");
 
@@ -834,7 +836,7 @@ void JSONSchema::GenerateSchema(const string& prefix) const
             EnumTypes[i]->GenerateSchema(*this, prefix);
         }
 
-        printf("static const JSON_EnumType* _%s_enumTypes[] =\n", 
+        printf("static const JSON_EnumType* _%s_enumTypes[] =\n",
             prefix.c_str());
         printf("{\n");
 
@@ -861,7 +863,7 @@ void JSONSchema::GenerateSchema(const string& prefix) const
             ComplexTypes[i]->GenerateSchema(*this, prefix);
         }
 
-        printf("static const JSON_ComplexType* _%s_complexTypes[] =\n", 
+        printf("static const JSON_ComplexType* _%s_complexTypes[] =\n",
             prefix.c_str());
         printf("{\n");
 
@@ -902,7 +904,7 @@ void JSONSchema::GenerateSchema(const string& prefix) const
         if (EntityTypes.size())
         {
           printf("  _%s_entityTypes, /* entityTypes */\n", prefix.c_str());
-          printf("  ODATA_ARRAYSIZE(_%s_entityTypes), /* entityTypesSize */\n", 
+          printf("  ODATA_ARRAYSIZE(_%s_entityTypes), /* entityTypesSize */\n",
                 prefix.c_str());
         }
         else
@@ -916,7 +918,7 @@ void JSONSchema::GenerateSchema(const string& prefix) const
         if (EnumTypes.size())
         {
             printf("  _%s_enumTypes, /* enumTypes */\n", prefix.c_str());
-            printf("  ODATA_ARRAYSIZE(_%s_enumTypes), /* enumTypesSize */\n", 
+            printf("  ODATA_ARRAYSIZE(_%s_enumTypes), /* enumTypesSize */\n",
                 prefix.c_str());
         }
         else
@@ -930,7 +932,7 @@ void JSONSchema::GenerateSchema(const string& prefix) const
         if (EntityTypes.size())
         {
             printf("  _%s_complexTypes, /* complexTypes */\n", prefix.c_str());
-            printf("  ODATA_ARRAYSIZE(_%s_complexTypes), /* complexTypesSize */\n", 
+            printf("  ODATA_ARRAYSIZE(_%s_complexTypes), /* complexTypesSize */\n",
                 prefix.c_str());
         }
         else
@@ -1248,7 +1250,7 @@ Object* LoadJSONFile(
 
 static bool _CreateEntityType(
     JSONSchema& schema,
-    const Object* object, 
+    const Object* object,
     const std::string& name,
     JSONEntityType*& entityType);
 
@@ -1344,7 +1346,7 @@ static bool _ProcessItemsElement(
 
             vector<string> enums;
 
-            if (pair.GetStringArray(enums)) 
+            if (pair.GetStringArray(enums))
                 IsInteger = false;
             else if (pair.GetIntegerArray(enums))
                 IsInteger = true;
@@ -1428,7 +1430,7 @@ static bool _CreateProperty(
             vector<string> enums;
             bool IsInteger = true;
 
-            if (pair.GetStringArray(enums)) 
+            if (pair.GetStringArray(enums))
                 IsInteger = false;
             else if (pair.GetIntegerArray(enums))
                 IsInteger = true;
@@ -1553,7 +1555,7 @@ static bool _CreateProperties(
             if (!_CreateProperty(schema, ownerName,
                 pair.name, pair.element, property, enumType, complexType))
             {
-                fprintf(stderr, "Warning: cannot create property: %s.%s\n", 
+                fprintf(stderr, "Warning: cannot create property: %s.%s\n",
                     ownerName.c_str(), pair.name.c_str());
                 continue;
             }
@@ -1576,7 +1578,7 @@ static bool _CreateProperties(
 
 static bool _CreateEntityType(
     JSONSchema& schema,
-    const Object* object, 
+    const Object* object,
     const std::string& name,
     JSONEntityType*& entityType)
 {
@@ -1614,7 +1616,7 @@ static bool _CreateEntityType(
             if (!pair.GetObject(properties))
                 RETURN(false);
 
-            if (!_CreateProperties(schema, entityType->Name, 
+            if (!_CreateProperties(schema, entityType->Name,
                 properties, entityType->Properties))
             {
                 RETURN(false);
@@ -1639,7 +1641,7 @@ bool Object::CreateSchema(JSONSchema& schema) const
     JSONEntityType* entityType;
 
     string name = "Unknown";
- 
+
     if (!_CreateEntityType(schema, this, name, entityType))
         RETURN(false);
 
@@ -1658,7 +1660,7 @@ bool JSONSchema::ParseJSONFile(
 
     // Remove everything after the '.' character:
     string name = path.substr(0, path.find('.'));
- 
+
     if (!_CreateEntityType(*this, object, name, entityType))
         RETURN(false);
 

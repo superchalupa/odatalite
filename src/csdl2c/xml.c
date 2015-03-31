@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -117,9 +119,9 @@ static void _AppendElem(
 }
 
 void _StartHandler(
-    void* data, 
-    const char* element, 
-    const char** attrs) 
+    void* data,
+    const char* element,
+    const char** attrs)
 {
     XML* self = (XML*)data;
     XMLElem* elem;
@@ -138,7 +140,7 @@ void _StartHandler(
 
     /* XMLElem.type */
     elem->type = XML_START;
-    
+
     /* XMLElem.tag */
     if (!(elem->tag = strdup(element)))
     {
@@ -168,7 +170,7 @@ void _StartHandler(
 }
 
 void _CharacterDataHandler(
-    void* data, 
+    void* data,
     const char* str,
     int len)
 {
@@ -202,7 +204,7 @@ void _CharacterDataHandler(
 
     /* XMLElem.type */
     elem->type = XML_CHARS;
-    
+
     /* XMLElem.data */
     {
         if (!(elem->data = malloc(len+1)))
@@ -219,8 +221,8 @@ void _CharacterDataHandler(
 }
 
 void _EndHandler(
-    void* data, 
-    const char* element) 
+    void* data,
+    const char* element)
 {
     XML* self = (XML*)data;
     XMLElem* elem;
@@ -237,7 +239,7 @@ void _EndHandler(
 
     /* XMLElem.type */
     elem->type = XML_END;
-    
+
     /* XMLElem.tag */
     if (!(elem->tag = strdup(element)))
     {
@@ -294,12 +296,12 @@ void XMLDelete(XML* self)
     }
 
     XML_ParserFree(self->parser);
-    free(self); 
+    free(self);
 }
 
 int XMLParse(
-    XML* self, 
-    const char* data, 
+    XML* self,
+    const char* data,
     size_t size)
 {
     if (!XML_Parse(self->parser, data, size, 1))

@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -162,7 +164,7 @@ static OL_URI* _URI_Clone(
     /* Check parameters */
     if (!self || self->magic != URI_MAGIC)
         RETURN(NULL);
-    
+
     /* Allocate the memory (self + alignment + extra bytes) */
     if (!(newURI = (URI*)Malloc(sizeof(URIWithAllocBuf))))
         RETURN(NULL);
@@ -223,9 +225,9 @@ static OL_URI* _URI_Clone(
                 }
 
                 if ((*setter)(
-                    (JSON_Value*)&p->value, 
-                    (const JSON_Value*)&q->value, 
-                    0, 
+                    (JSON_Value*)&p->value,
+                    (const JSON_Value*)&q->value,
+                    0,
                     &newURI->alloc) != 0)
                 {
                     _URI_Release(&newURI->base);
@@ -344,7 +346,7 @@ const OL_Char* _URI_GetName(
 }
 
 static OL_Result _URI_GetKey(
-    const OL_URI* self_, 
+    const OL_URI* self_,
     size_t index,
     const OL_Char* name,
     OL_Value* value)
@@ -374,7 +376,7 @@ static OL_Result _URI_GetKey(
         if (value)
         {
             ValueAssignUnpadded(
-                (JSON_Value*)value, 
+                (JSON_Value*)value,
                 (JSON_Value*)&segment->keys[i].value);
         }
 
@@ -404,7 +406,7 @@ static OL_Result _URI_GetKey(
 }
 
 static OL_Result _URI_GetKeyAt(
-    const OL_URI* self_, 
+    const OL_URI* self_,
     size_t index,
     size_t offset,
     const OL_Char** name,
@@ -649,7 +651,7 @@ static OL_Result _URI_Print(
             {
                 if (n)
                     printf(",\n");
-                Iprintf(indent, "\"$skiptoken\": %s", 
+                Iprintf(indent, "\"$skiptoken\": %s",
                     self->queryOptionSkiptoken);
                 n++;
             }
@@ -681,7 +683,7 @@ static OL_Result _URI_Print(
                 {
                     Buf buf = BUF_INITIALIZER;
 
-                    if (_URI_GetKeyAt(self_, i, j, &name, &value) != 
+                    if (_URI_GetKeyAt(self_, i, j, &name, &value) !=
                         OL_Result_Ok)
                     {
                         BufDestroy(&buf);
@@ -690,7 +692,7 @@ static OL_Result _URI_Print(
 
                     Iprintf(indent, "\"%s\": ", name);
 
-                    SerializeElement(&buf, (JSON_Value*)&value, 0, 
+                    SerializeElement(&buf, (JSON_Value*)&value, 0,
                         OL_MetadataType_None);
 
                     printf("%.*s", (int)buf.size, buf.data);
@@ -727,7 +729,7 @@ static OL_Result _URI_Print(
 void __OL_URI_Construct(URIWithAllocBuf* self_)
 {
     URI* self = (URI*)self_;
-    
+
     /* Set URI.ft */
     self->base.ft = &__OL_URI_ft;
 
@@ -775,7 +777,7 @@ int URIMakePath(
 OL_URI* __OL_URI_New()
 {
     URI* self;
-    
+
     /* Allocate array structure with extra bytes */
     if (!(self = (URI*)Calloc(1, sizeof(URIWithAllocBuf))))
         RETURN(NULL);

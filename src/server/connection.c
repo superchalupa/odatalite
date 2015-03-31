@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -141,9 +143,9 @@ static int _AuthHTTPBasic(
         len = strlen(headers->headers.authorization.credentials);
 
         n = Base64Dec(
-            &s, 
+            &s,
             credentials,
-            len, 
+            len,
             credentials,
             len);
 
@@ -233,7 +235,7 @@ static void _HandleHTTPRequest(
             /* parse the HTTP request headers */
             if (HTTPRequestParse(
                 &self->httpRequest,
-                self->in.data, 
+                self->in.data,
                 headersLength) != 0)
             {
                 LOGW(("HTTP request parsing failed"));
@@ -241,7 +243,7 @@ static void _HandleHTTPRequest(
             }
 
             /* Save content length (if any) */
-            requestLength = (size_t)headersLength + 
+            requestLength = (size_t)headersLength +
                 self->httpRequest.headers.contentLength.value;
 
             /* Use chunked encoding if "TE: chunked" present */
@@ -268,14 +270,14 @@ static void _HandleHTTPRequest(
                     goto denied;
                 }
 
-                Strlcpy(self->user, self->httpRequest.username, 
+                Strlcpy(self->user, self->httpRequest.username,
                     sizeof(self->user));
 
 # endif /* defined(ENABLE_PAM_AUTH) */
 
                 self->authState = AUTH_ALLOWED;
 
-                LOGD(("Access allowed: %s", 
+                LOGD(("Access allowed: %s",
                     self->httpRequest.headers.authorization.credentials));
             }
 
@@ -290,15 +292,15 @@ static void _HandleHTTPRequest(
     if (self->httpState == HTTPSTATE_WAITING_FOR_CONTENT)
     {
         /* If all the content has arrived */
-        if (self->httpRequest.headers.contentLength.value <= 
+        if (self->httpRequest.headers.contentLength.value <=
             self->in.size - self->headerLength)
         {
-            size_t endOffset = self->headerLength + 
+            size_t endOffset = self->headerLength +
                 self->httpRequest.headers.contentLength.value;
 
             if (g_options.dump)
             {
-                Dump(stdout, "HTTP.CONTENT", 
+                Dump(stdout, "HTTP.CONTENT",
                     self->in.data + self->headerLength,
                     self->httpRequest.headers.contentLength.value);
             }
@@ -307,7 +309,7 @@ static void _HandleHTTPRequest(
 
             /* Handle the command */
             _HandleRequest(
-                selector, 
+                selector,
                 self,
                 self->in.data + self->headerLength,
                 self->httpRequest.headers.contentLength.value);
@@ -493,7 +495,7 @@ static int _WriteCallback(
 
 static void _Callback(
     Selector* selector,
-    Handler* handler, 
+    Handler* handler,
     unsigned int mask)
 {
     Connection* conn = (Connection*)handler;
@@ -519,12 +521,12 @@ static void _Callback(
 }
 
 Connection* ConnectionNew(
-    Selector* selector, 
+    Selector* selector,
     AddrType addrType,
     Sock sock)
 {
     Connection* self;
-    
+
     if (!(self = (Connection*)Calloc(1, sizeof(Connection))))
         return NULL;
 

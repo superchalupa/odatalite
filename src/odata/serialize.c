@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -101,7 +103,7 @@ static void _SerializeEscChar(Buf* out, char x)
 }
 
 ALWAYS_INLINE void _SerializeNamePlusColonSpace(
-    Buf* out, 
+    Buf* out,
     const char* name,
     size_t nameLen)
 {
@@ -273,7 +275,7 @@ ALWAYS_INLINE int NeedOdataTypeAnnotation(unsigned short type)
 }
 
 static void _SerializeArrayOdataType(
-    Buf* out, 
+    Buf* out,
     const Pair* pair,
     size_t depth)
 {
@@ -324,7 +326,7 @@ static void _SerializeArrayOdataType(
 }
 
 static void _SerializePrimitiveOdataType(
-    Buf* out, 
+    Buf* out,
     const Pair* pair,
     size_t depth)
 {
@@ -367,7 +369,7 @@ static void _SerializePrimitiveOdataType(
 
 #if 0
 void _SerializeOdataType(
-    Buf* out, 
+    Buf* out,
     const Pair* pair,
     OL_Type type,
     int isArray,
@@ -420,7 +422,7 @@ OL_Result SerializeRawPrimitiveValue(
         case OL_Type_Double:
         case OL_Type_String:
         {
-            return SerializeElement(out, (const JSON_Value*)value, 
+            return SerializeElement(out, (const JSON_Value*)value,
                 0, OL_MetadataType_None);
         }
         case OL_Type_Object:
@@ -561,7 +563,7 @@ OL_Result SerializeObject(
             continue;
         }
 
-        if (_SerializePair(out, &self->pairs[i], depth, 
+        if (_SerializePair(out, &self->pairs[i], depth,
             metadataType) != OL_Result_Ok)
         {
             return OL_Result_Failed;
@@ -608,7 +610,7 @@ OL_Result Object_Serialize(
         BufReserve(out = &buf, 4096);
 
     /* Serialize the object */
-    if ((r = SerializeObject(self, NULL, out, depth, 1, 
+    if ((r = SerializeObject(self, NULL, out, depth, 1,
         OL_MetadataType_Minimal, NULL)) != OL_Result_Ok)
         goto done;
 

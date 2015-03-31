@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -60,7 +62,7 @@
 #if defined(ENABLE_LOGP)
 # define LOGP LOGW
 #else
-# define LOGP(EXPR) 
+# define LOGP(EXPR)
 #endif
 
 static OL_Scope* _Scope_New();
@@ -184,9 +186,9 @@ static OL_Result _Scope_SendBeginEntitySet(
         BufDefine(buf, 128);
 
         PostStatusLineAndHeaders(
-            context, 
-            self->httpStatusCode, 
-            self->httpStatusMsg, 
+            context,
+            self->httpStatusCode,
+            self->httpStatusMsg,
             "application/json");
 
         BufCatCh2(&buf, '{', '\n');
@@ -261,9 +263,9 @@ static OL_Result _Scope_SendMetadataXML(
     /* Post the headers */
     {
         PostStatusLineAndHeaders(
-            context, 
-            self->httpStatusCode, 
-            self->httpStatusMsg, 
+            context,
+            self->httpStatusCode,
+            self->httpStatusMsg,
             "application/xml");
 
         self->postHTTPPreamble++;
@@ -377,9 +379,9 @@ static OL_Result _Scope_SendEntityAux(
             contentType = "application/json";
 
         PostStatusLineAndHeaders(
-            context, 
-            self->httpStatusCode, 
-            self->httpStatusMsg, 
+            context,
+            self->httpStatusCode,
+            self->httpStatusMsg,
             contentType);
 
         self->postHTTPPreamble++;
@@ -399,16 +401,16 @@ static OL_Result _Scope_SendEntityAux(
 
     /* Get whether chunked encoding was requested */
     if (PHIT_Context_GetOption(
-        context, 
-        CONTEXT_OPTION_CHUNKED_ENCODING, 
-        &chunkedEncoding, 
+        context,
+        CONTEXT_OPTION_CHUNKED_ENCODING,
+        &chunkedEncoding,
         sizeof(chunkedEncoding)) != 0)
     {
         LOGE(("PHIT_Context_GetOption(CHUNKED_ENCODING)"));
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
-    
+
     /* Write the HTTP chunk prefix (if any) */
     if (self->out != &buf && chunkedEncoding)
     {
@@ -485,7 +487,7 @@ static OL_Result _Scope_SendEntityAux(
     {
         /* Now that we have the chunk size, update the null chunk prefix */
         UIntToHexStr8(
-            out->data + chunkPrefixOffset, 
+            out->data + chunkPrefixOffset,
             out->size - chunkPrefixOffset - MAX_CHUNK_PREFIX_SIZE);
 
         /* Write the HTTP chunk suffix */
@@ -604,8 +606,8 @@ static OL_Result _Scope_SendResult(
 
     /* Ignore error if data already posted (cannot report error after fact) */
     if (result != OL_Result_Ok &&
-        !self->postHTTPPreamble && 
-        !self->postBeginEntitySet && 
+        !self->postHTTPPreamble &&
+        !self->postBeginEntitySet &&
         !self->postEntity &&
         !self->postEndEntitySet &&
         !self->postMetadata)
@@ -619,9 +621,9 @@ static OL_Result _Scope_SendResult(
         if (!self->postHTTPPreamble)
         {
             PostStatusLineAndHeaders(
-                context, 
-                self->httpStatusCode, 
-                self->httpStatusMsg, 
+                context,
+                self->httpStatusCode,
+                self->httpStatusMsg,
                 "application/json");
             self->postHTTPPreamble++;
         }
@@ -674,8 +676,8 @@ static OL_Result _Scope_GetOption(
 
         if (PHIT_Context_GetOption(
             ((Scope*)self)->phitContext,
-            PHIT_CONTEXT_OPTION_ROLE, 
-            &role, 
+            PHIT_CONTEXT_OPTION_ROLE,
+            &role,
             sizeof(role)) != 0)
         {
             return OL_Result_NotFound;

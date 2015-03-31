@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -126,7 +128,7 @@ static JSON_Array* _Clone(
     /* Check parameters */
     if (!self || self->magic != ARRAY_MAGIC)
         return NULL;
-    
+
     /* Align size to next multiple of 8 */
     n = ((sizeof(JSONArray) + 7) & ~7);
 
@@ -182,9 +184,9 @@ static JSON_Array* _Clone(
             }
 
             if ((*setter)(
-                &newArray->elements[i].value, 
-                &self->elements[i].value, 
-                0, 
+                &newArray->elements[i].value,
+                &self->elements[i].value,
+                0,
                 &newArray->alloc) != 0)
             {
                 _Release(&newArray->base);
@@ -360,7 +362,7 @@ static OL_Result _Append(
 }
 
 static OL_Result _Set(
-    JSON_Array* self_, 
+    JSON_Array* self_,
     size_t index,
     const JSON_Value* value,
     unsigned int flags)
@@ -459,11 +461,11 @@ static OL_Result _Get(
                 if (elem->binaryData)
                 {
                     AllocPut(
-                        (Alloc*)&self->alloc, 
+                        (Alloc*)&self->alloc,
                         ((JSONArrayElement*)elem)->binaryData);
                 }
 
-                ((JSONArrayElement*)elem)->binaryData = 
+                ((JSONArrayElement*)elem)->binaryData =
                     ((OL_Value*)value)->u.binary.data;
             }
         }
@@ -505,8 +507,8 @@ static OL_Result _Remove(
         if (r)
         {
             memmove(
-                &self->elements[index], 
-                &self->elements[index+1], 
+                &self->elements[index],
+                &self->elements[index+1],
                 r * sizeof(JSONArrayElement));
         }
 
@@ -565,7 +567,7 @@ JSON_Array* JSON_Array_New()
     JSONArray* self;
     size_t allocBufSize;
     size_t n;
-    
+
     /* Align size to next multiple of 8 */
     n = ((sizeof(JSONArray) + 7) & ~7);
 
@@ -595,7 +597,7 @@ JSON_Array* JSON_Array_New()
     self->count = 0;
 
     /* Set JSONArray.capacity */
-    self->capacity = 0; 
+    self->capacity = 0;
 
     /* Set JSONArray.flags */
     self->flags = 0;

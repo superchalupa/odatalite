@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -204,8 +206,8 @@ public:
     }
 
     Decimal(
-        signed long long integral, 
-        signed long long fractional) 
+        signed long long integral,
+        signed long long fractional)
     {
         _rep.integral = integral;
         _rep.fractional = fractional;
@@ -1250,102 +1252,102 @@ public:
 
     bool GetAtBoolean(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Boolean& x) const;
 
     bool GetAtInt64(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Int64& x) const;
 
     bool GetAtDouble(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Double& x) const;
 
     bool GetAtString(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         const Char*& x) const;
 
     bool GetAtObject(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Object& x) const;
 
     bool GetAtArray(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Array& x) const;
 
     bool GetAtByte(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Byte& x) const;
 
     bool GetAtSByte(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         SByte& x) const;
 
     bool GetAtInt16(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Int16& x) const;
 
     bool GetAtInt32(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Int32& x) const;
 
     bool GetAtSingle(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Single& x) const;
 
     bool GetAtDecimal(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Decimal& x) const;
 
     bool GetAtBinary(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Binary& x) const;
 
     bool GetAtDate(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Date& x) const;
 
     bool GetAtTimeOfDay(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         TimeOfDay& x) const;
 
     bool GetAtDateTimeOffset(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         DateTimeOffset& x) const;
 
     bool GetAtDuration(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Duration& x) const;
 
     bool GetAtGuid(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Guid& x) const;
 
     bool GetAtNavigationLink(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         Char*& x) const;
 
     bool GetAtAssociationLink(
         size_t index,
-        const Char*& name, 
+        const Char*& name,
         const Char*& x) const;
 
 private:
@@ -1700,8 +1702,8 @@ public:
     {
     }
 
-    virtual void Get( 
-        Scope& scope, 
+    virtual void Get(
+        Scope& scope,
         const URI& uri)
     {
         scope.SendResult(OL_Result_NotSupported);

@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -191,7 +193,7 @@ static OL_Result _Add(
         return OL_Result_BadParameter;
 
     /* Check for a valid navigation link name */
-    if (value->type == OL_Type_NavigationLink && 
+    if (value->type == OL_Type_NavigationLink &&
         !_IsValidNavigationLinkName(name))
     {
         return OL_Result_InvalidName;
@@ -248,16 +250,16 @@ static OL_Result _Add(
             (flags & JSON_FLAG_STATIC_NAME) &&
             (flags & JSON_FLAG_STATIC_VALUE))
         {
-            PairConstructStringSpecial(&self->pairs[self->count], name, 
+            PairConstructStringSpecial(&self->pairs[self->count], name,
                 nameCode, value);
         }
         else if (PairConstruct(
             &self->pairs[self->count],
-            name, 
-            nameLen, 
-            nameCode, 
-            value, 
-            flags, 
+            name,
+            nameLen,
+            nameCode,
+            value,
+            flags,
             &self->alloc) != 0)
         {
             return OL_Result_Failed;
@@ -270,7 +272,7 @@ static OL_Result _Add(
 }
 
 static OL_Result _Set(
-    JSON_Object* self_, 
+    JSON_Object* self_,
     const char* name,
     const JSON_Value* value,
     unsigned int flags)
@@ -315,7 +317,7 @@ static OL_Result _Set(
 }
 
 static OL_Result _Get(
-    const JSON_Object* self_, 
+    const JSON_Object* self_,
     const char* name,
     JSON_Value* value,
     unsigned int* flags_)
@@ -342,9 +344,9 @@ static OL_Result _Get(
     /* Set 'value' parameter */
     if (value)
     {
-        OL_Result r; 
+        OL_Result r;
 
-        if ((r = PairGet(&self->pairs[pos], value, flags_, 
+        if ((r = PairGet(&self->pairs[pos], value, flags_,
             (Alloc*)&self->alloc)) != OL_Result_Ok)
             return r;
     }
@@ -353,7 +355,7 @@ static OL_Result _Get(
 }
 
 static OL_Result _Remove(
-    JSON_Object* self_, 
+    JSON_Object* self_,
     const char* name,
     unsigned int flags)
 {
@@ -392,7 +394,7 @@ static OL_Result _Remove(
 }
 
 static OL_Result _SetAt(
-    JSON_Object* self_, 
+    JSON_Object* self_,
     size_t pos,
     const JSON_Value* value,
     unsigned int flags)
@@ -418,7 +420,7 @@ static OL_Result _SetAt(
 }
 
 static OL_Result _GetAt(
-    const JSON_Object* self_, 
+    const JSON_Object* self_,
     size_t pos,
     const char** name,
     JSON_Value* value,
@@ -441,7 +443,7 @@ static OL_Result _GetAt(
     /* Set 'value' parameter */
     if (value)
     {
-        OL_Result r; 
+        OL_Result r;
 
         if ((r = PairGet(&self->pairs[pos], value, flags,
             (Alloc*)&self->alloc) != OL_Result_Ok))
@@ -452,7 +454,7 @@ static OL_Result _GetAt(
 }
 
 static OL_Result _RemoveAt(
-    JSON_Object* self_, 
+    JSON_Object* self_,
     size_t pos,
     unsigned int flags)
 {
@@ -567,7 +569,7 @@ static OL_Result _Clear(
 
         /* Free JSONObject.pairs[] array */
         AllocPut(&self->alloc, self->pairs);
-        
+
         /* Align size to next multiple of 8 */
         n = ((sizeof(JSONObject) + 7) & ~7);
 
@@ -673,7 +675,7 @@ static JSON_Object* _Clone(
     /* Check parameters */
     if (!self || self->magic != OBJECT_MAGIC)
         return NULL;
-    
+
     /* Align size to next multiple of 8 */
     n = ((sizeof(JSONObject) + 7) & ~7);
 
@@ -714,7 +716,7 @@ static JSON_Object* _Clone(
         const Pair* pair = &self->pairs[i];
 
         if (PairConstruct(
-            &newObject->pairs[i], 
+            &newObject->pairs[i],
             pair->name,
             pair->nameLen,
             pair->nameCode,
@@ -737,7 +739,7 @@ JSON_Object* JSON_Object_New()
     JSONObject* self;
     size_t allocBufSize;
     size_t n;
-    
+
     /* Align size to next multiple of 8 */
     n = ((sizeof(JSONObject) + 7) & ~7);
 

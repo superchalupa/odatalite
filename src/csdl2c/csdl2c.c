@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -215,7 +217,7 @@ void WriteNavigationProperty(
     const char* entityTypeName,
     const EDM_NavigationProperty* md)
 {
-    putl("static const EDM_NavigationProperty _%s_%s_%s =", 
+    putl("static const EDM_NavigationProperty _%s_%s_%s =",
         schemaAlias, entityTypeName, md->Name);
     putl("{");
 
@@ -228,13 +230,13 @@ void WriteNavigationProperty(
 
             if (md->Flags & EDM_NavigationProperty_Flags_Nullable)
             {
-                flags[nflags++] = 
+                flags[nflags++] =
                     "EDM_NavigationProperty_Flags_Nullable";
             }
 
             if (md->Flags & EDM_NavigationProperty_Flags_ContainsTarget)
             {
-                flags[nflags++] = 
+                flags[nflags++] =
                     "EDM_NavigationProperty_Flags_ContainsTarget";
             }
 
@@ -273,13 +275,13 @@ void WriteArray1(
     {
         size_t i;
 
-        putl("static const EDM_%s* _%s_%sArray[] =", 
+        putl("static const EDM_%s* _%s_%sArray[] =",
             objectName, schemaAlias, suffix);
         putl("{");
 
         for (i = 0; i < nnames; i++)
         {
-            put("    (const EDM_%s*)&_%s_%s", 
+            put("    (const EDM_%s*)&_%s_%s",
                 objectName, schemaAlias, names[i]);
 
             if (i + 1 != nnames)
@@ -336,7 +338,7 @@ void WriteArrayInitializer2(
 }
 
 void WriteEntityType(
-    const char* schemaAlias, 
+    const char* schemaAlias,
     EDM_EntityType* md,
     size_t nkeys,
     size_t nproperties,
@@ -370,7 +372,7 @@ void WriteEntityType(
     WriteArrayInitializer2(schemaAlias, md->Name, "Properties", nproperties, 1);
 
     /* EntityType.NavigationProperties & EntityType.NumNavigationProperties */
-    WriteArrayInitializer2(schemaAlias, md->Name, "NavigationProperties", 
+    WriteArrayInitializer2(schemaAlias, md->Name, "NavigationProperties",
         nnavigationproperties, 0);
 
     putl("};");
@@ -378,7 +380,7 @@ void WriteEntityType(
 }
 
 void WriteComplexType(
-    const char* schemaAlias, 
+    const char* schemaAlias,
     EDM_ComplexType* md,
     size_t nproperties,
     size_t nnavigationproperties)
@@ -402,7 +404,7 @@ void WriteComplexType(
     WriteArrayInitializer2(schemaAlias, md->Name, "Properties", nproperties, 1);
 
     /* ComplexType.NavigationProperties & ComplexType.NumNavigationProperties */
-    WriteArrayInitializer2(schemaAlias, md->Name, "NavigationProperties", 
+    WriteArrayInitializer2(schemaAlias, md->Name, "NavigationProperties",
         nnavigationproperties, 0);
 
     putl("};");
@@ -410,7 +412,7 @@ void WriteComplexType(
 }
 
 void WriteEnumType(
-    const char* schemaAlias, 
+    const char* schemaAlias,
     EDM_EnumType* md,
     size_t nmembers,
     int hasValues)
@@ -436,7 +438,7 @@ void WriteEnumType(
     /* EnumType.Members & EnumType.NumMembers */
     if (nmembers)
     {
-        putl("    (const void** const)_%s_%s_MembersArray,", schemaAlias, 
+        putl("    (const void** const)_%s_%s_MembersArray,", schemaAlias,
             md->Name);
         putl("    OL_ARRAYSIZE(_%s_%s_MembersArray)", schemaAlias, md->Name);
     }
@@ -451,10 +453,10 @@ void WriteEnumType(
 }
 
 void WriteTypeDefinition(
-    const char* schemaAlias, 
+    const char* schemaAlias,
     EDM_TypeDefinition* md)
 {
-    putl("static const EDM_TypeDefinition _%s_%s =", 
+    putl("static const EDM_TypeDefinition _%s_%s =",
         schemaAlias, md->Name);
     putl("{");
 
@@ -494,7 +496,7 @@ void WriteMember(
 
     FixupName(name);
 
-    putl("static const EDM_Member _%s_%s_%s =", 
+    putl("static const EDM_Member _%s_%s_%s =",
         schemaAlias, enumTypeName, name);
     putl("{");
 
@@ -518,7 +520,7 @@ void WriteParameter(
     const char* enumTypeName,
     const EDM_Parameter* md)
 {
-    putl("static const EDM_Parameter _%s_%s_%s =", 
+    putl("static const EDM_Parameter _%s_%s_%s =",
         schemaAlias, enumTypeName, md->Name);
     putl("{");
 
@@ -547,13 +549,13 @@ void WriteArray2(
     {
         size_t i;
 
-        putl("static const EDM_%s* _%s_%s_%sArray[] =", 
+        putl("static const EDM_%s* _%s_%s_%sArray[] =",
             objectName, schemaAlias, parentName, suffix);
         putl("{");
 
         for (i = 0; i < nnames; i++)
         {
-            put("    (const EDM_%s*)&_%s_%s_%s", 
+            put("    (const EDM_%s*)&_%s_%s_%s",
                 objectName, schemaAlias, parentName, names[i]);
 
             if (i + 1 != nnames)
@@ -597,7 +599,7 @@ void WriteKey(
     const char* schemaAlias,
     const char* entityTypeName)
 {
-    putl("static const EDM_Key _%s_%s_Key =", schemaAlias, 
+    putl("static const EDM_Key _%s_%s_Key =", schemaAlias,
         entityTypeName);
     putl("{");
     putl("    {");
@@ -622,7 +624,7 @@ void WriteInclude(
     size_t referenceIndex,
     size_t includeIndex)
 {
-    putl("static const EDMX_Include _%u_%u_Include =", 
+    putl("static const EDMX_Include _%u_%u_Include =",
         (int)referenceIndex,
         (int)includeIndex);
     putl("{");
@@ -646,12 +648,12 @@ void WriteIncludeAnnotations(
     size_t includeAnnotationIndex)
 {
     putl("static const EDMX_IncludeAnnotations "
-        "_%u_%u_IncludeAnnotations =", (int)referenceIndex, 
+        "_%u_%u_IncludeAnnotations =", (int)referenceIndex,
         (int)includeAnnotationIndex);
     putl("{");
 
     /* IncludeAnnotations.Namespace */
-    putl("    \"%s\", /* IncludeAnnotations.TermNamespace */", 
+    putl("    \"%s\", /* IncludeAnnotations.TermNamespace */",
         md->TermNamespace);
 
     /* IncludeAnnotations.Qualifier */
@@ -663,7 +665,7 @@ void WriteIncludeAnnotations(
     /* IncludeAnnotations.TargetNamespace */
     if (md->TargetNamespace)
     {
-        putl("    \"%s\", /* IncludeAnnotations.TargetNamespace */", 
+        putl("    \"%s\", /* IncludeAnnotations.TargetNamespace */",
             md->TargetNamespace);
     }
     else
@@ -684,7 +686,7 @@ void WriteReference(
 
     FixupName(s);
 
-    putl("static const EDMX_Reference _%u_Reference =", 
+    putl("static const EDMX_Reference _%u_Reference =",
         (int)referenceIndex);
     putl("{");
 
@@ -695,7 +697,7 @@ void WriteReference(
     if (nincludes)
     {
         putl("    _%u_IncludesArray, /* Includes */", (int)referenceIndex);
-        putl("    OL_ARRAYSIZE(_%u_IncludesArray), /* NumIncludes */", 
+        putl("    OL_ARRAYSIZE(_%u_IncludesArray), /* NumIncludes */",
             (int)referenceIndex);
     }
     else
@@ -707,7 +709,7 @@ void WriteReference(
     /* Reference.IncludeAnnotations[] */
     if (nincludeassocations)
     {
-        putl("    _%u_IncludeAnnotationsArray, /* IncludeAnnotations */", 
+        putl("    _%u_IncludeAnnotationsArray, /* IncludeAnnotations */",
             (int)referenceIndex);
         putl("    OL_ARRAYSIZE(_%u_IncludeAnnotationsArray) "
             "/* NumIncludeAnnotations */", (int)referenceIndex);
@@ -724,10 +726,10 @@ void WriteReference(
 }
 
 void WriteSingleton(
-    const char* parentName, 
+    const char* parentName,
     EDM_Singleton* md)
 {
-    putl("static const EDM_Singleton _%s_%s =", parentName, 
+    putl("static const EDM_Singleton _%s_%s =", parentName,
         md->Name);
     putl("{");
 
@@ -765,7 +767,7 @@ void WriteEntityContainer(
 }
 
 void WriteSchema(
-    const char* schemaAlias, 
+    const char* schemaAlias,
     EDM_Schema* md,
     size_t nentitytypes,
     size_t ncomplextypes,
@@ -806,7 +808,7 @@ void WriteSchema(
     WriteArrayInitializer1(schemaAlias, "TypeDefinitions", ntypedefinitions, 1);
 
     /* Schema.EntityContainers & Schema.NumEntityContainers */
-    WriteArrayInitializer1(schemaAlias, "EntityContainers", nentitycontainers, 
+    WriteArrayInitializer1(schemaAlias, "EntityContainers", nentitycontainers,
         1);
 
     /* Schema.Terms & Schema.NumTerms */
@@ -907,7 +909,7 @@ void ParseAnnotation(XML* xml, XMLElem* elem)
 
 /* <edmx:Term> */
 void ParseTerm(
-    XML* xml, 
+    XML* xml,
     const char* schemaAlias,
     XMLElem* elem,
     const char** termName)
@@ -991,7 +993,7 @@ void ParseTerm(
 
 /* <edmx:Include> */
 void ParseInclude(
-    XML* xml, 
+    XML* xml,
     XMLElem* elem,
     size_t referenceIndex,
     size_t includeIndex)
@@ -1025,7 +1027,7 @@ void ParseInclude(
 
 /* <edmx:IncludeAnnotations> */
 void ParseIncludeAnnotations(
-    XML* xml, 
+    XML* xml,
     XMLElem* elem,
     size_t referenceIndex,
     size_t includeAnnotationsIndex)
@@ -1062,8 +1064,8 @@ void ParseIncludeAnnotations(
 
 /* <edmx:Reference> */
 void ParseReference(
-    XML* xml, 
-    XMLElem* elem, 
+    XML* xml,
+    XMLElem* elem,
     size_t referenceIndex)
 {
     EDMX_Reference md;
@@ -1085,10 +1087,10 @@ void ParseReference(
             ParseInclude(xml, &e, referenceIndex, includeIndex);
             includeIndex++;
         }
-        else if (e.type == XML_START && 
+        else if (e.type == XML_START &&
             strcmp(e.tag, "edmx:IncludeAnnotations") == 0)
         {
-            ParseIncludeAnnotations(xml, &e, referenceIndex, 
+            ParseIncludeAnnotations(xml, &e, referenceIndex,
                 includeAnnotationsIndex);
             includeAnnotationsIndex++;
         }
@@ -1155,7 +1157,7 @@ void ParseReference(
 
 /* <Singleton> */
 void ParseSingleton(
-    XML* xml, 
+    XML* xml,
     XMLElem* elem,
     const char* parentName,
     const char** name)
@@ -1197,7 +1199,7 @@ void ParseSingleton(
 
 /* <edmx:EntityContainer> */
 void ParseEntityContainer(
-    XML* xml, 
+    XML* xml,
     XMLElem* elem,
     const char* schemaAlias,
     const char** entityContainerName)
@@ -1242,7 +1244,7 @@ void ParseEntityContainer(
         }
     }
 
-    WriteArray1(md.Name, "Singleton", "Singletons", (char**)singletons.data, 
+    WriteArray1(md.Name, "Singleton", "Singletons", (char**)singletons.data,
         singletons.size);
 
     WriteEntityContainer(&md, schemaAlias, singletons.size);
@@ -1457,7 +1459,7 @@ void ParseKey(
 
 /* <EntityType> */
 void ParseEntityType(
-    XML* xml, 
+    XML* xml,
     const char* schemaAlias,
     XMLElem* elem)
 {
@@ -1534,14 +1536,14 @@ void ParseEntityType(
         }
     }
 
-    WriteArray2(schemaAlias, md.Name, "Property", "Properties", 
+    WriteArray2(schemaAlias, md.Name, "Property", "Properties",
         (char**)properties.data, properties.size);
 
-    WriteArray2(schemaAlias, md.Name, "NavigationProperty", 
-        "NavigationProperties", (char**)navigationproperties.data, 
+    WriteArray2(schemaAlias, md.Name, "NavigationProperty",
+        "NavigationProperties", (char**)navigationproperties.data,
             navigationproperties.size);
 
-    WriteEntityType(schemaAlias, &md, nkeys, properties.size, 
+    WriteEntityType(schemaAlias, &md, nkeys, properties.size,
         navigationproperties.size);
 
     PtrArray_Destruct(&properties);
@@ -1550,7 +1552,7 @@ void ParseEntityType(
 
 /* <ComplexType> */
 void ParseComplexType(
-    XML* xml, 
+    XML* xml,
     const char* schemaAlias,
     XMLElem* elem)
 {
@@ -1614,11 +1616,11 @@ void ParseComplexType(
         }
     }
 
-    WriteArray2(schemaAlias, md.Name, "Property", "Properties", 
+    WriteArray2(schemaAlias, md.Name, "Property", "Properties",
         (char**)properties.data, properties.size);
 
-    WriteArray2(schemaAlias, md.Name, "NavigationProperty", 
-        "NavigationProperties", (char**)navigationproperties.data, 
+    WriteArray2(schemaAlias, md.Name, "NavigationProperty",
+        "NavigationProperties", (char**)navigationproperties.data,
         navigationproperties.size);
 
     WriteComplexType(schemaAlias, &md, properties.size,
@@ -1630,7 +1632,7 @@ void ParseComplexType(
 
 /* <Member> */
 void ParseMember(
-    XML* xml, 
+    XML* xml,
     const char* schemaAlias,
     const char* enumTypeName,
     XMLElem* elem,
@@ -1687,7 +1689,7 @@ void DeleteMember(void* data)
 
 /* <EnumType> */
 void ParseEnumType(
-    XML* xml, 
+    XML* xml,
     const char* schemaAlias,
     XMLElem* elem)
 {
@@ -1750,12 +1752,12 @@ void ParseEnumType(
             WriteMember(schemaAlias, md.Name, member);
         }
 
-        WriteArray2(schemaAlias, md.Name, "Member", "Members", 
+        WriteArray2(schemaAlias, md.Name, "Member", "Members",
             (char**)members.data, members.size);
     }
     else
     {
-        putl("static const char* _%s_%s_MembersArray[] =", schemaAlias, 
+        putl("static const char* _%s_%s_MembersArray[] =", schemaAlias,
             md.Name);
         putl("{");
 
@@ -1783,7 +1785,7 @@ void ParseEnumType(
 
 /* <Parameter> */
 void ParseParameter(
-    XML* xml, 
+    XML* xml,
     const char* schemaAlias,
     const char* enumTypeName,
     XMLElem* elem)
@@ -1825,7 +1827,7 @@ void ParseParameter(
 
 /* <Action> */
 void ParseAction(
-    XML* xml, 
+    XML* xml,
     const char* schemaAlias,
     XMLElem* elem)
 {
@@ -1870,7 +1872,7 @@ void ParseAction(
         }
     }
 
-    WriteArray2(schemaAlias, md.Name, "Parameter", "Parameters", 
+    WriteArray2(schemaAlias, md.Name, "Parameter", "Parameters",
         (char**)parameters.data, parameters.size);
 
     WriteAction(schemaAlias, &md, parameters.size);
@@ -1880,7 +1882,7 @@ void ParseAction(
 
 /* <TypeDefinition> */
 void ParseTypeDefinition(
-    XML* xml, 
+    XML* xml,
     const char* schemaAlias,
     XMLElem* elem)
 {
@@ -1917,7 +1919,7 @@ void ParseTypeDefinition(
 
 /* <Schema> */
 void ParseSchema(
-    XML* xml, 
+    XML* xml,
     XMLElem* elem,
     char alias[ALIAS_SIZE])
 {
@@ -2027,21 +2029,21 @@ void ParseSchema(
         }
     }
 
-    WriteArray1(alias, "EntityType", "EntityTypes", (char**)entitytypes.data, 
+    WriteArray1(alias, "EntityType", "EntityTypes", (char**)entitytypes.data,
         entitytypes.size);
 
     WriteArray1(alias, "ComplexType", "ComplexTypes", (char**)complextypes.data,
         complextypes.size);
 
-    WriteArray1(alias, "EnumType", "EnumTypes", (char**)enumtypes.data, 
+    WriteArray1(alias, "EnumType", "EnumTypes", (char**)enumtypes.data,
         enumtypes.size);
 
     WriteArray1(alias, "Action", "Actions", (char**)actions.data, actions.size);
 
-    WriteArray1(alias, "TypeDefinition", "TypeDefinitions", 
+    WriteArray1(alias, "TypeDefinition", "TypeDefinitions",
         (char**)typedefinitions.data, typedefinitions.size);
 
-    WriteArray1(alias, "EntityContainer", "EntityContainers", 
+    WriteArray1(alias, "EntityContainer", "EntityContainers",
         (char**)entitycontainers.data, entitycontainers.size);
 
     WriteArray1(alias, "Term", "Terms", (char**)terms.data, terms.size);
@@ -2061,7 +2063,7 @@ void ParseSchema(
 
 /* <edmx:DataServices> */
 void ParseDataServices(
-    XML* xml, 
+    XML* xml,
     XMLElem* elem)
 {
     XMLElem e;
@@ -2117,7 +2119,7 @@ void ParseDataServices(
 
 /* <edmx:Edmx> */
 void ParseEdmx(
-    XML* xml, 
+    XML* xml,
     XMLElem* elem,
     const char* prefix)
 {
@@ -2247,7 +2249,7 @@ void ParseFile(const char* path)
 
     /* Parse the document */
     Parse(xml, prefix);
-    
+
 #if 0
     XMLDump(xml);
 #endif

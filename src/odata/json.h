@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -166,24 +168,24 @@ typedef struct _JSON_ArrayFT
         const JSON_Array* self);
 
     OL_Result (*Append)(
-        JSON_Array* self, 
+        JSON_Array* self,
         const JSON_Value* value,
         unsigned int flags);
 
     OL_Result (*Set)(
-        JSON_Array* self, 
+        JSON_Array* self,
         size_t index,
         const JSON_Value* value,
         unsigned int flags);
 
     OL_Result (*Get)(
-        const JSON_Array* self, 
+        const JSON_Array* self,
         size_t index,
         JSON_Value* value,
         unsigned int* flags);
 
     OL_Result (*Remove)(
-        JSON_Array* self, 
+        JSON_Array* self,
         size_t index);
 
     OL_Result (*Print)(
@@ -192,7 +194,7 @@ typedef struct _JSON_ArrayFT
 }
 JSON_ArrayFT;
 
-struct _JSON_Array 
+struct _JSON_Array
 {
     JSON_ArrayFT* ft;
 };
@@ -235,14 +237,14 @@ OL_INLINE size_t JSON_Array_Count(
 }
 
 OL_INLINE OL_Result JSON_Array_Append(
-    JSON_Array* self, 
+    JSON_Array* self,
     const JSON_Value* value)
 {
     return self->ft->Append(self, value, 0);
 }
 
 OL_INLINE OL_Result JSON_Array_AppendF(
-    JSON_Array* self, 
+    JSON_Array* self,
     const JSON_Value* value,
     unsigned int flags)
 {
@@ -250,7 +252,7 @@ OL_INLINE OL_Result JSON_Array_AppendF(
 }
 
 OL_INLINE OL_Result JSON_Array_Set(
-    JSON_Array* self, 
+    JSON_Array* self,
     size_t index,
     const JSON_Value* value)
 {
@@ -258,7 +260,7 @@ OL_INLINE OL_Result JSON_Array_Set(
 }
 
 OL_INLINE OL_Result JSON_Array_SetF(
-    JSON_Array* self, 
+    JSON_Array* self,
     size_t index,
     const JSON_Value* value,
     unsigned int flags)
@@ -267,7 +269,7 @@ OL_INLINE OL_Result JSON_Array_SetF(
 }
 
 OL_INLINE OL_Result JSON_Array_Get(
-    const JSON_Array* self, 
+    const JSON_Array* self,
     size_t index,
     JSON_Value* value)
 {
@@ -275,7 +277,7 @@ OL_INLINE OL_Result JSON_Array_Get(
 }
 
 OL_INLINE OL_Result JSON_Array_GetF(
-    const JSON_Array* self, 
+    const JSON_Array* self,
     size_t index,
     JSON_Value* value,
     unsigned int* flags)
@@ -284,7 +286,7 @@ OL_INLINE OL_Result JSON_Array_GetF(
 }
 
 OL_INLINE OL_Result JSON_Array_GetAs(
-    const JSON_Array* self, 
+    const JSON_Array* self,
     size_t index,
     unsigned short type,
     JSON_Value* value)
@@ -295,7 +297,7 @@ OL_INLINE OL_Result JSON_Array_GetAs(
 }
 
 OL_INLINE OL_Result JSON_Array_Remove(
-    JSON_Array* self, 
+    JSON_Array* self,
     size_t index)
 {
     return self->ft->Remove(self, index);
@@ -364,43 +366,43 @@ typedef struct JSON_ObjectFT
         const JSON_Object* self);
 
     OL_Result (*Add)(
-        JSON_Object* self, 
+        JSON_Object* self,
         const JSON_Char* name,
         const JSON_Value* value,
         unsigned int flags);
 
     OL_Result (*Set)(
-        JSON_Object* self, 
+        JSON_Object* self,
         const JSON_Char* name,
         const JSON_Value* value,
         unsigned int flags);
 
     OL_Result (*Get)(
-        const JSON_Object* self, 
+        const JSON_Object* self,
         const JSON_Char* name,
         JSON_Value* value,
         unsigned int* flags);
 
     OL_Result (*Remove)(
-        JSON_Object* self, 
+        JSON_Object* self,
         const JSON_Char* name,
         unsigned int flags);
 
     OL_Result (*SetAt)(
-        JSON_Object* self, 
+        JSON_Object* self,
         size_t pos,
         const JSON_Value* value,
         unsigned int flags);
 
     OL_Result (*GetAt)(
-        const JSON_Object* self, 
+        const JSON_Object* self,
         size_t pos,
         const JSON_Char** name,
         JSON_Value* value,
         unsigned int* flags);
 
     OL_Result (*RemoveAt)(
-        JSON_Object* self, 
+        JSON_Object* self,
         size_t pos,
         unsigned int flags);
 
@@ -421,7 +423,7 @@ typedef struct JSON_ObjectFT
 }
 JSON_ObjectFT;
 
-struct _JSON_Object 
+struct _JSON_Object
 {
     JSON_ObjectFT* ft;
 };
@@ -464,7 +466,7 @@ OL_INLINE size_t JSON_Object_Count(
 }
 
 OL_INLINE OL_Result JSON_Object_Add(
-    JSON_Object* self, 
+    JSON_Object* self,
     const JSON_Char* name,
     const JSON_Value* value)
 {
@@ -472,7 +474,7 @@ OL_INLINE OL_Result JSON_Object_Add(
 }
 
 OL_INLINE OL_Result JSON_Object_AddF(
-    JSON_Object* self, 
+    JSON_Object* self,
     const JSON_Char* name,
     const JSON_Value* value,
     unsigned int flags)
@@ -481,7 +483,7 @@ OL_INLINE OL_Result JSON_Object_AddF(
 }
 
 OL_INLINE OL_Result JSON_Object_Set(
-    JSON_Object* self, 
+    JSON_Object* self,
     const JSON_Char* name,
     const JSON_Value* value)
 {
@@ -489,7 +491,7 @@ OL_INLINE OL_Result JSON_Object_Set(
 }
 
 OL_INLINE OL_Result JSON_Object_SetF(
-    JSON_Object* self, 
+    JSON_Object* self,
     const JSON_Char* name,
     const JSON_Value* value,
     unsigned int flags)
@@ -498,7 +500,7 @@ OL_INLINE OL_Result JSON_Object_SetF(
 }
 
 OL_INLINE OL_Result JSON_Object_Get(
-    const JSON_Object* self, 
+    const JSON_Object* self,
     const JSON_Char* name,
     JSON_Value* value)
 {
@@ -506,7 +508,7 @@ OL_INLINE OL_Result JSON_Object_Get(
 }
 
 OL_INLINE OL_Result JSON_Object_GetF(
-    const JSON_Object* self, 
+    const JSON_Object* self,
     const JSON_Char* name,
     JSON_Value* value,
     unsigned int* flags)
@@ -515,7 +517,7 @@ OL_INLINE OL_Result JSON_Object_GetF(
 }
 
 OL_INLINE OL_Result JSON_Object_GetAs(
-    const JSON_Object* self, 
+    const JSON_Object* self,
     const JSON_Char* name,
     unsigned short type,
     JSON_Value* value)
@@ -527,7 +529,7 @@ OL_INLINE OL_Result JSON_Object_GetAs(
 }
 
 OL_INLINE OL_Result JSON_Object_Remove(
-    JSON_Object* self, 
+    JSON_Object* self,
     const JSON_Char* name,
     unsigned int flags)
 {
@@ -535,7 +537,7 @@ OL_INLINE OL_Result JSON_Object_Remove(
 }
 
 OL_INLINE OL_Result JSON_Object_SetAt(
-    JSON_Object* self, 
+    JSON_Object* self,
     size_t pos,
     const JSON_Value* value)
 {
@@ -543,7 +545,7 @@ OL_INLINE OL_Result JSON_Object_SetAt(
 }
 
 OL_INLINE OL_Result JSON_Object_SetAtF(
-    JSON_Object* self, 
+    JSON_Object* self,
     size_t pos,
     const JSON_Value* value,
     unsigned int flags)
@@ -552,7 +554,7 @@ OL_INLINE OL_Result JSON_Object_SetAtF(
 }
 
 OL_INLINE OL_Result JSON_Object_GetAt(
-    const JSON_Object* self, 
+    const JSON_Object* self,
     size_t pos,
     const JSON_Char** name,
     JSON_Value* value)
@@ -561,7 +563,7 @@ OL_INLINE OL_Result JSON_Object_GetAt(
 }
 
 OL_INLINE OL_Result JSON_Object_GetAtF(
-    const JSON_Object* self, 
+    const JSON_Object* self,
     size_t pos,
     const JSON_Char** name,
     JSON_Value* value,
@@ -571,7 +573,7 @@ OL_INLINE OL_Result JSON_Object_GetAtF(
 }
 
 OL_INLINE OL_Result JSON_Object_GetAtAs(
-    const JSON_Object* self, 
+    const JSON_Object* self,
     size_t pos,
     const JSON_Char** name,
     unsigned short type,
@@ -583,7 +585,7 @@ OL_INLINE OL_Result JSON_Object_GetAtAs(
 }
 
 OL_INLINE OL_Result JSON_Object_RemoveAt(
-    JSON_Object* self, 
+    JSON_Object* self,
     size_t pos,
     unsigned int flags)
 {

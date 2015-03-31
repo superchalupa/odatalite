@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -33,17 +35,17 @@
 #include <base/str.h>
 #include <odata/odatamacros.h>
 
-const StrLit __metadataV3[] = 
+const StrLit __metadataV3[] =
 {
-    { STRLIT("nometadata") },  
-    { STRLIT("minimalmetadata") }, 
+    { STRLIT("nometadata") },
+    { STRLIT("minimalmetadata") },
     { STRLIT("fullmetadata") }
 };
 
-const StrLit __metadataV4[] = 
-{ 
-    { STRLIT("none") }, 
-    { STRLIT("minimal") }, 
+const StrLit __metadataV4[] =
+{
+    { STRLIT("none") },
+    { STRLIT("minimal") },
     { STRLIT("full") }
 };
 
@@ -60,16 +62,16 @@ static void _PostHTTPContentTypeField(
     {
         if (scope->version == OL_VERSION_4_0)
         {
-            Strlcat3(buf, 
-                "odata.metadata=", 
+            Strlcat3(buf,
+                "odata.metadata=",
                 __metadataV4[scope->metadataType].str,
                 ";",
                 sizeof(buf));
         }
         else if (scope->version == OL_VERSION_3_0)
         {
-            Strlcat3(buf, 
-                "odata=", 
+            Strlcat3(buf,
+                "odata=",
                 __metadataV3[scope->metadataType].str,
                 ";",
                 sizeof(buf));
@@ -82,7 +84,7 @@ static void _PostHTTPContentTypeField(
 }
 
 void FormatErrorMessage(
-    Buf* out, 
+    Buf* out,
     OL_Result result,
     PHIT_StatusCode* statusCode,
     const char** statusMsg,
@@ -148,8 +150,8 @@ void FormatErrorMessage(
 
 void PostErrorV(
     PHIT_Context* context,
-    OL_Result result, 
-    const char* format, 
+    OL_Result result,
+    const char* format,
     va_list ap)
 {
     Buf buf = BUF_INITIALIZER;
@@ -157,7 +159,7 @@ void PostErrorV(
     const char* statusMsg;
 
     FormatErrorMessage(&buf, result, &statusCode, &statusMsg, format, ap);
-    PostStatusLineAndHeaders(context, statusCode, statusMsg, 
+    PostStatusLineAndHeaders(context, statusCode, statusMsg,
         "application/json");
     PHIT_Context_PostContent(context, buf.data, buf.size);
     BufDestroy(&buf);
@@ -167,7 +169,7 @@ void PostErrorV(
 OL_PRINTF_FORMAT(3, 4)
 void PostError(
     PHIT_Context* context,
-    OL_Result result, 
+    OL_Result result,
     const char* format,
     ...)
 {
@@ -186,7 +188,7 @@ void PostError(
 }
 
 void PostStatusLineAndHeaders(
-    PHIT_Context* context, 
+    PHIT_Context* context,
     PHIT_StatusCode statusCode,
     const char* statusMsg,
     const char* contextType)
@@ -215,14 +217,14 @@ void PostStatusLineAndHeaders(
 }
 
 void PostCountResponse(
-    PHIT_Context* context, 
+    PHIT_Context* context,
     unsigned long count)
 {
     char buf[ULongToStrBufSize];
     const char* data;
     size_t size;
 
-    PostStatusLineAndHeaders(context, 
+    PostStatusLineAndHeaders(context,
         PHIT_STATUSCODE_200_OK, PHIT_STATUSMSG_200_OK, "text/plain");
 
     data = ULongToStr(buf, count, &size);

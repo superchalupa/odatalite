@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -251,7 +253,7 @@ static int _HTTPParseContentType(
         if (!(p = _ParseHTTPParameter(p, &param)))
             return -1;
 
-        if (headers->contentType.nparameters == 
+        if (headers->contentType.nparameters ==
             PHIT_ARRAY_SIZE(buf->contentTypeParameters))
         {
             return -1;
@@ -548,7 +550,7 @@ int HTTPFormatChunk(
 {
     /* Reserve space for the chunk (prefix+data+suffix) */
     if (BufReserve(
-        out, 
+        out,
         out->size + MAX_CHUNK_PREFIX_SIZE + size + CHUNK_SUFFIX_SIZE) != 0)
     {
         return -1;
@@ -559,7 +561,7 @@ int HTTPFormatChunk(
         char buf[10];
         size_t strLen;
         const char* str;
-        
+
         str = UIntToHexStr(buf, size, &strLen);
         buf[8] = '\r';
         buf[9] = '\n';
@@ -653,7 +655,7 @@ int HTTPHaveCompleteChunk(
     }
 
     /* Check for chunk suffix: <CR><LF> */
-    if (data[chunkOffset+chunkSize] != '\r' || 
+    if (data[chunkOffset+chunkSize] != '\r' ||
         data[chunkOffset+chunkSize+1] != '\n')
     {
         return -1;

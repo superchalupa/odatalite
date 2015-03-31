@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -88,7 +90,7 @@ INLINE int StreqShort(const char* s1, const char* s2)
 /* Returns 0 on match */
 INLINE int Streq3(const char* s1, const char* s2)
 {
-    return 
+    return
         !(s1[0] == s2[0] &&
         s1[1] == s2[1] &&
         s1[2] == s2[2] &&
@@ -98,7 +100,7 @@ INLINE int Streq3(const char* s1, const char* s2)
 /* Returns 0 on match */
 INLINE int Streq4(const char* s1, const char* s2)
 {
-    return 
+    return
         !(s1[0] == s2[0] &&
         s1[1] == s2[1] &&
         s1[2] == s2[2] &&
@@ -145,8 +147,8 @@ size_t Strlcat3(
 #define UIntToStrBufSize 12
 
 const char* UIntToStr(
-    char buf[UIntToStrBufSize], 
-    unsigned int x, 
+    char buf[UIntToStrBufSize],
+    unsigned int x,
     size_t* size);
 
 void UIntToStrZeroPadded(
@@ -162,29 +164,29 @@ void ULongLongToStrZeroPadded(
 #define SIntToStrBufSize 12
 
 const char* SIntToStr(
-    char buf[SIntToStrBufSize], 
-    int x, 
+    char buf[SIntToStrBufSize],
+    int x,
     size_t* size);
 
 #define ULongToStrBufSize 21
 
 const char* ULongToStr(
-    char buf[ULongToStrBufSize], 
-    unsigned long x, 
+    char buf[ULongToStrBufSize],
+    unsigned long x,
     size_t* size);
 
 #define ULongLongToStrBufSize 21
 
 const char* ULongLongToStr(
-    char buf[ULongLongToStrBufSize], 
-    unsigned long long x, 
+    char buf[ULongLongToStrBufSize],
+    unsigned long long x,
     size_t* size);
 
 #define SLongLongToStrBufSize 22
 
 const char* SLongLongToStr(
-    char buf[SLongLongToStrBufSize], 
-    long long x, 
+    char buf[SLongLongToStrBufSize],
+    long long x,
     size_t* size);
 
 extern const char __hexNibbleToChar[];
@@ -221,13 +223,13 @@ INLINE void UShortToHexStr4(
 
 /* Format: "FFFFFFFF" (unterminated) */
 const char* UIntToHexStr(
-    char buf[8], 
+    char buf[8],
     unsigned int x,
     size_t* size);
 
 /* Format: "FFFFFFFF" (unterminated and always 8 bytes) */
 void UIntToHexStr8(
-    char buf[8], 
+    char buf[8],
     unsigned int x);
 
 /* Convert 4-byte hex string to unsigned int (e.g., "FE01") */
@@ -259,16 +261,16 @@ INLINE int HexStr2ToChar(
 
 /* Returns zero if first n characters of string match (case insensitive) */
 int Strncaseeq(
-    const char* s1, 
-    const char* s2, 
+    const char* s1,
+    const char* s2,
     size_t n);
 
 /* Use instead of Strncaseeq when there is a high probability of a case
  * sensitive match
  */
 ALWAYS_INLINE int StrncaseeqProbable(
-    const char* s1, 
-    const char* s2, 
+    const char* s1,
+    const char* s2,
     size_t n)
 {
     return strncmp(s1, s2, n) && Strncaseeq(s1, s2, n);
@@ -321,7 +323,7 @@ INLINE int Strncasecmp(
 
 ALWAYS_INLINE unsigned int StrCode(const char* str, size_t len)
 {
-    return 
+    return
         (((unsigned int)str[0]) << 16) ^
         (((unsigned int)str[len-1]) << 8) ^
         ((unsigned int)len);

@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -138,7 +140,7 @@ INLINE int SockClose(
 }
 
 INLINE int SockBind(
-    Sock sock, 
+    Sock sock,
     const Addr* addr)
 {
     return bind(sock, (struct sockaddr*)addr, addr->length);
@@ -151,7 +153,7 @@ INLINE int SockListen(
 }
 
 INLINE Sock SockAccept(
-    Sock sock, 
+    Sock sock,
     Addr* addr)
 {
     socklen_t addrlen = sizeof(addr->u);
@@ -159,7 +161,7 @@ INLINE Sock SockAccept(
 }
 
 INLINE int SockSetCloseOnExec(
-    Sock sock, 
+    Sock sock,
     int closeOnExec)
 {
 #if defined(_MSC_VER)
@@ -171,7 +173,7 @@ INLINE int SockSetCloseOnExec(
 }
 
 INLINE int SockConnect(
-    Sock sock, 
+    Sock sock,
     const Addr* addr)
 {
     return connect(sock, (struct sockaddr*)addr, addr->length);
@@ -182,10 +184,10 @@ INLINE int SockReuseAddr(
     int reuseAddr)
 {
     return setsockopt(
-        sock, 
-        SOL_SOCKET, 
-        SO_REUSEADDR, 
-        (char*)&reuseAddr, 
+        sock,
+        SOL_SOCKET,
+        SO_REUSEADDR,
+        (char*)&reuseAddr,
         sizeof(reuseAddr));
 }
 
@@ -229,9 +231,9 @@ INLINE int SockSetNoDelay(
 {
     return setsockopt(
         sock,
-        IPPROTO_TCP, 
-        TCP_NODELAY, 
-        (char*)&noDelay, 
+        IPPROTO_TCP,
+        TCP_NODELAY,
+        (char*)&noDelay,
         sizeof(noDelay));
 }
 

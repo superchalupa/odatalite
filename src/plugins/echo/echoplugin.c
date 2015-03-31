@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -144,7 +146,7 @@ static void _HandleRequest(
     if (method != PHIT_METHOD_MPOST && method != PHIT_METHOD_POST)
     {
         _PostHTTPError(
-            context, 
+            context,
             PHIT_STATUSCODE_501_NOT_IMPLEMENTED,
             "This method is not implemented");
         return;
@@ -155,9 +157,9 @@ static void _HandleRequest(
     {
         PHIT_Context_PostStatusLine(
             context, PHIT_STATUSCODE_200_OK, PHIT_STATUSMSG_200_OK);
-        PHIT_Context_PostHeader(context, "Content-Type", 
+        PHIT_Context_PostHeader(context, "Content-Type",
             "text/plain; charset=utf-8");
-        PHIT_Context_PostHeaderUL(context, "Content-Length", 
+        PHIT_Context_PostHeaderUL(context, "Content-Length",
             contentLength);
         PHIT_Context_PostEOH(context);
         PHIT_Context_PostContent(context, content, contentLength);
@@ -169,7 +171,7 @@ static void _HandleRequest(
     if (!(pluginData = (PluginData*)malloc(sizeof(PluginData))))
     {
         _PostHTTPError(
-            context, 
+            context,
             PHIT_STATUSCODE_500_INTERNAL_SERVER_ERROR,
             "malloc() failed");
         return;
@@ -186,7 +188,7 @@ static void _HandleRequest(
         {
             free(pluginData);
             _PostHTTPError(
-                context, 
+                context,
                 PHIT_STATUSCODE_500_INTERNAL_SERVER_ERROR,
                 "malloc() failed");
             return;
@@ -203,7 +205,7 @@ static void _HandleRequest(
     /* Post stauts line and header fields */
     PHIT_Context_PostStatusLine(
         context, PHIT_STATUSCODE_200_OK, PHIT_STATUSMSG_200_OK);
-    PHIT_Context_PostHeader(context, "Content-Type", 
+    PHIT_Context_PostHeader(context, "Content-Type",
         "text/plain; charset=utf-8");
 
 #if defined(USE_TRAILERS)
@@ -236,7 +238,7 @@ static void _HandlePull(
 
     /* Post the content */
     PHIT_Context_PostContent(
-        context, 
+        context,
         pluginData->content + pluginData->contentOffset,
         len);
 

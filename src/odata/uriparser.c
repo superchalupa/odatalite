@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -54,7 +56,7 @@
 **     service/Customers/Model.VipCustomer
 **     service/Customers(1)/Products
 **     http://host/service/People('O''Neil')
-**     http://host/service/People(%27O%27%27Neil%27) 
+**     http://host/service/People(%27O%27%27Neil%27)
 **     http://host/service/People%28%27O%27%27Neil%27%29
 **     http://host/service/Categories('Smartphone%2FTablet')
 **     http://host/service/$metadata
@@ -116,15 +118,15 @@ int URIExpandEscapes(char* str)
 /*
 **==============================================================================
 **
-** Example: 
+** Example:
 **     https://host/odata/Orders(1)/Items(OrderID=1,ItemNo=2)
 **
-** 
+**
 ** BNF:
 **    keyPredicate     = simpleKey / compoundKey
 **    simpleKey        = OPEN keyPropertyValue CLOSE
 **    compoundKey      = OPEN keyValuePair *( COMMA keyValuePair ) CLOSE
-**    keyValuePair     = 
+**    keyValuePair     =
 **        ( primitiveKeyProperty / keyPropertyAlias ) EQ keyPropertyValue
 **    keyPropertyValue = primitiveLiteral
 **    keyPropertyAlias = serviceIdentifier
@@ -201,7 +203,7 @@ static char* _ParseQueryOptionValueULong(
 }
 
 static OL_Result _ParseQueryOption(
-    URI* uri, 
+    URI* uri,
     char** pInOut,
     char* err,
     size_t errSize)
@@ -216,7 +218,7 @@ static OL_Result _ParseQueryOption(
             p,
             STRN("$top="),
             &uri->queryOptionTop,
-            err, 
+            err,
             errSize)))
         {
             return OL_Result_SyntaxError;
@@ -230,7 +232,7 @@ static OL_Result _ParseQueryOption(
             p,
             STRN("$skip="),
             &uri->queryOptionSkip,
-            err, 
+            err,
             errSize)))
         {
             return OL_Result_SyntaxError;
@@ -257,7 +259,7 @@ static OL_Result _ParseQueryOption(
 }
 
 static OL_Result _ParseKeyPredicate(
-    URISegment* segment, 
+    URISegment* segment,
     Alloc* alloc,
     char** pInOut,
     int expectClosingParen)
@@ -295,7 +297,7 @@ static OL_Result _ParseKeyPredicate(
         if (segment->keysSize == segment->keysCapacity)
         {
             if (ArrayReserve(
-                (Array*)segment, 
+                (Array*)segment,
                 segment->keysSize + 1,
                 sizeof(URIKey),
                 URI_PAIR_CAPACITY,
@@ -352,7 +354,7 @@ static OL_Result _ParseKeyPredicate(
             /* Parse literal */
             {
                 char* start = p;
-                
+
                 if (!(p = _ParseLiteral(key, p)))
                     RETURN(OL_Result_Failed);
 
@@ -566,7 +568,7 @@ OL_Result URIParse(
         if (self->segments.size == self->segments.capacity)
         {
             if (ArrayReserve(
-                (Array*)&self->segments, 
+                (Array*)&self->segments,
                 self->segments.size + 1,
                 sizeof(URISegment),
                 URI_ELEMENT_CAPACITY,
@@ -604,7 +606,7 @@ OL_Result URIParse(
             {
                 *p++ = '\0';
 
-                if (_ParseKeyPredicate(segment, &self->alloc, &p, 1) != 
+                if (_ParseKeyPredicate(segment, &self->alloc, &p, 1) !=
                     OL_Result_Ok)
                 {
                     Snprintf(err, errSize, "invalid key predicate");
@@ -641,7 +643,7 @@ OL_Result URIParse(
 
                     if (*p != '&')
                     {
-                        Snprintf(err, errSize, 
+                        Snprintf(err, errSize,
                             "expected '&' after query option");
                         return OL_Result_SyntaxError;
                     }

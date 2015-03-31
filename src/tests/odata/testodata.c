@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -54,8 +56,8 @@ const char* arg0;
 */
 
 JSON_Value MakeArray(
-    JSON_Array** array, 
-    const JSON_Value* data, 
+    JSON_Array** array,
+    const JSON_Value* data,
     size_t size)
 {
     JSON_Value v;
@@ -82,7 +84,7 @@ BEGINTEST(TestJSON)
     JSON_Object* newObj;
     OL_Result r;
     JSON_Value v;
-    
+
     obj = JSON_Object_New();
     TEST(obj != NULL);
 
@@ -90,7 +92,7 @@ BEGINTEST(TestJSON)
     {
         v = JSON_StringValue("Fred");
 
-        r = JSON_Object_AddF(obj, "\006String"+1, &v, 
+        r = JSON_Object_AddF(obj, "\006String"+1, &v,
             JSON_FLAG_STATIC_NAME|JSON_FLAG_LENGTH_NAME);
         TEST(r == OL_Result_Ok);
     }
@@ -281,7 +283,7 @@ BEGINTEST(TestJSONHelpers)
     OL_Result r;
     JSON_Integer integer;
     const JSON_Char* string;
-    
+
     JSON_Object* obj = JSON_Object_New();
     TEST(obj != NULL);
 
@@ -372,7 +374,7 @@ BEGINTEST(TestServiceDoc)
     JSON_Object* obj = JSON_Object_New();
     TEST(obj != NULL);
 
-    r = JSON_Object_AddString(obj, "@odata.context",  
+    r = JSON_Object_AddString(obj, "@odata.context",
         "http://host/service/$metadata");
     TEST(r == OL_Result_Ok);
 
@@ -380,7 +382,7 @@ BEGINTEST(TestServiceDoc)
         JSON_Object* odata[4];
         JSON_Value v;
         JSON_Value data[4];
-        
+
         odata[0] = MakeServiceEntity(
             "Orders", /* name */
             NULL, /* title */
@@ -519,7 +521,7 @@ JSON_Object* NewTestObject()
     {
         const char* s;
 
-        r = JSON_Object_AddString(obj, "String", 
+        r = JSON_Object_AddString(obj, "String",
             "\nLF\rCR\tTAB\rCR\001ONE");
         assert(r == OL_Result_Ok);
 
@@ -531,7 +533,7 @@ JSON_Object* NewTestObject()
     {
         const char* s;
 
-        r = JSON_Object_AddString(obj, "EscString2", 
+        r = JSON_Object_AddString(obj, "EscString2",
             "ABCDEFG\nLF\rCR\tTAB\rCR\001ONE");
         assert(r == OL_Result_Ok);
         r = JSON_Object_GetString(obj, "EscString2", &s);
@@ -712,8 +714,8 @@ ENDTEST(TestSizes)
 */
 
 OL_Value ODATAMakeArray(
-    OL_Array** array, 
-    const OL_Value* data, 
+    OL_Array** array,
+    const OL_Value* data,
     size_t size)
 {
     OL_Value v;
@@ -735,8 +737,8 @@ OL_Value ODATAMakeArray(
 }
 
 int AddGetCheck(
-    OL_Object* obj, 
-    const char* name, 
+    OL_Object* obj,
+    const char* name,
     const OL_Value value)
 {
     OL_Result r;
@@ -774,9 +776,9 @@ int AddGetCheck(
 }
 
 static int TestBinary(
-    OL_Object* obj, 
+    OL_Object* obj,
     const char* name,
-    void* data, 
+    void* data,
     size_t size)
 {
     OL_Binary b1;
@@ -808,7 +810,7 @@ static int TestBinary(
 BEGINTEST(TestODATA)
 {
     OL_Result r;
-    
+
     OL_Object* obj = __OL_Object_New();
     TEST(obj != NULL);
 
@@ -828,9 +830,9 @@ BEGINTEST(TestODATA)
     TEST(AddGetCheck(obj, "StringEmpty", OL_StringValue("")) == 0);
     TEST(AddGetCheck(obj, "StringFull", OL_StringValue("Full")) == 0);
     TEST(AddGetCheck(obj, "Date", OL_DateValue(2014,7,4)) == 0);
-    TEST(AddGetCheck(obj, "DateTimeOffset", 
+    TEST(AddGetCheck(obj, "DateTimeOffset",
         OL_DateTimeOffsetValue(2014,7,4,12,15,3,666)) == 0);
-    TEST(AddGetCheck(obj, "DateTimeOffset5", 
+    TEST(AddGetCheck(obj, "DateTimeOffset5",
         OL_DateTimeOffsetValue(2014,7,4,12,15,0,0)) == 0);
     TEST(AddGetCheck(obj, "TimeOfDay", OL_TimeOfDayValue(12,15,3,555)) == 0);
     TEST(AddGetCheck(obj, "Duration", OL_DurationValue(OL_TRUE, 10,3,4,3,555)) == 0);
@@ -948,7 +950,7 @@ BEGINTEST(TestPerson)
     OL_Object* object;
     OL_Result r;
     OL_Value v;
-    
+
     /* Allocate scope */
     scope = __OL_Scope_New();
     TEST(scope);
@@ -1065,7 +1067,7 @@ BEGINTEST(TestProviderEntry)
         TESTDIR "/providers.conf",
         &entries,
         &entriesSize,
-        err, 
+        err,
         sizeof(err));
 
     if (r != 0)
@@ -1254,7 +1256,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "https://xyz.com/odata/Person"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1269,7 +1271,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "https://xyz.com/odata/Person/Job"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1284,9 +1286,9 @@ BEGINTEST(TestURIParse)
 
         OL_Result r = URIParse(
             uri,
-            strcpy(buf, 
+            strcpy(buf,
                 "https://xyz.com/odata/Person(99, msg='hello', false, true)"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1368,7 +1370,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "odata/Person(Name='Fred', Age=99, Single=true)"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1403,7 +1405,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "https://xyz.com/odata/Person(1)/Job('JOB101')"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1435,7 +1437,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "/odata/GetNearestAirport(lat = 33, lon = -118)"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1465,7 +1467,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "/odata/GetHeapUsage()"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1481,7 +1483,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "/odata-plain/stuff"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1605,7 +1607,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "/odata/People/$count"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1625,7 +1627,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "/odata/Products?$top=4"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1644,7 +1646,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "/odata/Products?$skip=1234"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1663,7 +1665,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "/odata/Products?$skiptoken=1234"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1683,7 +1685,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "/odata/Products?$top=4&$skip=2"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1705,7 +1707,7 @@ BEGINTEST(TestURIParse)
         OL_Result r = URIParse(
             uri,
             strcpy(buf, "/odata/People(123456)/$value"),
-            err, 
+            err,
             sizeof(err));
         PrintURI(uri);
 
@@ -1884,7 +1886,7 @@ BEGINTEST(TestDurationFormat)
 
     {
         char buf[128];
-        OL_Duration x = { 1, UINT_MAX, UINT_MAX, UINT_MAX, UINT_MAX, 
+        OL_Duration x = { 1, UINT_MAX, UINT_MAX, UINT_MAX, UINT_MAX,
             0xFFFFFFFFFFFFFFFFLL };
         FormatDuration(buf, &x);
         TEST(strcmp(buf,
@@ -1922,7 +1924,7 @@ BEGINTEST(TestDateTimeOffsetFormat)
     }
     {
         char buf[128];
-        OL_DateTimeOffset x = { UINT_MAX, UINT_MAX, UINT_MAX, UINT_MAX, 
+        OL_DateTimeOffset x = { UINT_MAX, UINT_MAX, UINT_MAX, UINT_MAX,
             UINT_MAX, UINT_MAX, 0xFFFFFFFFFFFFFFFFLL };
         FormatDateTimeOffset(buf, &x);
         TEST(strcmp(buf, "7295-95-95T95:95:95.073709551615Z") == 0);

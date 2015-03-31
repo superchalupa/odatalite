@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -60,8 +62,8 @@ static void _ReadCallback(
 
     if (n > 0)
     {
-        BufCat(&self->in, buf, n);        
-        
+        BufCat(&self->in, buf, n);
+
         if (self->in.err)
         {
             self->errorCallback(self, "unexpected failure", self->callbackData);
@@ -71,7 +73,7 @@ static void _ReadCallback(
 
         if (self->httpState == HTTPSTATE_WAITING_FOR_HEADER)
         {
-            ssize_t headersLength = 
+            ssize_t headersLength =
                 HTTPHaveCompleteHeaders(self->in.data, self->in.size);
 
             if (headersLength == -1)
@@ -110,7 +112,7 @@ static void _ReadCallback(
 
                 if (!self->httpResponse.headers.contentLength.found &&
                     !self->httpResponse.headers.transferEncoding.chunked &&
-                    self->httpResponse.statusCode 
+                    self->httpResponse.statusCode
                         != PHIT_STATUSCODE_204_NO_CONTENT)
                 {
                     self->errorCallback(
@@ -207,8 +209,8 @@ static void _ReadCallback(
 
                     /* Dispatch all items in this chunk */
                     self->contentCallback(
-                        self, 
-                        self->in.data, 
+                        self,
+                        self->in.data,
                         chunkSize,
                         self->callbackData);
 
@@ -230,8 +232,8 @@ static void _ReadCallback(
                 {
                     /* Dispatch the content */
                     self->contentCallback(
-                        self, 
-                        self->in.data, 
+                        self,
+                        self->in.data,
                         r,
                         self->callbackData);
 
@@ -256,9 +258,9 @@ trailer:
 
         if (self->httpState == HTTPSTATE_WAITING_FOR_TRAILER)
         {
-            ssize_t trailersLength = 
+            ssize_t trailersLength =
                 HTTPHaveCompleteTrailers(
-                self->in.data, 
+                self->in.data,
                 self->in.size,
                 self->httpResponse.headers.trailer.size);
 
@@ -408,7 +410,7 @@ Client* ClientNew(
     Sock sock;
     Client* self;
 
-    if (!errorCallback || !headersCallback || 
+    if (!errorCallback || !headersCallback ||
         !contentCallback || !trailersCallback)
     {
         return NULL;

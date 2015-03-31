@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -68,7 +70,7 @@
 #if defined(ENABLE_LOGP)
 # define LOGP LOGW
 #else
-# define LOGP(EXPR) 
+# define LOGP(EXPR)
 #endif
 
 /*
@@ -80,24 +82,24 @@
 */
 
 #if 0
-static const StrLit _metadataV3[] = 
+static const StrLit _metadataV3[] =
 {
-    { STRLIT("nometadata") },  
-    { STRLIT("minimalmetadata") }, 
+    { STRLIT("nometadata") },
+    { STRLIT("minimalmetadata") },
     { STRLIT("fullmetadata") }
 };
 
-static const StrLit _metadataV4[] = 
-{ 
-    { STRLIT("none") }, 
-    { STRLIT("minimal") }, 
+static const StrLit _metadataV4[] =
+{
+    { STRLIT("none") },
+    { STRLIT("minimal") },
     { STRLIT("full") }
 };
 #endif
 
 static OL_Object* _Deserialize(
     OL_Scope* scope,
-    char* data, 
+    char* data,
     size_t size)
 {
     OL_Object* object = OL_Scope_NewObject(scope);
@@ -292,7 +294,7 @@ static void _ODATAPlugin_HandleRequest(
     /* Process the OData version header */
     if (_ProcessVersionHeader(headers, &version) != 0)
     {
-        PostError(context, OL_Result_InternalError, 
+        PostError(context, OL_Result_InternalError,
             "unsupported OData version");
         goto failed;
     }
@@ -400,7 +402,7 @@ static void _ODATAPlugin_HandleRequest(
             }
 
             /* Save the segment name to process property requests later */
-            ((Scope*)scope)->unmatchedSegmentName = 
+            ((Scope*)scope)->unmatchedSegmentName =
                 uri->segments.data[uri->segments.size-1].name;
         }
 
@@ -457,13 +459,13 @@ static void _ODATAPlugin_HandleRequest(
         ((Scope*)scope)->httpStatusMsg = PHIT_STATUSMSG_200_OK;
 
         (*self->provider->ft->Get)(
-            self->provider, 
-            scope, 
+            self->provider,
+            scope,
             &uri->base);
     }
     else if (method == PHIT_METHOD_POST)
     {
-        OL_Object* object = 
+        OL_Object* object =
             _Deserialize(scope, (char*)content, contentLength);
 
         ((Scope*)scope)->httpStatusCode = PHIT_STATUSCODE_201_CREATED;
@@ -476,8 +478,8 @@ static void _ODATAPlugin_HandleRequest(
         }
 
         (*self->provider->ft->Post)(
-            self->provider, 
-            scope, 
+            self->provider,
+            scope,
             &uri->base,
             object);
 
@@ -485,7 +487,7 @@ static void _ODATAPlugin_HandleRequest(
     }
     else if (method == PHIT_METHOD_PUT)
     {
-        OL_Object* object = 
+        OL_Object* object =
             _Deserialize(scope, (char*)content, contentLength);
 
         ((Scope*)scope)->httpStatusCode = PHIT_STATUSCODE_201_CREATED;
@@ -498,8 +500,8 @@ static void _ODATAPlugin_HandleRequest(
         }
 
         (*self->provider->ft->Put)(
-            self->provider, 
-            scope, 
+            self->provider,
+            scope,
             &uri->base,
             object);
 
@@ -507,7 +509,7 @@ static void _ODATAPlugin_HandleRequest(
     }
     else if (method == PHIT_METHOD_PATCH)
     {
-        OL_Object* object = 
+        OL_Object* object =
             _Deserialize(scope, (char*)content, contentLength);
 
         ((Scope*)scope)->httpStatusCode = PHIT_STATUSCODE_204_NO_CONTENT;
@@ -520,8 +522,8 @@ static void _ODATAPlugin_HandleRequest(
         }
 
         (*self->provider->ft->Patch)(
-            self->provider, 
-            scope, 
+            self->provider,
+            scope,
             &uri->base,
             object);
 
@@ -533,8 +535,8 @@ static void _ODATAPlugin_HandleRequest(
         ((Scope*)scope)->httpStatusMsg = PHIT_STATUSMSG_204_NO_CONTENT;
 
         (*self->provider->ft->Delete)(
-            self->provider, 
-            scope, 
+            self->provider,
+            scope,
             &uri->base);
     }
     else if (method == PHIT_METHOD_OPTIONS)
@@ -542,10 +544,10 @@ static void _ODATAPlugin_HandleRequest(
         PHIT_Context_PostStatusLine(
             context, PHIT_STATUSCODE_200_OK, PHIT_STATUSMSG_200_OK);
 
-        PHIT_Context_PostHeader(context, "Allow", 
+        PHIT_Context_PostHeader(context, "Allow",
             "GET,POST,PUT,PATCH,DELETE,OPTIONS");
 
-        PHIT_Context_PostHeader(context, "Public", 
+        PHIT_Context_PostHeader(context, "Public",
             "GET,POST,PUT,PATCH,DELETE,OPTIONS");
 
         PHIT_Context_PostHeader(context, "Access-Control-Allow-Origin", "*");
@@ -553,7 +555,7 @@ static void _ODATAPlugin_HandleRequest(
         PHIT_Context_PostHeader(context, "Access-Control-Allow-Methods",
             "GET,POST,PUT,PATCH,DELETE,OPTIONS");
 
-        PHIT_Context_PostHeader(context, "Access-Control-Allow-Headers", 
+        PHIT_Context_PostHeader(context, "Access-Control-Allow-Headers",
             "DataServiceVersion,OData-Version,Accept,MaxDataServiceVersion");
 
         PHIT_Context_PostHeader(context, "Access-Control-Expose-Headers", "*");
@@ -563,7 +565,7 @@ static void _ODATAPlugin_HandleRequest(
     }
     else
     {
-        PostError(context, OL_Result_NotSupported, 
+        PostError(context, OL_Result_NotSupported,
             "HTTP method: %s", HTTPMethodNameOf(method));
     }
 

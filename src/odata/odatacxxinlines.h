@@ -5,23 +5,25 @@
 **
 ** Copyright (c) Microsoft Corporation
 **
-** All rights reserved. 
+** All rights reserved.
 **
 ** MIT License
 **
-** Permission is hereby granted, free of charge, to any person obtaining a copy ** of this software and associated documentation files (the ""Software""), to 
-** deal in the Software without restriction, including without limitation the 
-** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-** sell copies of the Software, and to permit persons to whom the Software is 
-** furnished to do so, subject to the following conditions: The above copyright ** notice and this permission notice shall be included in all copies or 
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
 ** substantial portions of the Software.
 **
-** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.
 **
 **==============================================================================
@@ -516,7 +518,7 @@ inline bool Array::GetBoolean(size_t index, Boolean& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Boolean);
     {
         x = v.u.boolean;
@@ -530,7 +532,7 @@ inline bool Array::GetInt64(size_t index, Int64& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Int64);
     {
         x = v.u.int64;
@@ -544,7 +546,7 @@ inline bool Array::GetDouble(size_t index, Double& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Double);
     {
         x = v.u.double_;
@@ -558,7 +560,7 @@ inline bool Array::GetString(size_t index, const Char*& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_String)
     {
         x = v.u.string;
@@ -572,7 +574,7 @@ inline bool Array::GetObject(size_t index, Object& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Object)
     {
         OL_Object_Release(*((OL_Object**)&x));
@@ -587,7 +589,7 @@ inline bool Array::GetArray(size_t index, Array& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Array)
     {
         OL_Array_Release(*((OL_Array**)&x));
@@ -602,7 +604,7 @@ inline bool Array::GetByte(size_t index, Byte& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Byte)
     {
         x = v.u.byte;
@@ -616,7 +618,7 @@ inline bool Array::GetSByte(size_t index, SByte& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_SByte)
     {
         x = v.u.sByte;
@@ -630,7 +632,7 @@ inline bool Array::GetInt16(size_t index, Int16& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Int16)
     {
         x = v.u.int16;
@@ -644,7 +646,7 @@ inline bool Array::GetInt32(size_t index, Int32& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Int32)
     {
         x = v.u.int32;
@@ -658,7 +660,7 @@ inline bool Array::GetSingle(size_t index, Single& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Single)
     {
         x = v.u.single;
@@ -672,7 +674,7 @@ inline bool Array::GetDecimal(size_t index, Decimal& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Decimal)
     {
         x._rep = v.u.decimal;
@@ -686,7 +688,7 @@ inline bool Array::GetBinary(size_t index, Binary& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Binary)
     {
         x = v.u.binary;
@@ -700,7 +702,7 @@ inline bool Array::GetDate(size_t index, Date& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Date)
     {
         x._rep = v.u.date;
@@ -714,7 +716,7 @@ inline bool Array::GetTimeOfDay(size_t index, TimeOfDay& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_TimeOfDay)
     {
         x._rep = v.u.timeOfDay;
@@ -728,7 +730,7 @@ inline bool Array::GetDateTimeOffset(size_t index, DateTimeOffset& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_DateTimeOffset)
     {
         x._rep = v.u.dateTimeOffset;
@@ -742,7 +744,7 @@ inline bool Array::GetDuration(size_t index, Duration& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Duration)
     {
         x._rep = v.u.duration;
@@ -756,7 +758,7 @@ inline bool Array::GetGuid(size_t index, Guid& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_Guid)
     {
         x._rep = v.u.guid;
@@ -770,7 +772,7 @@ inline bool Array::GetNavigationLink(size_t index, const Char*& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_NavigationLink)
     {
         x = v.u.navigationLink;
@@ -784,7 +786,7 @@ inline bool Array::GetAssociationLink(size_t index, const Char*& x) const
 {
     Value v;
 
-    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok && 
+    if (OL_Array_Get(_rep, index, &v) == OL_Result_Ok &&
         v.type == OL_Type_AssociationLink)
     {
         x = v.u.associationLink;
@@ -1313,7 +1315,7 @@ inline bool Object::GetBoolean(const Char* name, Boolean& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Boolean)
     {
         x = v.u.boolean;
@@ -1327,7 +1329,7 @@ inline bool Object::GetInt64(const Char* name, Int64& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Int64)
     {
         x = v.u.int64;
@@ -1341,7 +1343,7 @@ inline bool Object::GetDouble(const Char* name, Double& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Double)
     {
         x = v.u.double_;
@@ -1355,7 +1357,7 @@ inline bool Object::GetString(const Char* name, const Char*& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_String)
     {
         x = v.u.string;
@@ -1369,7 +1371,7 @@ inline bool Object::GetObject(const Char* name, Object& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Object)
     {
         OL_Object_Release(*((OL_Object**)&x));
@@ -1384,7 +1386,7 @@ inline bool Object::GetArray(const Char* name, Array& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Array)
     {
         OL_Array_Release(*((OL_Array**)&x));
@@ -1399,7 +1401,7 @@ inline bool Object::GetByte(const Char* name, Byte& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Byte)
     {
         x = v.u.byte;
@@ -1413,7 +1415,7 @@ inline bool Object::GetSByte(const Char* name, SByte& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_SByte)
     {
         x = v.u.sByte;
@@ -1427,7 +1429,7 @@ inline bool Object::GetInt16(const Char* name, Int16& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Int16)
     {
         x = v.u.int16;
@@ -1441,7 +1443,7 @@ inline bool Object::GetInt32(const Char* name, Int32& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Int32)
     {
         x = v.u.int32;
@@ -1455,7 +1457,7 @@ inline bool Object::GetSingle(const Char* name, Single& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Single)
     {
         x = v.u.single;
@@ -1469,7 +1471,7 @@ inline bool Object::GetDecimal(const Char* name, Decimal& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Decimal)
     {
         x._rep = v.u.decimal;
@@ -1483,7 +1485,7 @@ inline bool Object::GetBinary(const Char* name, Binary& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Binary)
     {
         x = v.u.binary;
@@ -1497,7 +1499,7 @@ inline bool Object::GetDate(const Char* name, Date& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Date)
     {
         x._rep = v.u.date;
@@ -1511,7 +1513,7 @@ inline bool Object::GetTimeOfDay(const Char* name, TimeOfDay& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_TimeOfDay)
     {
         x._rep = v.u.timeOfDay;
@@ -1525,7 +1527,7 @@ inline bool Object::GetDateTimeOffset(const Char* name, DateTimeOffset& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_DateTimeOffset)
     {
         x._rep = v.u.dateTimeOffset;
@@ -1539,7 +1541,7 @@ inline bool Object::GetDuration(const Char* name, Duration& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Duration)
     {
         x._rep = v.u.duration;
@@ -1553,7 +1555,7 @@ inline bool Object::GetGuid(const Char* name, Guid& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Guid)
     {
         x._rep = v.u.guid;
@@ -1567,7 +1569,7 @@ inline bool Object::GetNavigationLink(const Char* name, NavigationLink& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_NavigationLink)
     {
         x = v.u.navigationLink;
@@ -1578,12 +1580,12 @@ inline bool Object::GetNavigationLink(const Char* name, NavigationLink& x) const
 }
 
 inline bool Object::GetAssociationLink(
-    const Char* name, 
+    const Char* name,
     const Char*& x) const
 {
     Value v;
 
-    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok && 
+    if (OL_Object_Get(_rep, name, &v) == OL_Result_Ok &&
         v.type == OL_Type_AssociationLink)
     {
         x = v.u.associationLink;
@@ -1800,7 +1802,7 @@ inline bool Object::GetAtBoolean(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Boolean)
     {
         x = v.u.boolean;
@@ -1817,7 +1819,7 @@ inline bool Object::GetAtInt64(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Int64)
     {
         x = v.u.int64;
@@ -1834,7 +1836,7 @@ inline bool Object::GetAtDouble(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Double)
     {
         x = v.u.double_;
@@ -1851,7 +1853,7 @@ inline bool Object::GetAtString(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_String)
     {
         x = v.u.string;
@@ -1868,7 +1870,7 @@ inline bool Object::GetAtObject(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Object)
     {
         OL_Object_AddRef(x._rep = v.u.object);
@@ -1885,7 +1887,7 @@ inline bool Object::GetAtArray(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Array)
     {
         OL_Array_AddRef(x._rep = v.u.array);
@@ -1902,7 +1904,7 @@ inline bool Object::GetAtByte(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Byte)
     {
         x = v.u.byte;
@@ -1919,7 +1921,7 @@ inline bool Object::GetAtSByte(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_SByte)
     {
         x = v.u.sByte;
@@ -1933,7 +1935,7 @@ inline bool Object::GetAtInt16(size_t index, const Char*& name, Int16& x) const
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Int16)
     {
         x = v.u.int16;
@@ -1950,7 +1952,7 @@ inline bool Object::GetAtInt32(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Int32)
     {
         x = v.u.int32;
@@ -1967,7 +1969,7 @@ inline bool Object::GetAtSingle(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Single)
     {
         x = v.u.single;
@@ -1984,7 +1986,7 @@ inline bool Object::GetAtDecimal(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Decimal)
     {
         x._rep = v.u.decimal;
@@ -2001,7 +2003,7 @@ inline bool Object::GetAtBinary(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Binary)
     {
         x = v.u.binary;
@@ -2018,7 +2020,7 @@ inline bool Object::GetAtDate(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Date)
     {
         x._rep = v.u.date;
@@ -2035,7 +2037,7 @@ inline bool Object::GetAtTimeOfDay(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_TimeOfDay)
     {
         x._rep = v.u.timeOfDay;
@@ -2052,7 +2054,7 @@ inline bool Object::GetAtDateTimeOffset(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_DateTimeOffset)
     {
         x._rep = v.u.dateTimeOffset;
@@ -2069,7 +2071,7 @@ inline bool Object::GetAtDuration(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Duration)
     {
         x._rep = v.u.duration;
@@ -2086,7 +2088,7 @@ inline bool Object::GetAtGuid(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_Guid)
     {
         x._rep = v.u.guid;
@@ -2103,7 +2105,7 @@ inline bool Object::GetAtNavigationLink(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_NavigationLink)
     {
         x = v.u.navigationLink;
@@ -2120,7 +2122,7 @@ inline bool Object::GetAtAssociationLink(
 {
     Value v;
 
-    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok && 
+    if (OL_Object_GetAt(_rep, index, &name, &v) == OL_Result_Ok &&
         v.type == OL_Type_AssociationLink)
     {
         x = v.u.associationLink;
