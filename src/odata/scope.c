@@ -381,22 +381,22 @@ static void* _GetProviderData(
 
 static OL_ScopeFT _ft =
 {
-    _AddRef,
-    _Release,
-    _Clear,
-    _Reset,
-    _NewURI,
-    _NewArray,
-    _NewObject,
-    NULL, /* SendBeginEntitySet, */
-    NULL, /* SendEntity, */
-    NULL, /* SendEndEntitySet, */
-    NULL, /* SendResult, */
-    NULL, /* SendMetadataStruct */
-    NULL, /* SendMetadataXML */
-    _SetProviderData,
-    _GetProviderData,
-    NULL, /* GetOption */
+    .AddRef = _AddRef,
+    .Release = _Release,
+    .Clear = _Clear,
+    .Reset = _Reset,
+    .NewURI = _NewURI,
+    .NewArray = _NewArray,
+    .NewObject = _NewObject,
+    /* SendBeginEntitySet, */
+    /* SendEntity, */
+    /* SendEndEntitySet, */
+    /* SendResult, */
+    /* SendMetadataStruct */
+    /* SendMetadataXML */
+    .SetProviderData = _SetProviderData,
+    .GetProviderData = _GetProviderData,
+    /* GetOption */
 };
 
 OL_Scope* __OL_Scope_New()
