@@ -78,6 +78,7 @@ include pkg/Makefile-libfrogprovider.inc
 endif
 if BUILD_GADGET_PROVIDER
 include pkg/Makefile-libgadgetprovider.inc
+include pkg/Makefile-libasyncgadgetprovider.inc
 endif
 if BUILD_HEAP_PROVIDER
 include pkg/Makefile-libheapprovider.inc
