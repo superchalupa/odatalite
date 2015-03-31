@@ -13,6 +13,6 @@ nodist_out_libmetadataprovider_la_SOURCES = \
 
 DISTCLEANFILES += $(nodist_out_libmetadataprovider_la_SOURCES)
 
-EXTRA_DIST += src/RedfishSchema/ServiceRoot.0.9.2.metadata
+EXTRA_DIST += src/RedfishSchema/ServiceRoot.0.94.0.metadata
 
 INSTALL_COMMANDS += ;echo  'metadataprovider:/$$metadata:' >> $(DESTDIR)/$(phit_confdir)/providers.conf

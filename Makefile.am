@@ -26,7 +26,8 @@ bin_includes = src
 
 # generate .c files from .metadata files
 # NOTE: version encoded in files, unfortunately...
-%.c: %.0.9.2.metadata out/csdl2c
+# ServiceRoot.0.94.0.metadata
+%.c: %.0.94.0.metadata out/csdl2c
 	PATH=$$PATH:$(top_builddir)/out csdl2c $<
 	mv $(notdir $@) $@
 
