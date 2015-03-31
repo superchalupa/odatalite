@@ -338,8 +338,6 @@ static void _ODATAPlugin_HandleRequest(
         goto failed;
     }
 
-    DEBUG_PRINTF("=== scope uri(%s)\n", uri);
-
     /* The two contexts will refer to each other */
     PHIT_Context_SetPluginData(context, scope);
 
