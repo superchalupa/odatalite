@@ -183,7 +183,9 @@ int ValueCompare(
             size_t i;
 
             n1 = JSON_Object_Count(o1);
-            n2 = JSON_Object_Count(o1);
+            n2 = JSON_Object_Count(o2);
+            if (n1 != n2)
+                return -1;
 
             for (i = 0; i < n1; i++)
             {

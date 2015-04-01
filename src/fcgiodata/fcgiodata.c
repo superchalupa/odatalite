@@ -39,6 +39,8 @@ int FASTCGI_HeadersParse(
     HTTPBuf* buf,
     char **env);
 
+#if 0
+//unused for now, mainly for debugging
 static void PrintEnv(char *label, char **envp)
 {
     FCGI_printf("%s:<br>\n<pre>\n", label);
@@ -47,6 +49,7 @@ static void PrintEnv(char *label, char **envp)
     }
     FCGI_printf("</pre><p>\n");
 }
+#endif
 
 int main ()
 {

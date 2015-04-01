@@ -271,7 +271,6 @@ static void _ODATAPlugin_HandleRequest(
     OL_Scope* scope = NULL;
     URI* uri = NULL;
     char err[64];
-    const char* entitySetName;
     OL_MetadataType metadataType = OL_MetadataType_Minimal;
     unsigned short version;
 
@@ -363,10 +362,7 @@ static void _ODATAPlugin_HandleRequest(
 
         /* We know that this is preceded with a '/' character */
         DEBUG_ASSERT(name[-1] == '/');
-        entitySetName = name - 1;
     }
-    else
-        entitySetName = "/";
 
     /* Find provider entry and set up paging */
     {
@@ -378,7 +374,7 @@ static void _ODATAPlugin_HandleRequest(
         {
             char errstr[1024] = {0};
             snprintf(errstr, 1023, "no provider for URI: '%s'", requestURI);
-            PostError(context, OL_Result_NotFound, errstr);
+            PostError(context, OL_Result_NotFound, "%s", errstr);
             goto failed;
         }
 
@@ -395,7 +391,7 @@ static void _ODATAPlugin_HandleRequest(
             {
                 char errstr[1024] = {0};
                 snprintf(errstr, 1023, "no provider for URI: '%s'", requestURI);
-                PostError(context, OL_Result_NotFound, errstr);
+                PostError(context, OL_Result_NotFound, "%s", errstr);
                 goto failed;
             }
 
