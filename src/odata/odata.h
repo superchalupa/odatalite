@@ -37,6 +37,7 @@
 #include <stddef.h>
 #include <stdarg.h>
 #include <limits.h>
+#include <syslog.h>
 
 /*
 **==============================================================================
@@ -538,6 +539,25 @@ typedef struct _OL_ScopeFT
         const OL_Char* format,
         va_list ap);
 
+    int (*SetLogPriority)(
+        OL_Scope* self,
+        int priority
+    );
+
+    int (*GetLogPriority)(
+        OL_Scope* self
+    );
+
+    void (*VLogMessage)(
+        OL_Scope* self,
+        int priority,
+        const char *file,
+        int line,
+        const char *fn,
+        const char *format,
+        va_list args
+    );
+
     void (*SetProviderData)(
         OL_Scope* self,
         void* ptr,
@@ -692,6 +712,36 @@ OL_INLINE OL_Result OL_Scope_SendResultF(
     return r;
 }
 
+OL_INLINE int OL_Scope_GetLogPriority(
+    OL_Scope* self)
+{
+    return self->ft->GetLogPriority(self);
+}
+
+OL_INLINE int OL_Scope_SetLogPriority(
+    OL_Scope* self,
+    int priority)
+{
+    return self->ft->SetLogPriority(self, priority);
+}
+
+OL_PRINTF_FORMAT(6, 7)
+OL_INLINE void OL_Scope_LogMessage(
+    OL_Scope* self,
+    int priority,
+    const char *file,
+    int line,
+    const char *fn,
+    const char *format,
+    ...)
+{
+    va_list ap;
+    va_start(ap, format);
+    self->ft->VLogMessage(self, priority, file, line, fn, format, ap);
+    va_end(ap);
+}
+
+
 OL_INLINE void OL_Scope_SetProviderData(
     OL_Scope* self,
     void* ptr,
@@ -718,6 +768,39 @@ OL_INLINE OL_Result OL_Scope_GetOption(
 }
 
 OL_Scope* __OL_Scope_New();
+
+/*
+**==============================================================================
+**
+** Logging
+**
+**==============================================================================
+*/
+
+// purpose of this is to ensure that we always have valid well-formed logging calls instead of just throwing away the result
+// compiler should optimize away completely
+static inline void __attribute__((always_inline, format(printf, 2, 3)))
+__scope_log_null(OL_Scope *self, const char *format, ...) {}
+
+#define __scope_log_cond(ctx, prio, arg...) \
+  do { \
+     if (OL_Scope_GetLogPriority(ctx) >= prio) \
+      OL_Scope_LogMessage(ctx, prio, __FILE__, __LINE__, __FUNCTION__, ## arg); \
+  } while (0)
+
+#ifdef ENABLE_LOGGING
+#  ifdef ENABLE_DEBUG
+#    define OL_Scope_DEBUG(ctx, arg...) __scope_log_cond(ctx, LOG_DEBUG, ## arg)
+#  else
+#    define OL_Scope_DEBUG(ctx, arg...) __scope_log_null(ctx, ## arg)
+#  endif
+#  define OL_Scope_INFO(ctx, arg...) __scope_log_cond(ctx, LOG_INFO, ## arg)
+#  define OL_Scope_ERR(ctx, arg...) __scope_log_cond(ctx, LOG_ERR, ## arg)
+#else
+#  define OL_Scope_DEBUG(ctx, arg...) __scope_log_null(ctx, ## arg)
+#  define OL_Scope_INFO(ctx, arg...) __scope_log_null(ctx, ## arg)
+#  define OL_Scope_ERR(ctx, arg...) __scope_log_null(ctx, ## arg)
+#endif
 
 /*
 **==============================================================================

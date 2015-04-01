@@ -3,7 +3,7 @@ Description=The PHIT Web Server
 
 [Service]
 Type=simple
-ExecStart=/usr/sbin/phitd -f -i -S -l VERBOSE
+ExecStart=/usr/sbin/phitd -f -i -S -l DEBUG
 Restart=on-failure
 
 # we will run as an unprivileged user that has very limited filesystem privilege

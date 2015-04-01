@@ -28,6 +28,7 @@
 **
 **==============================================================================
 */
+#include <stdarg.h>
 #include <base/buf.h>
 #include <base/dump.h>
 #include <base/log.h>
@@ -308,20 +309,60 @@ static int _GetOption(
     return -1;
 }
 
+static int _SetLogPriority(
+        PHIT_Context* context,
+        int priority)
+{
+    Context* self = (Context*)context;
+    DEBUG_ASSERT(context->magic == PHIT_CONTEXT_MAGIC);
+
+    int oldlevel = self->loglevel;
+    self->loglevel = priority;
+    return oldlevel;
+}
+
+static int _GetLogPriority(
+        PHIT_Context* context)
+{
+    Context* self = (Context*)context;
+    DEBUG_ASSERT(context->magic == PHIT_CONTEXT_MAGIC);
+
+    return self->loglevel;
+}
+
+static void _LogMessage(
+        PHIT_Context* context,
+        int priority,
+        const char *file,
+        int line,
+        const char *fn,
+        const char *format,
+        va_list args)
+{
+    Context* self = (Context*)context;
+    DEBUG_ASSERT(context->magic == PHIT_CONTEXT_MAGIC);
+    (void)self;
+
+    VLog(priority, format, args);
+}
+
 static PHIT_Context _base =
 {
-    PHIT_CONTEXT_MAGIC,
-    _PostStatusLine,
-    _PostHeader,
-    _PostHeaderUL,
-    _PostTrailerField,
-    _PostEOH,
-    _PostContent,
-    _PostEOC,
-    _PostError,
-    _SetPluginData,
-    _GetPluginData,
-    _GetOption
+    .magic = PHIT_CONTEXT_MAGIC,
+    .PostStatusLine = _PostStatusLine,
+    .PostHeader = _PostHeader,
+    .PostHeaderUL = _PostHeaderUL,
+    .PostTrailerField = _PostTrailerField,
+    .PostEOH = _PostEOH,
+    .PostContent = _PostContent,
+    .PostEOC = _PostEOC,
+    .PostError = _PostError,
+    .SetPluginData = _SetPluginData,
+    .GetPluginData = _GetPluginData,
+    .GetOption = _GetOption,
+    .SetLogPriority = _SetLogPriority,
+    .GetLogPriority = _GetLogPriority,
+    .VLogMessage = _LogMessage,
 };
 
 void ContextInit(
@@ -332,6 +373,7 @@ void ContextInit(
     self->base = _base;
     self->connection = connection;
     self->connection->base.mask &= ~SELECTOR_WRITE;
+    self->loglevel=9;
 }
 
 void ContextReset(
@@ -341,6 +383,7 @@ void ContextReset(
     self->postedEOH = 0;
     self->postedEOC = 0;
     self->connection->base.mask &= ~SELECTOR_WRITE;
+    self->loglevel=9;
 }
 
 void ContextDestroy(

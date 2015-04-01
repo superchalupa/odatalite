@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <stdarg.h>
 
 /*
 **==============================================================================
@@ -509,6 +510,23 @@ struct _PHIT_Context
         const char* statusMsg,
         const char* detail);
 
+    /* Logging functions */
+    int (*SetLogPriority)(
+        PHIT_Context* context,
+        int priority);
+
+    int (*GetLogPriority)(
+        PHIT_Context* context);
+
+    void (*VLogMessage)(
+        PHIT_Context* context,
+        int priority,
+        const char *file,
+        int line,
+        const char *fn,
+        const char *format,
+        va_list args);
+
     /* Set client data */
     void* (*SetPluginData)(
         PHIT_Context* context,
@@ -585,6 +603,47 @@ PHIT_INLINE void PHIT_Context_PostError(
     const char* detail)
 {
     context->PostError(context, statusCode, statusMsg, detail);
+}
+
+
+PHIT_INLINE int PHIT_Context_SetLogPriority(
+    PHIT_Context* context,
+    int priority)
+{
+    return context->SetLogPriority(context, priority);
+}
+
+PHIT_INLINE int PHIT_Context_GetLogPriority(
+    PHIT_Context* context)
+{
+    return context->GetLogPriority(context);
+}
+
+PHIT_INLINE void PHIT_Context_VLogMessage(
+    PHIT_Context* context,
+    int priority,
+    const char *file,
+    int line,
+    const char *fn,
+    const char *format,
+    va_list args)
+{
+    context->VLogMessage(context, priority, file, line, fn, format, args);
+}
+
+PHIT_INLINE void PHIT_Context_LogMessage(
+    PHIT_Context* context,
+    int priority,
+    const char *file,
+    int line,
+    const char *fn,
+    const char *format,
+    ...)
+{
+    va_list args;
+    va_start(args, format);
+    context->VLogMessage(context, priority, file, line, fn, format, args);
+    va_end(args);
 }
 
 PHIT_INLINE void* PHIT_Context_SetPluginData(

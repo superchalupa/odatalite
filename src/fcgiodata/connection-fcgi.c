@@ -28,21 +28,44 @@
 **
 **==============================================================================
 */
-#include "common.h"
 
+//#define _GNU_SOURCE
+//#include <syslog.h>
+
+#include "common.h"
 #include "base/log.h"
 #include "connection-fcgi.h"
+
+static void FCGI_Context_VLogMessage(
+        PHIT_Context* context,
+        int priority,
+        const char *file,
+        int line,
+        const char *fn,
+        const char *format,
+        va_list args)
+{
+    Context* self = (Context*)context;
+    DEBUG_ASSERT(context->magic == PHIT_CONTEXT_MAGIC);
+    (void)self;
+
+    vsyslog(priority, format, args);
+}
 
 static void FCGI_PostStatusLine(
     PHIT_Context* context,
     PHIT_StatusCode statusCode,
     const char* statusMsg)
 {
-  char *name = "Status";
-  char value[50] = "";
+    Context* self = (Context*)context;
+    DEBUG_ASSERT(context->magic == PHIT_CONTEXT_MAGIC);
+    (void)self;
 
-  snprintf(value, sizeof(value)-1, "%d %s", statusCode, statusMsg);
-  context->PostHeader(context, name, value);
+    char *name = "Status";
+    char value[50] = "";
+
+    snprintf(value, sizeof(value)-1, "%d %s", statusCode, statusMsg);
+    context->PostHeader(context, name, value);
 }
 
 Connection* FCGI_ConnectionNew()
@@ -67,6 +90,7 @@ Connection* FCGI_ConnectionNew()
     // anybody care to explain why I can't do the below two lines as one line?
     PHIT_Context *base = &self->context.base;
     base->PostStatusLine = &FCGI_PostStatusLine;
+    base->VLogMessage = &FCGI_Context_VLogMessage;
 
     return self;
 }

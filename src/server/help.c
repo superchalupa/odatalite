@@ -55,7 +55,7 @@ static const char HELP_ROLES[] = "\
 
 #if defined(ENABLE_LOGGING)
 static const char HELP_LOGGING[] = "\
-    -l LEVEL            Log level: FATAL|ERROR|WARNING|INFO|DEBUG|VERBOSE\n\
+    -l LEVEL            Log level: EMERG|ALERT|CRIT|ERR|WARNING|NOTICE|INFO|DEBUG\n\
     -S                  Send log output to standard output\n";
 #endif
 

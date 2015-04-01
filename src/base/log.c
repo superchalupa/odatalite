@@ -30,6 +30,8 @@
 */
 #define _GNU_SOURCE
 
+#include <syslog.h>
+
 #include "log.h"
 #include "datetime.h"
 #include "path.h"
@@ -39,22 +41,16 @@
 
 #if defined(ENABLE_LOGGING)
 
-static const char* _arr =
-    "\005FATAL\0"
-    "\005ERROR\0"
-    "\007WARNING\0"
-    "\004INFO\0"
-    "\005DEBUG\0"
-    "\007VERBOSE";
-
-static const unsigned char _off[] =
-{
-    0x00, /* 'FATAL' */
-    0x07, /* 'ERROR' */
-    0x0E, /* 'WARNING' */
-    0x17, /* 'INFO' */
-    0x1D, /* 'DEBUG' */
-    0x24, /* 'VERBOSE' */
+static const char *lognames[] = {
+    "EMERG", // = 0
+    "ALERT", // = 1
+    "CRIT", // = 2
+    "ERR", // = 3
+    "WARNING", // = 4
+    "NOTICE", // = 5
+    "INFO", // = 6
+    "DEBUG", // = 7
+    NULL
 };
 
 LogLevel __logLevel = LOG_WARNING;
@@ -75,9 +71,9 @@ int LogLevelFromString(
 {
     size_t i;
 
-    for (i = 0; i < sizeof(_off) / sizeof(_off[0]); i++)
+    for (i = 0; lognames[i];  i++)
     {
-        if (Strcasecmp(_arr + _off[i] + 1, str) == 0)
+        if (Strcasecmp(lognames[i] , str) == 0)
         {
             *level = (LogLevel)i;
             return 0;
@@ -151,9 +147,9 @@ void VLog(
 #endif /* defined(ENABLE_DATETIME_LOGGING) */
 
 #if defined(ENABLE_LOGLEVEL_LOGGING)
-    fprintf(__log, "%s: ", _arr + _off[(int)level] + 1);
+    fprintf(__log, "%s: ", lognames[level]);
 #else
-    fprintf(__log, "%c: ", (_arr + _off[(int)level])[1]);
+    fprintf(__log, "%c: ", lognames[level][0]);
 #endif
     vfprintf(__log, format, ap);
     fputc('\n', __log);
@@ -188,7 +184,7 @@ void __LogF(const char* format, ...)
 {
     va_list ap;
     va_start(ap, format);
-    VLog(LOG_FATAL, format, ap);
+    VLog(LOG_EMERG, format, ap);
     va_end(ap);
 }
 #endif /* defined(INCLUDE_UNUSED) */
@@ -198,7 +194,7 @@ void __LogE(const char* format, ...)
 {
     va_list ap;
     va_start(ap, format);
-    VLog(LOG_ERROR, format, ap);
+    VLog(LOG_ERR, format, ap);
     va_end(ap);
 }
 #endif /* defined(INCLUDE_UNUSED) */
@@ -226,14 +222,6 @@ void __LogD(const char* format, ...)
     va_list ap;
     va_start(ap, format);
     VLog(LOG_DEBUG, format, ap);
-    va_end(ap);
-}
-
-void __LogV(const char* format, ...)
-{
-    va_list ap;
-    va_start(ap, format);
-    VLog(LOG_VERBOSE, format, ap);
     va_end(ap);
 }
 

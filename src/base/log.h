@@ -34,16 +34,13 @@
 #include "common.h"
 #include <stdarg.h>
 
-typedef enum _LogLevel
-{
-   LOG_FATAL = 0,
-   LOG_ERROR = 1,
-   LOG_WARNING = 2,
-   LOG_INFO = 3,
-   LOG_DEBUG = 4,
-   LOG_VERBOSE = 5
-}
-LogLevel;
+// TODO: windows compat? (ie. no syslog.h)
+// for definitions
+#include <syslog.h>
+// back compat for syslog defs
+#define LOG_VERBOSE LOG_DEBUG
+
+typedef int LogLevel;
 
 #if defined(ENABLE_LOGGING)
 
@@ -97,9 +94,6 @@ void __LogI(const char* format, ...);
 PRINTF_FORMAT(1, 2)
 void __LogD(const char* format, ...);
 
-PRINTF_FORMAT(1, 2)
-void __LogV(const char* format, ...);
-
 #endif /* defined(ENABLE_DEBUG) */
 
 # define LOGF(ARGS) __LogF ARGS
@@ -109,10 +103,8 @@ void __LogV(const char* format, ...);
 
 # if defined(ENABLE_DEBUG)
 #  define LOGD(ARGS) __LogD ARGS
-#  define LOGV(ARGS) __LogV ARGS
 # else
 #  define LOGD(ARGS)
-#  define LOGV(ARGS)
 # endif
 
 #else /* defined(ENABLE_LOGGING) */
@@ -122,12 +114,11 @@ void __LogV(const char* format, ...);
 # define LOGW(ARGS)
 # define LOGI(ARGS)
 # define LOGD(ARGS)
-# define LOGV(ARGS)
 
 INLINE void LogSetLevel(LogLevel level) { }
 INLINE void LogSetStream(FILE* os) { }
 INLINE void LogClose() { }
-INLINE LogLevel LogGetLevel() { return LOG_FATAL; }
+INLINE LogLevel LogGetLevel() { return LOG_EMERG; }
 INLINE FILE* LogGetStream() { return stdout; }
 
 #endif /* defined(ENABLE_LOGGING) */

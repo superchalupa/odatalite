@@ -68,6 +68,9 @@ typedef struct _Context
 
     /* Status code from the PostStatusLine() method */
     PHIT_StatusCode statusCode;
+
+    /* current logging level */
+    int loglevel;
 }
 Context;
 

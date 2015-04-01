@@ -641,6 +641,37 @@ static OL_Result _Scope_SendResult(
     return OL_Result_Ok;
 }
 
+static int _Scope_SetLogPriority(
+    OL_Scope* self_,
+    int priority)
+{
+    Scope* self = (Scope*)self_;
+    PHIT_Context* context = (PHIT_Context*)self->privateData;
+    return PHIT_Context_SetLogPriority(context, priority);
+}
+
+static int _Scope_GetLogPriority(
+    OL_Scope* self_)
+{
+    Scope* self = (Scope*)self_;
+    PHIT_Context* context = (PHIT_Context*)self->privateData;
+    return PHIT_Context_GetLogPriority(context);
+}
+
+static void _Scope_VLogMessage(
+    OL_Scope* self_,
+    int priority,
+    const char *file,
+    int line,
+    const char *fn,
+    const char *format,
+    va_list args)
+{
+    Scope* self = (Scope*)self_;
+    PHIT_Context* context = (PHIT_Context*)self->privateData;
+    PHIT_Context_VLogMessage(context, priority, file, line, fn, format, args);
+}
+
 static OL_Result _Scope_GetOption(
     const OL_Scope* self_,
     int option,
@@ -705,6 +736,9 @@ static OL_Scope* _Scope_New()
     scope->ft->SendMetadataXML = _Scope_SendMetadataXML;
     scope->ft->SendResult = _Scope_SendResult;
     scope->ft->GetOption = _Scope_GetOption;
+    scope->ft->SetLogPriority = _Scope_SetLogPriority;
+    scope->ft->GetLogPriority = _Scope_GetLogPriority;
+    scope->ft->VLogMessage = _Scope_VLogMessage;
 
     ((Scope*)scope)->contextURI[0] = '\0';
 
