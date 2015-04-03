@@ -3,7 +3,9 @@ Description=Test fcgi process on port 4100
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgitest -p 4100
+ExecStart=/bin/sh -c "/usr/sbin/fcgistarter -c /usr/bin/fcgitest -p 4100; \
+                      /bin/pidof fcgitest > /run/fcgitest.pid"
+PIDFile=/run/fcgitest.pid
 RestartSec=10s
 
 [Install]

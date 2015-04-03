@@ -3,7 +3,9 @@ Description=Async odatalite fcgi process on port 4200
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgiodata-async -p 4200
+ExecStart=/bin/sh -c "/usr/sbin/fcgistarter -c /usr/bin/fcgiodata-async -p 4200; \
+                      /bin/pidof fcgiodata-async > /run/fcgiodata-async.pid"
+PIDFile=/run/fcgiodata-async.pid
 RestartSec=10s
 
 [Install]

@@ -29,20 +29,23 @@
 **==============================================================================
 */
 #include <stdarg.h>
+#include <syslog.h>
 #include "iprintf.h"
 
 PRINTF_FORMAT(2, 3)
+
 int Iprintf(size_t n, const char* format, ...)
 {
-    int i;
-    va_list ap;
-
-    for (i = 0; i < n; i++)
-        printf("    ");
-
-    va_start(ap, format);
-    vfprintf(stdout, format, ap);
-    va_end(ap);
+    #if defined(ENABLE_LOGGING) && defined(ENABLE_DEBUG)
+      va_list ap;
+      int indent = n*4;
+      char fmt[1024] = "";
+  
+      snprintf(fmt, sizeof(fmt), ".%*s%s", indent, " ", format);
+      va_start(ap, format);
+      vsyslog(LOG_INFO, (const char*)fmt, ap);
+      va_end(ap);
+    #endif
 
     return 0;
 }

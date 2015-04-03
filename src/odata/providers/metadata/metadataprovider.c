@@ -73,7 +73,8 @@ static void _Metadata_Get(
         return;
     }
 
-    printf("{%s}\n", entityType);
+    OL_Scope_DEBUG(scope, "%s(): {%s}\n", __FUNCTION__, entityType);
+    OL_URI_Print(uri);
 
     if (strcmp(entityType, "$metadata") == 0)
     {

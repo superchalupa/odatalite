@@ -3,7 +3,9 @@ Description=odatalite fcgi process on port 4000
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgiodata -p 4000
+ExecStart=/bin/sh -c "/usr/sbin/fcgistarter -c /usr/bin/fcgiodata -p 4000; \
+                      /bin/pidof fcgiodata > /run/fcgiodata.pid"
+PIDFile=/run/fcgiodata.pid
 RestartSec=10s
 
 [Install]
