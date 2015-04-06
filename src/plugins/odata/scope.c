@@ -28,6 +28,7 @@
 **
 **==============================================================================
 */
+#include "common.h"
 #include "post.h"
 #include "scope.h"
 #include "odataplugin.h"
@@ -56,11 +57,9 @@
 #include "options.h"
 #include "webpage.h"
 
-#define D(X)
-
 /* Defined ENABLE_LOGP to log provider errors when calling into scope */
 #if defined(ENABLE_LOGP)
-# define LOGP LOGW
+# define LOGP OL_Scope_ERR
 #else
 # define LOGP(EXPR)
 #endif
@@ -148,7 +147,7 @@ static OL_Result _Scope_SendBeginEntitySet(
     Scope* self = (Scope*)self_;
     PHIT_Context* context = (PHIT_Context*)self->privateData;
 
-    D( printf("Enter.SendBeginEntitySet\n"); )
+    OL_Scope_DEBUG(self_, "Enter.SendBeginEntitySet\n");
 
     /* Bail out if already in error state */
     if (self->error)
@@ -156,21 +155,21 @@ static OL_Result _Scope_SendBeginEntitySet(
 
     if (self->postBeginEntitySet)
     {
-        LOGP(("SendBeginEntitySet: called more than once"));
+        LOGP(self_, "SendBeginEntitySet: called more than once");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
 
     if (self->postEntity)
     {
-        LOGP(("SendBeginEntitySet: called after SendEntity"));
+        LOGP(self_, "SendBeginEntitySet: called after SendEntity");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
 
     if (self->postEndEntitySet)
     {
-        LOGP(("SendBeginEntitySet: called after SendEndEntitySet"));
+        LOGP(self_, "SendBeginEntitySet: called after SendEndEntitySet");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
@@ -213,7 +212,7 @@ static OL_Result _Scope_SendBeginEntitySet(
 
     self->postBeginEntitySet++;
 
-    D( printf("Leave.SendBeginEntitySet\n"); )
+    OL_Scope_DEBUG(self_, "Leave.SendBeginEntitySet\n");
 
     return OL_Result_Ok;
 }
@@ -226,7 +225,7 @@ static OL_Result _Scope_SendMetadataXML(
     Scope* self = (Scope*)self_;
     PHIT_Context* context = (PHIT_Context*)self->privateData;
 
-    D( printf("Enter.SendMetadataAux\n"); )
+    OL_Scope_DEBUG(self_, "Enter.SendMetadataAux\n");
 
     /* Bail out if already in error state */
     if (self->error)
@@ -234,28 +233,28 @@ static OL_Result _Scope_SendMetadataXML(
 
     if (self->postMetadata)
     {
-        LOGP(("SendMetadataAux: called more than once"));
+        LOGP(self_, "SendMetadataAux: called more than once");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
 
     if (self->postBeginEntitySet)
     {
-        LOGP(("SendMetadataAux: called after SendBeginEntity"));
+        LOGP(self_, "SendMetadataAux: called after SendBeginEntity");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
 
     if (self->postEntity)
     {
-        LOGP(("SendMetadataAux: called after SendEntity"));
+        LOGP(self_, "SendMetadataAux: called after SendEntity");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
 
     if (self->postEndEntitySet)
     {
-        LOGP(("SendMetadataAux: called after SendEndEntitySet"));
+        LOGP(self_, "SendMetadataAux: called after SendEndEntitySet");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
@@ -324,7 +323,7 @@ static OL_Result _Scope_SendEntityAux(
     /* If provider failed to call PostBeginEntitySet() */
     if (!self->postBeginEntitySet && self->postEntity == 1)
     {
-        LOGP(("SendEntity: called twice but no SendBeginEntitySet"));
+        LOGP(self_, "SendEntity: called twice but no SendBeginEntitySet");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
@@ -332,7 +331,7 @@ static OL_Result _Scope_SendEntityAux(
     /* If provider called SendEntity() after SendBeginEntitySet() */
     if (self->postEndEntitySet)
     {
-        LOGP(("SendEntity: called after SendEndEntitySet"));
+        LOGP(self_, "SendEntity: called after SendEndEntitySet");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
@@ -520,7 +519,7 @@ static OL_Result _Scope_SendEndEntitySet(
     Scope* self = (Scope*)self_;
     PHIT_Context* context = (PHIT_Context*)self->privateData;
 
-    D( printf("Enter.SendEntity\n"); )
+    OL_Scope_DEBUG(self_, "Enter.SendEntity\n");
 
     /* If already in an error state */
     if (self->error)
@@ -528,14 +527,14 @@ static OL_Result _Scope_SendEndEntitySet(
 
     if (!self->postBeginEntitySet)
     {
-        LOGP(("SendEndEntitySet: SendBeginEntitySet never called"));
+        LOGP(self_, "SendEndEntitySet: SendBeginEntitySet never called");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
 
     if (self->postEndEntitySet)
     {
-        LOGP(("SendEndEntitySet: called more than once"));
+        LOGP(self_, "SendEndEntitySet: called more than once");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
@@ -564,7 +563,7 @@ static OL_Result _Scope_SendEndEntitySet(
 
     self->postEndEntitySet++;
 
-    D( printf("Leave.SendEntity\n"); )
+    OL_Scope_DEBUG(self_, "Leave.SendEntity\n");
 
     return OL_Result_Ok;
 }
@@ -578,7 +577,7 @@ static OL_Result _Scope_SendResult(
     Scope* self = (Scope*)self_;
     PHIT_Context* context = (PHIT_Context*)self->privateData;
 
-    D( printf("Enter.SendResult\n"); )
+    OL_Scope_DEBUG(self_, "Enter.SendResult\n");
 
     if (self->error)
         return OL_Result_Failed;
@@ -586,14 +585,14 @@ static OL_Result _Scope_SendResult(
     /* Check whether context is invalid */
     if (self->magic != CONTEXT_MAGIC)
     {
-        LOGP(("SendResult: called with corrupt context"));
+        LOGP(self_, "SendResult: called with corrupt context");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
 
     if (self->postResult)
     {
-        LOGP(("SendResult: already called on this context"));
+        LOGP(self_, "SendResult: already called on this context");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
@@ -636,7 +635,7 @@ static OL_Result _Scope_SendResult(
     PHIT_Context_SetPluginData(context, NULL);
     ScopeCache_Put(self_);
 
-    D( printf("Leave.SendResult\n"); )
+    OL_Scope_DEBUG(self_, "Leave.SendResult\n");
 
     return OL_Result_Ok;
 }
