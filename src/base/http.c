@@ -56,11 +56,17 @@ const char* __HTTPMethodNames[10] =
 static int _AppendHeader(
     PHIT_Header* headers,
     size_t* nheaders,
-    const char* name,
+    char* name,
     const char* value)
 {
     if (*nheaders == HEADERS_BUFSIZE)
         return -1;
+
+    // change all non-alphanum chars in name to _ to be compatible with CGI spec
+    // we'll handle the difference in names for some variables elsewhere.
+    for(int i=0; i<strlen(name); i++)
+        if (!isalnum(name[i]))
+            name[i] = '_';
 
     headers[*nheaders].name = name;
     headers[*nheaders].value = value;
