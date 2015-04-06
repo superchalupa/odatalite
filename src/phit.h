@@ -681,6 +681,38 @@ PHIT_INLINE int PHIT_Context_GetOption(
 /*
 **==============================================================================
 **
+** Debug logging macros for places that have context objects
+**
+**==============================================================================
+*/
+// purpose of this is to ensure that we always have valid well-formed logging calls instead of just throwing away the result
+// compiler should optimize away completely
+static inline void __attribute__((always_inline, format(printf, 2, 3)))
+__context_log_null(PHIT_Context *self, const char *format, ...) {}
+
+#define __context_log_cond(ctx, prio, arg...) \
+  do { \
+     if (PHIT_Context_GetLogPriority(ctx) >= prio) \
+      PHIT_Context_LogMessage(ctx, prio, __FILE__, __LINE__, __FUNCTION__, ## arg); \
+  } while (0)
+
+#ifdef ENABLE_LOGGING
+#  ifdef ENABLE_DEBUG
+#    define PHIT_Context_DEBUG(ctx, arg...) __context_log_cond(ctx, LOG_DEBUG, ## arg)
+#  else
+#    define PHIT_Context_DEBUG(ctx, arg...) __context_log_null(ctx, ## arg)
+#  endif
+#  define PHIT_Context_INFO(ctx, arg...) __context_log_cond(ctx, LOG_INFO, ## arg)
+#  define PHIT_Context_ERR(ctx, arg...) __context_log_cond(ctx, LOG_ERR, ## arg)
+#else
+#  define PHIT_Context_DEBUG(ctx, arg...) __context_log_null(ctx, ## arg)
+#  define PHIT_Context_INFO(ctx, arg...) __context_log_null(ctx, ## arg)
+#  define PHIT_Context_ERR(ctx, arg...) __context_log_null(ctx, ## arg)
+#endif
+
+/*
+**==============================================================================
+**
 ** Options supported by PHIT_Context_GetOption()
 **
 **==============================================================================

@@ -75,6 +75,8 @@
 #define ENABLE_INDENT
 #define ENABLE_WEBPAGES
 #define ENABLE_ALWAYS_INLINE
+/* enable provider logging */
+#define ENABLE_LOGP
 
 #undef ENABLE_ALWAYS_INLINE
 

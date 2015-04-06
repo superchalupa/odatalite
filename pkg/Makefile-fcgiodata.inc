@@ -10,3 +10,9 @@ out_fcgiodata_SOURCES = \
 	src/fcgiodata/connection-fcgi.h	\
 	src/fcgiodata/http.c	\
 	src/fcgiodata/fcgiodata.c
+
+# Apache2 conf file for fastcgi
+dist_apache_conf_DATA += share/apache/fcgiodata.conf
+
+# odata service install
+dist_systemdsystemunit_DATA += share/apache/fcgiodata.service

@@ -6,13 +6,19 @@
 #include <czmq.h>
 #include <fcgiapp.h>
 #include "plugins/odata/odataplugin.h"
-#include "connection-fcgi.h"
+#include "fcgiodata/connection.h"
 #include "base/http.h"
 
 #define THREAD_COUNT 20
 
 #define DEBUG_OUT(fd, prio, args...) syslog(prio, args)
 #define DEBUG_PRINTF(args...) DEBUG_OUT(stderr, LOG_INFO, args)
+
+#ifdef HAVE_SYSTEMD
+#include "sd-daemon.h"
+#else
+int sd_notify(int unset_environment, const char *state) {return 0;}
+#endif
 
 static int counts[THREAD_COUNT];
 
@@ -132,7 +138,7 @@ int zmsg_to_headers_and_content(zmsg_t *msg_in, char ***envp_out, char **content
     // similar to the fcgi envp stuff and so should be completely compatible.
     char **envp = calloc(num_http_headers + 1, sizeof(char *));
     if (!envp) {
-        DEBUG_PRINTF("ERROR allocating memory to hold headers. Needed %d bytes.\n", (num_http_headers + 1) * sizeof(char *));
+        DEBUG_PRINTF("ERROR allocating memory to hold headers. Needed %zd bytes.\n", (num_http_headers + 1) * sizeof(char *));
         goto out_free_envp;
     }
 
@@ -229,6 +235,16 @@ int process_msg(void *socket, Connection *c, zmsg_t *msg)
         content,
         strlen(content));
 
+    DEBUG_PRINTF("HandleRequest DONE\n");
+
+    Context* ctx = (Context*)(&c->context);
+
+    DEBUG_PRINTF("WAIT FOR EOC\n");
+    while( ! ctx->postedEOC )
+        sleep(1);
+
+    DEBUG_PRINTF("GOT EOC\n");
+
     // Create response message
     zmsg_t *response = zmsg_new();
     if(!response)
@@ -296,6 +312,7 @@ out_free:
 
 int server_task (zloop_t *loop, zmq_pollitem_t *item, void *arg)
 {
+    DEBUG_PRINTF("GOT message for server_task\n");
     zsock_t *reader = item->socket;
     zmsg_t *msg = zmsg_recv (reader);
     if(msg) {
@@ -308,10 +325,17 @@ int server_task (zloop_t *loop, zmq_pollitem_t *item, void *arg)
     return 0;
 }
 
+int watchdog_ping (zloop_t *loop, int foo, void *arg)
+{
+    (void)foo;
+    DEBUG_PRINTF("Ping watchdog\n");
+    sd_notify(0, "WATCHDOG=1");
+    return 0;
+}
 
 int main(void)
 {
-    int i;
+    long i;
     pthread_t id[THREAD_COUNT];
 
     DEBUG_PRINTF("Async odata fastcgi server starting up.\n");
@@ -340,12 +364,24 @@ int main(void)
     assert (reactor);
     zloop_set_verbose (reactor, 1);
 
+    // create handler for incoming messages
     DEBUG_PRINTF("   Create reader\n");
     zmq_pollitem_t poller = { cgiserver, 0, ZMQ_POLLIN };
     zloop_poller (reactor, &poller, server_task, NULL);
 
+    // register watchdog timer
+    char *wd_usec_str = getenv("WATCHDOG_USEC");
+    if(!wd_usec_str) wd_usec_str = "0";
+    int wd_timeout_us = strtoul(wd_usec_str, NULL, 0);
+    int wd_interval_ms = (wd_timeout_us /1000) / 3;
+
+    DEBUG_PRINTF("   watchdog interval: %d\n", wd_interval_ms);
+    if (wd_interval_ms > 0)
+        zloop_timer (reactor, wd_interval_ms, 0, watchdog_ping, NULL);
+
     DEBUG_PRINTF("   Start reactor\n");
-    zloop_start(reactor);
+    sd_notify(0, "READY=1");
+    zloop_start(reactor);  // never returns until SIGINT
 
     zloop_destroy(&reactor);
     zsock_destroy(&cgiserver);

@@ -5,3 +5,9 @@ out_fcgitest_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(bin_includ
 out_fcgitest_LDADD = out/libbase.la out/libclient.la $(FASTCGI_LIBS)
 out_fcgitest_SOURCES = \
 	src/fcgitest/fcgitest.c
+
+# Apache2 conf file for fastcgi
+dist_apache_conf_DATA += share/apache/fcgitest.conf
+
+# odata service install
+dist_systemdsystemunit_DATA += share/apache/fcgitest.service

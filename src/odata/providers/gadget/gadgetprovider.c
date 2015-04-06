@@ -280,6 +280,9 @@ static void _Gadget_Get(
     const char* skiptoken = NULL;
     unsigned long nsent = 0;
 
+    OL_Scope_DEBUG(scope, "DEBUG HELLO WORLD\n");
+    OL_Scope_INFO(scope, "INFO HELLO WORLD\n");
+    OL_Scope_ERR(scope, "ERR HELLO WORLD\n");
     D( printf("_Gadget_Get()\n"); )
 
     /* Initialize top and skip */

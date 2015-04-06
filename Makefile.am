@@ -24,6 +24,29 @@ provider_LTLIBRARIES=
 provider_includes = src
 bin_includes = src
 
+# Apache2 conf file for fastcgi
+apache_confdir=$(sysconfdir)/apache2/conf.d
+dist_apache_conf_DATA = share/apache/load-proxy.conf
+
+# odata service install
+dist_systemdsystemunit_DATA =
+
+# config files
+phit_confdir=$(sysconfdir)/phit
+dist_phit_conf_DATA = etc/phit/phitd.conf  etc/phit/plugins.conf  etc/phit/providers.conf  etc/phit/roles.conf
+
+# PAM config
+pam_confdir=$(sysconfdir)/pam.d
+dist_pam_conf_DATA=etc/pam.d/phit
+
+# tmpfiles
+tmpfiledir=$(libdir)/tmpfiles.d
+dist_tmpfile_DATA = etc/tmpfiles.d/phit.conf
+
+# HTML stuff
+phit_datadir=$(datadir)/phit
+dist_phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/phit/odata.html share/phit/preamble.html
+
 # generate .c files from .metadata files
 # NOTE: version encoded in files, unfortunately...
 # ServiceRoot.0.94.0.metadata
@@ -61,7 +84,8 @@ endif
 
 if BUILD_ODATA_FASTCGI
 include pkg/Makefile-fcgitest.inc
-include pkg/Makefile-fcgiodata.inc
+# start phasing out sync version of fcgiodata
+#include pkg/Makefile-fcgiodata.inc
 include pkg/Makefile-fcgiodata-async.inc
 endif
 
@@ -87,30 +111,6 @@ endif
 if BUILD_CHECK_PROVIDER
 include pkg/Makefile-libcheckprovider.inc
 endif
-
-# config files
-phit_confdir=$(sysconfdir)/phit
-dist_phit_conf_DATA = etc/phit/phitd.conf  etc/phit/plugins.conf  etc/phit/providers.conf  etc/phit/roles.conf
-
-# PAM config
-pam_confdir=$(sysconfdir)/pam.d
-dist_pam_conf_DATA=etc/pam.d/phit
-
-# tmpfiles
-tmpfiledir=$(libdir)/tmpfiles.d
-dist_tmpfile_DATA = etc/tmpfiles.d/phit.conf
-
-# HTML stuff
-phit_datadir=$(datadir)/phit
-dist_phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/phit/odata.html share/phit/preamble.html
-
-# Apache2 conf file for fastcgi
-apache_confdir=$(sysconfdir)/apache2/conf.d
-dist_apache_conf_DATA = share/apache/fcgiodata-async.conf  share/apache/fcgiodata.conf  share/apache/fcgitest.conf share/apache/load-proxy.conf
-
-# odata service install
-systemddir=$(base_libdir)/systemd/system
-dist_systemd_DATA = share/apache/fcgiodata-async.service  share/apache/fcgiodata.service  share/apache/fcgitest.service
 
 install-data-hook:
 	mkdir -p $(DESTDIR)/$(pkgrundir) ||:

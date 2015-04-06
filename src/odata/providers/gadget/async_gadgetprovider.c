@@ -33,10 +33,11 @@
 #include <string.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include <base/format.h>
-#include <odata/odata.h>
+#include <pthread.h>
+#include <unistd.h>
 
-#define D(X)
+#include "base/format.h"
+#include "odata/odata.h"
 
 typedef struct _Gadget
 {
@@ -270,6 +271,122 @@ static void _Gadget_Unload(
 
 #define BATCH_SIZE 10
 
+
+
+struct _thread_data {
+    OL_Provider* self_;
+    OL_Scope* scope;
+    const OL_URI* uri;
+};
+
+static void *_Gadget_Get_thread(void *arg)
+{
+    OL_Provider* self_ = ((struct _thread_data *)arg)->self_;
+    OL_Scope* scope =  ((struct _thread_data *)arg)->scope;
+    const OL_URI* uri = ((struct _thread_data *)arg)->uri;
+
+    // cast self_ to correct data type
+    Provider* self = (Provider*)self_;
+
+    // arg allocated on heap, so free it before doing anything else. it was just pointers to the actual data we needed.
+    free(arg);
+
+    unsigned long nsent = 0;
+    OL_Scope_INFO(scope, "async provider GET thread started\n");
+
+    /* Send all gadgets: service/Gadgets */
+    if (OL_URI_KeyCount(uri, 0) == 0)
+    {
+        size_t i;
+
+        OL_Scope_DEBUG(scope, "keycount == 0\n");
+        if (self->countOption)
+        {
+            OL_Object * obj;
+
+            OL_Scope_DEBUG(scope, "countOption\n");
+            if (!(obj = OL_Scope_NewObject(scope)))
+            {
+                OL_Scope_SendResult(scope, OL_Result_Failed);
+                goto out;
+            }
+
+            OL_Object_AddInt64(obj, "count", _ngadgets);
+            OL_Scope_SendEntity(scope, obj);
+            OL_Object_Release(obj);
+            OL_Scope_SendResult(scope, OL_Result_Ok);
+            goto out;
+        }
+
+        OL_Scope_SendBeginEntitySet(scope);
+
+        for (i = 0; i < _ngadgets && nsent < BATCH_SIZE; i++)
+        {
+            self->count++;
+            OL_Scope_DEBUG(scope, "SendGadget(%d)\n", i);
+
+            if (self->count <= self->skip)
+                continue;
+
+            if (self->count > self->top)
+                break;
+
+            _SendGadget(scope, &_gadgets[i]);
+            nsent++;
+        }
+
+        /* Send begin-entity-set with (or without) skiptoken */
+        if (i < _ngadgets)
+        {
+            char buf[ULongLongToStrBufSize];
+            OL_Scope_SendEndEntitySetWithSkiptoken(scope,
+                ULongLongToStr(buf, i, NULL));
+        }
+        else
+        {
+            OL_Scope_SendEndEntitySet(scope);
+        }
+
+        OL_Scope_DEBUG(scope, "SendResult\n");
+        OL_Scope_SendResult(scope, OL_Result_Ok);
+        goto out;
+    }
+
+    /* Send requested gadget: service/Gadgets(1) */
+    if (OL_URI_KeyCount(uri, 0) == 1)
+    {
+        OL_Int64 id;
+        size_t i;
+
+
+        if (OL_URI_GetKeyInt64(uri, 0, "$0", &id) != OL_Result_Ok)
+        {
+            OL_Scope_SendResult(scope, OL_Result_NotSupported);
+            goto out;
+        }
+
+        for (i = 0; i < _ngadgets; i++)
+        {
+            if (_gadgets[i].Id == id)
+            {
+                _SendGadget(scope, &_gadgets[i]);
+                OL_Scope_SendResult(scope, OL_Result_Ok);
+                goto out;
+            }
+        }
+
+        OL_Scope_SendResult(scope, OL_Result_NotFound);
+        goto out;
+    }
+
+    OL_Scope_SendResult(scope, OL_Result_NotSupported);
+
+out:
+    OL_URI_Release((OL_URI *)uri);
+    OL_Scope_INFO(scope, "async provider GET thread exiting\n");
+    return NULL;
+}
+
 static void _Gadget_Get(
     OL_Provider* self_,
     OL_Scope* scope,
@@ -278,9 +395,8 @@ static void _Gadget_Get(
     Provider* self = (Provider*)self_;
     const char* entityType;
     const char* skiptoken = NULL;
-    unsigned long nsent = 0;
 
-    D( printf("_Gadget_Get()\n"); )
+    OL_Scope_INFO(scope, "INFO HELLO WORLD from async provider\n");
 
     /* Initialize top and skip */
     self->skip = 0;
@@ -340,88 +456,18 @@ static void _Gadget_Get(
         return;
     }
 
-    /* Send all gadgets: service/Gadgets */
-    if (OL_URI_KeyCount(uri, 0) == 0)
-    {
-        size_t i;
 
-        if (self->countOption)
-        {
-            OL_Object * obj;
+    OL_URI_AddRef(uri);
 
-            if (!(obj = OL_Scope_NewObject(scope)))
-            {
-                OL_Scope_SendResult(scope, OL_Result_Failed);
-                return;
-            }
+    struct _thread_data *d = calloc(1, sizeof(struct _thread_data));
+    d->self_ = self_;
+    d->scope = scope;
+    d->uri = uri;
 
-            OL_Object_AddInt64(obj, "count", _ngadgets);
-            OL_Scope_SendEntity(scope, obj);
-            OL_Object_Release(obj);
-            OL_Scope_SendResult(scope, OL_Result_Ok);
-            return;
-        }
-
-        OL_Scope_SendBeginEntitySet(scope);
-
-        for (i = 0; i < _ngadgets && nsent < BATCH_SIZE; i++)
-        {
-            self->count++;
-
-            if (self->count <= self->skip)
-                continue;
-
-            if (self->count > self->top)
-                break;
-
-            _SendGadget(scope, &_gadgets[i]);
-            nsent++;
-        }
-
-        /* Send begin-entity-set with (or without) skiptoken */
-        if (i < _ngadgets)
-        {
-            char buf[ULongLongToStrBufSize];
-            OL_Scope_SendEndEntitySetWithSkiptoken(scope,
-                ULongLongToStr(buf, i, NULL));
-        }
-        else
-        {
-            OL_Scope_SendEndEntitySet(scope);
-        }
-
-        OL_Scope_SendResult(scope, OL_Result_Ok);
-        return;
-    }
-
-    /* Send requested gadget: service/Gadgets(1) */
-    if (OL_URI_KeyCount(uri, 0) == 1)
-    {
-        OL_Int64 id;
-        size_t i;
-
-
-        if (OL_URI_GetKeyInt64(uri, 0, "$0", &id) != OL_Result_Ok)
-        {
-            OL_Scope_SendResult(scope, OL_Result_NotSupported);
-            return;
-        }
-
-        for (i = 0; i < _ngadgets; i++)
-        {
-            if (_gadgets[i].Id == id)
-            {
-                _SendGadget(scope, &_gadgets[i]);
-                OL_Scope_SendResult(scope, OL_Result_Ok);
-                return;
-            }
-        }
-
-        OL_Scope_SendResult(scope, OL_Result_NotFound);
-        return;
-    }
-
-    OL_Scope_SendResult(scope, OL_Result_NotSupported);
+    pthread_t id;
+    pthread_create(&id, NULL, _Gadget_Get_thread, (void*)d);
+    pthread_detach(id);
+    OL_Scope_INFO(scope, "_Gadget_Get spawn work to background\n");
 }
 
 static void _Gadget_Post(
@@ -430,7 +476,7 @@ static void _Gadget_Post(
     const OL_URI* uri,
     const OL_Object* object)
 {
-    D( printf("_Gadget_Post()\n"); )
+    OL_Scope_INFO(scope, "_Gadget_Post()\n");
     OL_Scope_SendEntity(scope, object);
     OL_Scope_SendResult(scope, OL_Result_Ok);
 }
@@ -441,7 +487,7 @@ static void _Gadget_Put(
     const OL_URI* uri,
     const OL_Object* object)
 {
-    D( printf("_Gadget_Put()\n"); )
+    OL_Scope_INFO(scope, "_Gadget_Put()\n");
     OL_Scope_SendEntity(scope, object);
     OL_Scope_SendResult(scope, OL_Result_Ok);
 }
@@ -452,7 +498,7 @@ static void _Gadget_Patch(
     const OL_URI* uri,
     const OL_Object* object)
 {
-    D( printf("_Gadget_Patch()\n"); )
+    OL_Scope_INFO(scope, "_Gadget_Patch()\n");
 
     OL_Scope_SendResult(scope, OL_Result_Ok);
 }
@@ -462,7 +508,7 @@ static void _Gadget_Delete(
     OL_Scope* scope,
     const OL_URI* uri)
 {
-    D( printf("_Gadget_Delete()\n"); )
+    OL_Scope_INFO(scope, "_Gadget_Delete()\n");
     OL_Scope_SendResult(scope, OL_Result_Ok);
 }
 

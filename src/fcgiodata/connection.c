@@ -28,13 +28,63 @@
 **
 **==============================================================================
 */
-#ifndef _fcgi_connection_h
-#define _fcgi_connection_h
+#include "common.h"
 
-#include "server/connection.h"
-#include "server/context.h"
+#include <stdlib.h>
+#include <ctype.h>
+#include <stdio.h>
 
-Connection* FCGI_ConnectionNew();
-void FCGI_ConnectionDelete( Connection* self);
+#if defined(HAVE_POSIX)
+#include <sys/types.h>
+#include <sys/socket.h>
+#endif
 
-#endif /* _connection_h */
+#include <base/str.h>
+#include <base/pam.h>
+#include <base/chars.h>
+#include <base/log.h>
+#include <base/role.h>
+#include <base/parse.h>
+#include <base/http.h>
+#include <base/dump.h>
+#include <base/base64.h>
+#include "phit.h"
+
+#include "base/log.h"
+#include "fcgiodata/connection.h"
+#include "fcgiodata/context.h"
+
+Connection* FCGI_ConnectionNew()
+{
+    Connection* self;
+
+    if (!(self = (Connection*)Calloc(1, sizeof(Connection))))
+        return NULL;
+
+    self->magic = CONNECTION_MAGIC;
+
+    AllocInit(&self->outAlloc, self->outBuffer, sizeof(self->outBuffer));
+    AllocInit(&self->wbufAlloc, self->wbufBuffer, sizeof(self->wbufBuffer));
+
+    LOGD(("ConnectionNew(%p)", self));
+
+    BufInit(&self->out, &self->outAlloc);
+    BufInit(&self->wbuf, &self->wbufAlloc);
+
+    ContextInit(&self->context, self);
+
+    return self;
+}
+
+void FCGI_ConnectionDelete(
+    Connection* self)
+{
+    LOGD(("ConnectionDelete(%p)", self));
+
+    BufDestroy(&self->out);
+    BufDestroy(&self->wbuf);
+    ContextDestroy(&self->context);
+
+    self->magic = 0xDDDDDDDD;
+    Free(self);
+}

@@ -28,6 +28,7 @@
 **
 **==============================================================================
 */
+#include "common.h"
 #include "post.h"
 #include "odataplugin.h"
 #include <phit.h>
@@ -55,8 +56,6 @@
 #include "webpage.h"
 #include "scope.h"
 
-#define D(X)
-
 #ifdef ENABLE_DEBUG
 #include <syslog.h>
 #define DEBUG_OUT(fd, prio, args...) syslog(prio, args)
@@ -64,13 +63,6 @@
 #else
 #define DEBUG_OUT(fd, prio, args...)
 #define DEBUG_PRINTF(args...)
-#endif
-
-/* Defined ENABLE_LOGP to log provider errors when calling into scope */
-#if defined(ENABLE_LOGP)
-# define LOGP LOGW
-#else
-# define LOGP(EXPR)
 #endif
 
 /*
@@ -131,8 +123,6 @@ static int _ProcessAcceptHeader(
     const char* metadataVar = NULL;
     size_t metadataLen = 0;
     const StrLit* metadataArr = NULL;
-
-    D( PHIT_HeadersDump(headers, 0); )
 
     if (!(accept = PHIT_HeadersFind(headers, STRLIT("Accept"))))
         return -1;
@@ -274,7 +264,7 @@ static void _ODATAPlugin_HandleRequest(
     OL_MetadataType metadataType = OL_MetadataType_Minimal;
     unsigned short version;
 
-    DEBUG_PRINTF("=== OL_HandleRequest(%s)\n", requestURI);
+    PHIT_Context_DEBUG(context, "=== OL_HandleRequest(%s)\n", requestURI);
 
     /* Check whether requestor wants a web page */
     if (strcmp(requestURI, "/odata/webpage") == 0)
@@ -305,7 +295,7 @@ static void _ODATAPlugin_HandleRequest(
         goto failed;
     }
 
-    DEBUG_PRINTF("metadataType{%u}\n", metadataType);
+    PHIT_Context_DEBUG(context, "metadataType{%u}\n", metadataType);
 
     /* Create context for this request */
     if (!(scope = ScopeCache_Get()))
@@ -332,7 +322,7 @@ static void _ODATAPlugin_HandleRequest(
 
     if (!(uri = (URI*)OL_Scope_NewURI(scope)))
     {
-        LOGD(("failed to create URI"));
+        PHIT_Context_DEBUG(context, "failed to create URI");
         PostError(context, OL_Result_InternalError, "failed to create URI");
         goto failed;
     }
@@ -350,7 +340,7 @@ static void _ODATAPlugin_HandleRequest(
     /* Parse the URI (destroy requestURI in place) */
     if (URIParse(uri, (char*)requestURI, err, sizeof(err)) != OL_Result_Ok)
     {
-        LOGD(("failed to parse URI: %s", requestURI));
+        PHIT_Context_DEBUG(context, "failed to parse URI: %s", requestURI);
         PostError(context, OL_Result_Failed, "failed to parse URI");
         goto failed;
     }
@@ -363,7 +353,7 @@ static void _ODATAPlugin_HandleRequest(
         if (!name)
         {
             PostError(context, OL_Result_Failed, "invalid URI");
-            LOGW(("URI has no $0: '%s'", requestURI));
+            PHIT_Context_ERR(context, "URI has no $0: '%s'", requestURI);
             goto failed;
         }
 
@@ -407,7 +397,7 @@ static void _ODATAPlugin_HandleRequest(
                 uri->segments.data[uri->segments.size-1].name;
         }
 
-        LOGI(("selected provider %s", entry->libname));
+        PHIT_Context_INFO(context, "selected provider %s", entry->libname);
 
         self->provider = entry->provider;
 
@@ -459,10 +449,12 @@ static void _ODATAPlugin_HandleRequest(
         ((Scope*)scope)->httpStatusCode = PHIT_STATUSCODE_200_OK;
         ((Scope*)scope)->httpStatusMsg = PHIT_STATUSMSG_200_OK;
 
+        PHIT_Context_DEBUG(context, "call provider GET");
         (*self->provider->ft->Get)(
             self->provider,
             scope,
             &uri->base);
+        PHIT_Context_DEBUG(context, "done with provider GET");
     }
     else if (method == PHIT_METHOD_POST)
     {
@@ -570,9 +562,15 @@ static void _ODATAPlugin_HandleRequest(
             "HTTP method: %s", HTTPMethodNameOf(method));
     }
 
+    PHIT_Context_DEBUG(context, "Release URI in handlerequest");
     if (uri)
+    {
+        PHIT_Context_DEBUG(context, "\tdoit");
         OL_URI_Release(&uri->base);
+        PHIT_Context_DEBUG(context, "\tdone");
+    }
 
+#if 0
     /* ATTN.A: hack to handle pulls when client does not accept chunking */
     if (method == PHIT_METHOD_GET &&
         !((Scope*)scope)->postResult &&
@@ -583,7 +581,9 @@ static void _ODATAPlugin_HandleRequest(
             _ODATAPlugin_HandlePull(plugin, context);
         }
     }
+#endif
 
+    PHIT_Context_DEBUG(context, "handlerequest RETURN");
     return;
 
 failed:

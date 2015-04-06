@@ -27,12 +27,11 @@ extern char **environ;
 #define NO_FCGI_DEFINES
 #include "fcgi_stdio.h"
 #include "plugins/odata/odataplugin.h"
-#include "connection-fcgi.h"
+#include "fcgiodata/connection.h"
 #include "base/http.h"
 #include "base/log.h"
 
 #define D(X)
-
 
 int FASTCGI_HeadersParse(
     PHIT_Headers* self,
