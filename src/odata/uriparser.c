@@ -37,6 +37,7 @@
 #include <base/parse.h>
 #include <base/iprintf.h>
 #include <base/array.h>
+#include <base/path.h>
 #include "uri.h"
 #include "chars.h"
 #include "serialize.h"
@@ -418,7 +419,7 @@ OL_Result URIParse(
 {
     char* p = uri;
     int foundHttp = 0;
-    int foundService = 0;
+    int foundService = self->serviceLen ? 1 : 0;
     char* start;
 
     DEBUG_ASSERT(self->magic == URI_MAGIC);
@@ -434,71 +435,86 @@ OL_Result URIParse(
         RETURN(OL_Result_SyntaxError);
     }
 
-    /* Skip over "http://" or "https://" */
-    if (Strncmp(p, STRLIT("http://")) == 0)
+    if (!foundService)
     {
-        foundHttp = 1;
-        p += STRN("http://");
-    }
-    else if (Strncmp(p, STRLIT("https://")) == 0)
-    {
-        foundHttp = 1;
-        p += STRN("https://");
-    }
+        /* Skip over "http://" or "https://" */
+        if (Strncmp(p, STRLIT("http://")) == 0)
+        {
+            foundHttp = 1;
+            p += STRN("http://");
+        }
+        else if (Strncmp(p, STRLIT("https://")) == 0)
+        {
+            foundHttp = 1;
+            p += STRN("https://");
+        }
 
-    /* If found "http://" or "https://" */
-    if (p != uri)
-    {
-        /* Skip over host (up to next slash) */
-        while (IsNotSlashOrZero(*p))
+        /* If found "http://" or "https://" */
+        if (p != uri)
+        {
+            /* Skip over host (up to next slash) */
+            while (IsNotSlashOrZero(*p))
+                p++;
+
+            /* *p is now a slash or a zero-terminator */
+            if (!*p)
+            {
+                Snprintf(err, errSize, "missing path");
+                RETURN(OL_Result_SyntaxError);
+            }
+
             p++;
 
-        /* *p is now a slash or a zero-terminator */
-        if (!*p)
-        {
-            Snprintf(err, errSize, "missing path");
-            RETURN(OL_Result_SyntaxError);
+            /* If a second slash folows, then unknown scheme */
+            if (*p == '/')
+            {
+                Snprintf(err, errSize, "unknown scheme: %.*s", (int)(p - uri), uri);
+                RETURN(OL_Result_SyntaxError);
+            }
         }
 
-        p++;
-
-        /* If a second slash folows, then unknown scheme */
+        /* Skip over optional slash (e.g., "/odata") */
         if (*p == '/')
+            p++;
+
+        /* Skip over resource path */
+        for (start = p; *p && *p != '/'; p++)
+            ;
+
+        if (p != start)
         {
-            Snprintf(err, errSize, "unknown scheme: %.*s", (int)(p - uri), uri);
+            size_t n = p - start;
+
+            if (n >= MAX_SERVICE_LEN)
+                RETURN(OL_Result_OutOfMemory);
+
+            memcpy(self->service, start, n);
+            self->service[n] = '\0';
+            self->serviceLen = n;
+
+            foundService = 1;
+        }
+
+        if (foundHttp && !foundService)
+        {
+            Snprintf(err, errSize, "missing service segment");
             RETURN(OL_Result_SyntaxError);
         }
     }
-
-    /* Skip over optional slash (e.g., "/odata") */
-    if (*p == '/')
-        p++;
-
-    /* Skip over resource path */
-    for (start = p; *p && *p != '/'; p++)
-        ;
-
-    if (p != start)
-    {
-        size_t n = p - start;
-
-        if (n >= MAX_SERVICE_LEN)
-            RETURN(OL_Result_OutOfMemory);
-
-        memcpy(self->service, start, n);
-        self->service[n] = '\0';
-        self->serviceLen = n;
-
-        foundService = 1;
+    else
+    {   // We've got a ServiceRoot defined. It should be part of p...
+        p = strstr(p, self->service);
+        if (!p)
+        {   // Just in case...
+            p = "\0";
+        }
+        else
+        {   //step past the ServiceRoot
+            p += self->serviceLen;
+        }
     }
 
-    if (foundHttp && !foundService)
-    {
-        Snprintf(err, errSize, "missing service segment");
-        RETURN(OL_Result_SyntaxError);
-    }
-
-    /* If URI represents just the service document */
+    /* If URI represents just the service document, ServiceRoot is stripped. */
     if (*p == '\0')
     {
         if (!foundService)

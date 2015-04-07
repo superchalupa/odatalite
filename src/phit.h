@@ -352,6 +352,13 @@ typedef struct _PHIT_HostHeader
 }
 PHIT_HostHeader;
 
+typedef struct _PHIT_ServiceRoot
+{
+    unsigned char found;
+    const char* value;
+}
+PHIT_ServiceRoot;
+
 typedef enum _PHIT_AuthorizationType
 {
     PHIT_AUTHORIZATIONTYPE_NONE,
@@ -415,6 +422,9 @@ typedef struct _PHIT_Headers
 
     /* Authorization: */
     PHIT_AuthorizationHeader authorization;
+
+    /* ServiceRoot */
+    PHIT_ServiceRoot ServiceRoot;
 
     /* TE: */
     PHIT_TEHeader te;

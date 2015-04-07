@@ -31,6 +31,7 @@
 #define _GNU_SOURCE
 #include <string.h>
 
+#include <odata/odata.h>
 #include "base/http.h"
 #include "base/parse.h"
 #include "base/str.h"
@@ -332,6 +333,55 @@ static int _ParseTokenList(
     return 0;
 }
 
+/* From FastCGI:
+   reqURI - REQUEST_URI == the full path:
+   ex: REQUEST_URI     ='/rest-sync/v1/arg1'
+   script - SCRIPT_FILENAME == munged URI with host:port + ResourcePath:
+   ex: SCRIPT_FILENAME ='proxy:fcgi://localhost:4000/arg1'
+ */
+static void GetServiceRoot(
+             PHIT_Headers* self, 
+             char *reqURI, 
+             char *script)
+{
+    // Construct serviceroot; Remove the trailing /; indicates possible segment data.
+    char serviceroot[1024] = DEFAULT_SERVICE_ROOT;
+    if (!reqURI || !(*reqURI) || !script || !(*script))
+    {
+      DEBUG_PRINTF("%s(): REQUEST_URI or SCRIPT_FILENAME is NULL\n", __FUNCTION__);
+      goto SetServiceRoot;
+    }
+
+    // Get the resource portion of the script filename.
+    char *resourcePath = strrchr(script, ':');
+    if (!resourcePath) { goto SetServiceRoot; }
+
+    // at the port #; find the next /; resource
+    resourcePath = strchr(resourcePath, '/');
+    if (!resourcePath) { goto SetServiceRoot; }
+
+    // Put a NULL at the end of the request uri and we have serviceroot.
+    strncpy(serviceroot, reqURI, sizeof(serviceroot));
+    char *value = strstr(serviceroot, resourcePath);
+    if (!value || !(*(value+1))) { goto SetServiceRoot; }
+
+    *(value) = '\0'; // Don't return the trailing '/'.
+    if (strlen(serviceroot) == 1)
+    { // no args specified; use REQUEST_URI directly.
+      strncpy(serviceroot, reqURI, sizeof(serviceroot));
+    }
+
+  SetServiceRoot:
+    // Set the Service Root
+    setenv("SERVICE_ROOT", serviceroot, 1); 
+    value = getenv("SERVICE_ROOT");
+    self->ServiceRoot.found = 1;
+    self->ServiceRoot.value = value;
+
+    // DEBUG_PRINTF("%s(): SERVICE_ROOT    ='%s'\n", __FUNCTION__, value);
+    // SERVICE_ROOT     ='/rest-sync/v1'
+}
+
 int FASTCGI_HeadersParse(
     PHIT_Headers* self,
     HTTPBuf* buf,
@@ -341,6 +391,8 @@ int FASTCGI_HeadersParse(
     char* p = NULL;
     int foundContentType = 0;
     int foundTE = 0;
+    char *reqURI = NULL;
+    char *script = NULL;
 
     memset(self, 0, sizeof(*self));
     memset(buf, 0, sizeof(*buf));
@@ -354,7 +406,7 @@ int FASTCGI_HeadersParse(
         char *value = equal+1;
         size_t len=strlen(value);
 
-//        printf("i=%d, env=%s\n", i, p);
+        //DEBUG_PRINTF("%s(): i=%d, env=%s\n", __FUNCTION__, i, p);
 
         /* Match the header */
         // Translate Fast CGI headers to match PHIT ones...
@@ -369,6 +421,14 @@ int FASTCGI_HeadersParse(
           DEBUG_PRINTF("HTTP_USER_AGENT\n");
           self->userAgent.found = 1;
           self->userAgent.value = value;
+        }
+        else if (strncasecmp(p, STRLIT("REQUEST_URI=")) == 0)
+        {
+            reqURI = value;
+        }
+        else if (strncasecmp(p, STRLIT("SCRIPT_FILENAME=")) == 0)
+        {
+            script = value;
         }
         else if (!foundContentType && c == 'C' &&
             strncasecmp(p, STRLIT("Content_Type=")) == 0)
@@ -518,6 +578,8 @@ int FASTCGI_HeadersParse(
 
     self->headers = buf->headersBuf;
     self->nheaders = buf->headersBufSize;
+
+    GetServiceRoot(self, reqURI, script);
 
     return 0;
 }

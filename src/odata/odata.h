@@ -39,6 +39,8 @@
 #include <limits.h>
 #include <syslog.h>
 
+#define DEFAULT_SERVICE_ROOT "/odata"
+
 /*
 **==============================================================================
 **

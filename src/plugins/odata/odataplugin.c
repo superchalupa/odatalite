@@ -340,6 +340,13 @@ static void _ODATAPlugin_HandleRequest(
     /* The two contexts will refer to each other */
     PHIT_Context_SetPluginData(context, scope);
 
+    // Pass in the ServiceRoot from the headers, if found.
+    char *serviceRoot = headers->ServiceRoot.found ? 
+                            headers->ServiceRoot.value : DEFAULT_SERVICE_ROOT;
+    strncpy(uri->service, serviceRoot, sizeof(uri->service));
+    uri->serviceLen = strlen(uri->service);
+    syslog(LOG_INFO, "%s(): serviceRoot='%s'\n", __FUNCTION__, serviceRoot);
+    
     /* Parse the URI (destroy requestURI in place) */
     if (URIParse(uri, (char*)requestURI, err, sizeof(err)) != OL_Result_Ok)
     {
