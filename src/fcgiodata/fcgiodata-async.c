@@ -9,7 +9,7 @@
 #include "fcgiodata/connection.h"
 #include "base/http.h"
 
-#define THREAD_COUNT 20
+#define THREAD_COUNT 2
 
 #define DEBUG_OUT(fd, prio, args...) syslog(prio, args)
 #define DEBUG_PRINTF(args...) DEBUG_OUT(stderr, LOG_INFO, args)
@@ -186,22 +186,20 @@ out:
     return ret;
 }
 
-int process_msg(void *socket, Connection *c, zmsg_t *msg)
+int send_response(zloop_t *loop, int timer_id, void *arg);
+int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
 {
     int ret = -1;
     int z_ret = 0;
 
-    zframe_t *identity = zmsg_first (msg); // client identity frame
-
     // parse incoming message to extract http headers and content.
-    char **envp = NULL, *content = NULL;
-    if(zmsg_to_headers_and_content(msg, &envp, &content) != 0) {
+    if(zmsg_to_headers_and_content(msg, &(c->envp), &(c->content)) != 0) {
         DEBUG_PRINTF("ERROR parsing message to headers and conteng_to_headers_and_content\n");
-        goto out_free;
+        goto error_out;
     }
 
     // Parse HTTP Method
-    char *methodStr = FCGX_GetParam("REQUEST_METHOD", envp);
+    char *methodStr = FCGX_GetParam("REQUEST_METHOD", c->envp);
     if(!methodStr)
         methodStr = "GET";
     PHIT_Method phit_method;
@@ -209,19 +207,18 @@ int process_msg(void *socket, Connection *c, zmsg_t *msg)
     DEBUG_PRINTF("method: %s(%d)\n", methodStr, (int)phit_method);
 
     // Parse Request URI
-    char *requestUri = FCGX_GetParam("REQUEST_URI", envp);
+    char *requestUri = FCGX_GetParam("REQUEST_URI", c->envp);
     if (!requestUri) {
         DEBUG_PRINTF("ERROR requestUri was NULL\n");
-        goto out_free;
+        goto error_out;
     }
 
     // HTTP Headers to PHIT format
-    PHIT_Headers headers={};
     HTTPBuf buf={};
-    z_ret = FASTCGI_HeadersParse( &headers, &buf, envp);
+    z_ret = FASTCGI_HeadersParse( &(c->headers), &buf, c->envp);
     if(z_ret) {
         DEBUG_PRINTF("ERROR parsing HTTP Headers\n");
-        goto out_free;
+        goto error_out;
     }
 
     // Finally call into ODATA. output is in the connection buffers.
@@ -231,53 +228,88 @@ int process_msg(void *socket, Connection *c, zmsg_t *msg)
         (PHIT_Context *)(&c->context),
         phit_method,
         requestUri,
-        &headers,
-        content,
-        strlen(content));
+        &(c->headers),
+        c->content,
+        strlen(c->content));
 
-    DEBUG_PRINTF("HandleRequest DONE\n");
+    int timer_id = zloop_timer (loop, 0, 1, send_response, c);
+    DEBUG_PRINTF("HandleRequest DONE. Scheduling response loop: timer id: %d\n", timer_id);
+    DEBUG_PRINTF("process msg: CHECK EOC: %d\n", c->context.postedEOC);
 
+    ret = 0;
+    goto out;
+
+error_out:
+    DEBUG_PRINTF("Handling error and cleaning up. FCGI_ConnectionDelete\n");
+    FCGI_ConnectionDelete(c);
+
+out:
+    return ret;
+}
+
+
+int send_response(zloop_t *loop, int timer_id, void *arg)
+{
+    Connection *c = (Connection *)arg;
     Context* ctx = (Context*)(&c->context);
+    int z_ret = 0, ret = -1;
+    DEBUG_PRINTF("CHECK EOC: %d\n", ctx->postedEOC);
 
-    DEBUG_PRINTF("WAIT FOR EOC\n");
-    while( ! ctx->postedEOC )
-        sleep(1);
+    if( ! ctx->postedEOC ) {
+        DEBUG_PRINTF("Connection NOT complete, waiting: %d\n", timer_id);
+        zloop_timer (loop, 0, 1, send_response, c);
+        goto out_incomplete;
+    }
 
     DEBUG_PRINTF("GOT EOC\n");
 
     // Create response message
     zmsg_t *response = zmsg_new();
-    if(!response)
+    if(!response) {
+        DEBUG_PRINTF("Error creating response message\n");
         goto error_sending;
+    }
 
     // IDENTITY frame (dup existing because the original message still owns it)
-    zframe_t *response_dest = zframe_dup(identity);
-    if(!response_dest)
+    zframe_t *response_dest = zframe_dup(c->return_identity);
+    if(!response_dest) {
+        DEBUG_PRINTF("Error dup response identity\n");
         goto error_sending;
+    }
 
     z_ret = zmsg_append( response, &response_dest );
-    if(z_ret)
+    if(z_ret) {
+        DEBUG_PRINTF("Error appending response identity\n");
         goto error_sending;
+    }
 
     // NULL separator frame
     z_ret = zmsg_addstr( response, "" );
-    if(z_ret)
+    if(z_ret) {
+        DEBUG_PRINTF("Error appending null frame\n");
         goto error_sending;
+    }
 
     // HEADER frame
     z_ret = zmsg_addmem( response, c->wbuf.data, c->wbuf.size );
-    if(z_ret)
+    if(z_ret){
+        DEBUG_PRINTF("Error appending http response headers\n");
         goto error_sending;
+    }
 
     // CONTENT frame
     z_ret = zmsg_addmem( response, c->out.data, c->out.size );
-    if(z_ret)
+    if(z_ret){
+        DEBUG_PRINTF("Error appending http response content\n");
         goto error_sending;
+    }
 
     // Actually send response message
-    z_ret = zmsg_send(&response, socket);
-    if(z_ret)
+    z_ret = zmsg_send(&response, c->socket);
+    if(z_ret) {
+        DEBUG_PRINTF("Error sending response message\n");
         goto error_sending;
+    }
 
     ret = 0;
     goto out_free;
@@ -288,27 +320,19 @@ error_sending:
     // ourselves.
     DEBUG_PRINTF("ERROR sending message, destroying it.\n");
     zmsg_destroy(&response);
+    // drop through below...
 
 out_free:
-    // free everything in reverse order of allocation
-    if(content) {
-        free(content);
-        content = NULL;
-    }
-
-    for(int i=0; envp[i]; i++) {
-        if (envp[i])
-            free(envp[i]);
-        envp[i] = NULL;
-    }
-
-    if (envp)
-        free(envp);
-    envp=NULL;
-
     DEBUG_PRINTF("Processed message. Ret=%d\n", ret);
+    DEBUG_PRINTF("FCGI_ConnectionDelete\n");
+    FCGI_ConnectionDelete(c);
     return ret;
+
+out_incomplete:
+    return 0;
 }
+
+
 
 int server_task (zloop_t *loop, zmq_pollitem_t *item, void *arg)
 {
@@ -316,18 +340,17 @@ int server_task (zloop_t *loop, zmq_pollitem_t *item, void *arg)
     zsock_t *reader = item->socket;
     zmsg_t *msg = zmsg_recv (reader);
     if(msg) {
-        Connection* c = FCGI_ConnectionNew();
-        process_msg(reader, c, msg);
-        DEBUG_PRINTF("FCGI_ConnectionDelete\n");
-        FCGI_ConnectionDelete(c);
-        zmsg_destroy (&msg);
+        DEBUG_PRINTF("connectionnew\n");
+        Connection* c = FCGI_ConnectionNew(reader, msg);
+        DEBUG_PRINTF("process_msg\n");
+        process_msg(loop, reader, c, msg);
     }
     return 0;
 }
 
-int watchdog_ping (zloop_t *loop, int foo, void *arg)
+int watchdog_ping (zloop_t *loop, int timer_id, void *arg)
 {
-    (void)foo;
+    (void)timer_id;
     DEBUG_PRINTF("Ping watchdog\n");
     sd_notify(0, "WATCHDOG=1");
     return 0;

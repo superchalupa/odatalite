@@ -54,7 +54,7 @@
 #include "fcgiodata/connection.h"
 #include "fcgiodata/context.h"
 
-Connection* FCGI_ConnectionNew()
+Connection* FCGI_ConnectionNew(zsock_t *socket, zmsg_t *msg)
 {
     Connection* self;
 
@@ -62,16 +62,21 @@ Connection* FCGI_ConnectionNew()
         return NULL;
 
     self->magic = CONNECTION_MAGIC;
+    ContextInit(&self->context, self);
+
+    self->socket = socket;
+    self->msg = msg;
+    self->return_identity = zmsg_first (self->msg); // client identity frame
+    self->envp=NULL;
+    self->content=NULL;
 
     AllocInit(&self->outAlloc, self->outBuffer, sizeof(self->outBuffer));
     AllocInit(&self->wbufAlloc, self->wbufBuffer, sizeof(self->wbufBuffer));
 
-    LOGD(("ConnectionNew(%p)", self));
+    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "ConnectionNew(%p)", self);
 
     BufInit(&self->out, &self->outAlloc);
     BufInit(&self->wbuf, &self->wbufAlloc);
-
-    ContextInit(&self->context, self);
 
     return self;
 }
@@ -79,8 +84,28 @@ Connection* FCGI_ConnectionNew()
 void FCGI_ConnectionDelete(
     Connection* self)
 {
-    LOGD(("ConnectionDelete(%p)", self));
+    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "ConnectionDelete(%p)", self);
 
+    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "zmsg_destroy");
+    zmsg_destroy (&self->msg);
+
+    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "free content");
+    if(self->content) {
+        free(self->content);
+        self->content = NULL;
+    }
+
+    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "free envp");
+    if(self->envp) {
+        for(int i=0; self->envp[i]; i++) {
+            free(self->envp[i]);
+            self->envp[i] = NULL;
+        }
+        free(self->envp);
+        self->envp=NULL;
+    }
+
+    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "buf destroy");
     BufDestroy(&self->out);
     BufDestroy(&self->wbuf);
     ContextDestroy(&self->context);

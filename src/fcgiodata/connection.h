@@ -32,6 +32,8 @@
 #define _connection_h
 
 #include <stdlib.h>
+#include <czmq.h>
+
 #include <base/alloc.h>
 #include <base/buf.h>
 #include <base/sock.h>
@@ -74,6 +76,13 @@ struct _Connection
     /* Provider invocation context */
     Context context;
 
+    zsock_t *socket;
+    zmsg_t *msg;
+    zframe_t *return_identity;
+    char **envp;
+    char *content;
+    PHIT_Headers headers;
+
     /* Authenticated user */
     char user[USERNAME_SIZE];
 
@@ -84,7 +93,7 @@ struct _Connection
     int chunkFinal;
 };
 
-Connection* FCGI_ConnectionNew();
+Connection* FCGI_ConnectionNew(zsock_t *socket, zmsg_t *msg);
 void FCGI_ConnectionDelete( Connection* self);
 
 #endif /* _connection_h */
