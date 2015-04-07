@@ -671,6 +671,34 @@ static void _Scope_VLogMessage(
     PHIT_Context_VLogMessage(context, priority, file, line, fn, format, args);
 }
 
+static OL_Result _Scope_AsyncSupported(
+    OL_Scope* self_)
+{
+    Scope* self = (Scope*)self_;
+    PHIT_Context* context = (PHIT_Context*)self->privateData;
+    return context->AddFDCallback ? 1 : 0;
+}
+
+static OL_Result _Scope_AddFDCallback(
+    OL_Scope* self_,
+    int fd,
+    int (*fn)(int fd, void *arg),
+    void *arg)
+{
+    Scope* self = (Scope*)self_;
+    PHIT_Context* context = (PHIT_Context*)self->privateData;
+    return PHIT_Context_AddFDCallback(context, fd, fn, arg);
+}
+
+static OL_Result _Scope_RemoveFDCallback(
+    OL_Scope* self_,
+    int fd)
+{
+    Scope* self = (Scope*)self_;
+    PHIT_Context* context = (PHIT_Context*)self->privateData;
+    return PHIT_Context_RemoveFDCallback(context, fd);
+}
+
 static OL_Result _Scope_GetOption(
     const OL_Scope* self_,
     int option,
@@ -738,6 +766,9 @@ static OL_Scope* _Scope_New()
     scope->ft->SetLogPriority = _Scope_SetLogPriority;
     scope->ft->GetLogPriority = _Scope_GetLogPriority;
     scope->ft->VLogMessage = _Scope_VLogMessage;
+    scope->ft->AsyncSupported = _Scope_AsyncSupported;
+    scope->ft->AddFDCallback = _Scope_AddFDCallback;
+    scope->ft->RemoveFDCallback = _Scope_RemoveFDCallback;
 
     ((Scope*)scope)->contextURI[0] = '\0';
 

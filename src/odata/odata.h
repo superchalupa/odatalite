@@ -541,6 +541,19 @@ typedef struct _OL_ScopeFT
         const OL_Char* format,
         va_list ap);
 
+    OL_Result (*AsyncSupported)(
+        OL_Scope* self);
+
+    OL_Result (*AddFDCallback)(
+        OL_Scope* self,
+        int fd,  int (*_OL_Scope_FD_Callback)(int fd, void *arg), void *arg);
+
+    OL_Result (*RemoveFDCallback)(
+        OL_Scope* self, int fd);
+
+    OL_Result (*DeferResult)(
+        OL_Scope* self);
+
     int (*SetLogPriority)(
         OL_Scope* self,
         int priority
@@ -677,7 +690,6 @@ OL_INLINE OL_Result OL_Scope_SendEndEntitySetWithSkiptoken(
     return self->ft->SendEndEntitySet(self, skiptoken);
 }
 
-
 OL_INLINE OL_Result OL_Scope_SendResult(
     OL_Scope* self,
     OL_Result result)
@@ -685,6 +697,31 @@ OL_INLINE OL_Result OL_Scope_SendResult(
     OL_RETURN_IF_NULL(self, OL_Result_BadParameter);
     va_list nulllist;
     return self->ft->SendResult(self, result, NULL, nulllist);
+}
+
+OL_INLINE OL_Result OL_Scope_AsyncSupported(
+    OL_Scope* self)
+{
+    OL_RETURN_IF_NULL(self, OL_Result_BadParameter);
+    return self->ft->AsyncSupported(self);
+}
+
+OL_INLINE OL_Result OL_Scope_AddFDCallback(
+    OL_Scope* self,
+    int fd,
+    int (*fn)(int fd, void *arg),
+    void *arg)
+{
+    OL_RETURN_IF_NULL(self, OL_Result_BadParameter);
+    return self->ft->AddFDCallback(self, fd, fn, arg);
+}
+
+OL_INLINE OL_Result OL_Scope_RemoveFDCallback(
+    OL_Scope* self,
+    int fd)
+{
+    OL_RETURN_IF_NULL(self, OL_Result_BadParameter);
+    return self->ft->RemoveFDCallback(self, fd);
 }
 
 OL_INLINE OL_Result OL_Scope_SendResultV(

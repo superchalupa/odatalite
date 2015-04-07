@@ -537,6 +537,19 @@ struct _PHIT_Context
         const char *format,
         va_list args);
 
+    /* async support for providers */
+    int (*AddFDCallback)(
+        PHIT_Context* self,
+        int fd,
+        int (*fn)(int fd, void *arg),
+        void *arg);
+
+    int (*RemoveFDCallback)(
+        PHIT_Context* self, int fd);
+
+    int (*DeferResult)(
+        PHIT_Context* self);
+
     /* Set client data */
     void* (*SetPluginData)(
         PHIT_Context* context,
@@ -654,6 +667,27 @@ PHIT_INLINE void PHIT_Context_LogMessage(
     va_start(args, format);
     context->VLogMessage(context, priority, file, line, fn, format, args);
     va_end(args);
+}
+
+PHIT_INLINE int PHIT_Context_AddFDCallback(
+    PHIT_Context* context,
+    int fd,
+    int (*fn)(int fd, void *arg),
+    void *arg)
+{
+    return context->AddFDCallback(context, fd, fn, arg);
+}
+
+PHIT_INLINE int PHIT_Context_RemoveFDCallback(
+    PHIT_Context* context, int fd)
+{
+    return context->RemoveFDCallback(context, fd);
+}
+
+PHIT_INLINE int PHIT_Context_DeferResult(
+    PHIT_Context* context)
+{
+    return context->DeferResult(context);
 }
 
 PHIT_INLINE void* PHIT_Context_SetPluginData(
