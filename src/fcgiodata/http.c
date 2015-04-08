@@ -366,7 +366,7 @@ static void GetServiceRoot(
     if (!value || !(*(value+1))) { goto SetServiceRoot; }
 
     *(value) = '\0'; // Don't return the trailing '/'.
-    if (strlen(serviceroot) == 1)
+    if (strlen(serviceroot) <= 1)
     { // no args specified; use REQUEST_URI directly.
       strncpy(serviceroot, reqURI, sizeof(serviceroot));
     }
@@ -378,8 +378,8 @@ static void GetServiceRoot(
     self->ServiceRoot.found = 1;
     self->ServiceRoot.value = value;
 
-    // DEBUG_PRINTF("%s(): SERVICE_ROOT    ='%s'\n", __FUNCTION__, value);
-    // SERVICE_ROOT     ='/rest-sync/v1'
+    // SERVICE_ROOT ex: '/rest-sync/v1'
+    DEBUG_PRINTF("%s(): SERVICE_ROOT    ='%s'\n", __FUNCTION__, value);
 }
 
 int FASTCGI_HeadersParse(
