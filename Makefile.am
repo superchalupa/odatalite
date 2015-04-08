@@ -84,8 +84,6 @@ endif
 
 if BUILD_ODATA_FASTCGI
 include pkg/Makefile-fcgitest.inc
-# start phasing out sync version of fcgiodata
-#include pkg/Makefile-fcgiodata.inc
 include pkg/Makefile-fcgiodata-async.inc
 endif
 
