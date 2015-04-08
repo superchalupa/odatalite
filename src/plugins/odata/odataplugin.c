@@ -331,7 +331,7 @@ static void _ODATAPlugin_HandleRequest(
     PHIT_Context_SetPluginData(context, scope);
 
     // Pass in the ServiceRoot from the headers, if found.
-    char *serviceRoot = headers->ServiceRoot.found ? 
+    const char *serviceRoot = headers->ServiceRoot.found ? 
                             headers->ServiceRoot.value : DEFAULT_SERVICE_ROOT;
     strncpy(uri->service, serviceRoot, sizeof(uri->service));
     uri->serviceLen = strlen(uri->service);
