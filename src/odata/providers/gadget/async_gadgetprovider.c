@@ -294,6 +294,8 @@ static void *_Gadget_Get_thread(void *arg)
     unsigned long nsent = 0;
     OL_Scope_INFO(scope, "async provider GET thread started\n");
 
+    sleep(1);
+
     /* Send all gadgets: service/Gadgets */
     if (OL_URI_KeyCount(uri, 0) == 0)
     {
