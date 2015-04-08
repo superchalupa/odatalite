@@ -94,6 +94,6 @@ struct _Connection
 };
 
 Connection* FCGI_ConnectionNew(zsock_t *socket, zmsg_t *msg);
-void FCGI_ConnectionDelete( Connection* self);
+void FCGI_ConnectionDelete( Connection** self);
 
 #endif /* _connection_h */

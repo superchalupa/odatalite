@@ -82,8 +82,10 @@ Connection* FCGI_ConnectionNew(zsock_t *socket, zmsg_t *msg)
 }
 
 void FCGI_ConnectionDelete(
-    Connection* self)
+    Connection** self_)
 {
+    Connection *self = *self_;
+    assert(self->magic == CONNECTION_MAGIC);
     PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "ConnectionDelete(%p)", self);
 
     PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "zmsg_destroy");
@@ -105,11 +107,16 @@ void FCGI_ConnectionDelete(
         self->envp=NULL;
     }
 
-    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "buf destroy");
+    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "buf destroy out");
     BufDestroy(&self->out);
+    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "buf destroy wbuf");
     BufDestroy(&self->wbuf);
+
+    PHIT_Context_DEBUG((PHIT_Context *)(&(self->context)), "context destroy");
     ContextDestroy(&self->context);
+    // can't call PHIT_Context_* functions after the destroy, above...
 
     self->magic = 0xDDDDDDDD;
     Free(self);
+    self_ = NULL;
 }

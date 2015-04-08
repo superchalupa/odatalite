@@ -9,13 +9,13 @@
 #include "fcgiodata/connection.h"
 #include "base/http.h"
 
-#define THREAD_COUNT 2
+#define THREAD_COUNT 20
 
 #define DEBUG_OUT(fd, prio, args...) syslog(prio, args)
 #define DEBUG_PRINTF(args...) DEBUG_OUT(stderr, LOG_INFO, args)
 
 #ifdef HAVE_SYSTEMD
-#include "sd-daemon.h"
+#include "systemd/sd-daemon.h"
 #else
 int sd_notify(int unset_environment, const char *state) {return 0;}
 #endif
@@ -172,19 +172,27 @@ int zmsg_to_headers_and_content(zmsg_t *msg_in, char ***envp_out, char **content
 out_free_content:
     if(content)
         free(content);
+    content=NULL;
 
 out_free_envp_i:
     for(int i=0; envp[i]; i++)
-        if (envp[i])
+        if (envp[i]) {
             free(envp[i]);
+            envp[i] = NULL;
+        }
 
 out_free_envp:
     if(envp)
         free(envp);
+    envp = NULL;
 
 out:
     return ret;
 }
+
+// TODO: all messages we get in process_msg must have a response, so we don't
+// hang up an fcgi frontent thread forever. All error paths must send a
+// response unless the error is in the message send function.
 
 int send_response(zloop_t *loop, int timer_id, void *arg);
 int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
@@ -232,7 +240,7 @@ int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
         c->content,
         strlen(c->content));
 
-    int timer_id = zloop_timer (loop, 0, 1, send_response, c);
+    int timer_id = zloop_timer (loop, 50, 0, send_response, c);
     DEBUG_PRINTF("HandleRequest DONE. Scheduling response loop: timer id: %d\n", timer_id);
     DEBUG_PRINTF("process msg: CHECK EOC: %d\n", c->context.postedEOC);
 
@@ -241,7 +249,7 @@ int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
 
 error_out:
     DEBUG_PRINTF("Handling error and cleaning up. FCGI_ConnectionDelete\n");
-    FCGI_ConnectionDelete(c);
+    FCGI_ConnectionDelete(&c);
 
 out:
     return ret;
@@ -250,14 +258,18 @@ out:
 
 int send_response(zloop_t *loop, int timer_id, void *arg)
 {
+    DEBUG_PRINTF("send_response\n");
     Connection *c = (Connection *)arg;
     Context* ctx = (Context*)(&c->context);
-    int z_ret = 0, ret = -1;
+
+    // return from timer: 0 == keep running timer, -1 == stop timer
+    int ret = 0;
+
+    int z_ret = 0;
     DEBUG_PRINTF("CHECK EOC: %d\n", ctx->postedEOC);
 
     if( ! ctx->postedEOC ) {
         DEBUG_PRINTF("Connection NOT complete, waiting: %d\n", timer_id);
-        zloop_timer (loop, 0, 1, send_response, c);
         goto out_incomplete;
     }
 
@@ -311,7 +323,7 @@ int send_response(zloop_t *loop, int timer_id, void *arg)
         goto error_sending;
     }
 
-    ret = 0;
+    ret = -1; // stop timer
     goto out_free;
 
 error_sending:
@@ -323,12 +335,16 @@ error_sending:
     // drop through below...
 
 out_free:
-    DEBUG_PRINTF("Processed message. Ret=%d\n", ret);
     DEBUG_PRINTF("FCGI_ConnectionDelete\n");
-    FCGI_ConnectionDelete(c);
-    return ret;
+    FCGI_ConnectionDelete(&c);
+    // drop through below...
 
 out_incomplete:
+    DEBUG_PRINTF("Processed message, returning. Ret=%d\n", ret);
+
+    if(ret == -1)
+        zloop_timer_end (loop, timer_id);
+
     return 0;
 }
 
