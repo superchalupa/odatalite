@@ -36,6 +36,10 @@
 #include <pthread.h>
 #include <unistd.h>
 
+// socketpair
+#include <sys/types.h>          /* See NOTES */
+#include <sys/socket.h>
+
 #include "base/format.h"
 #include "odata/odata.h"
 
@@ -277,6 +281,7 @@ struct _thread_data {
     OL_Provider* self_;
     OL_Scope* scope;
     const OL_URI* uri;
+    int fd;
 };
 
 static void *_Gadget_Get_thread(void *arg)
@@ -284,6 +289,7 @@ static void *_Gadget_Get_thread(void *arg)
     OL_Provider* self_ = ((struct _thread_data *)arg)->self_;
     OL_Scope* scope =  ((struct _thread_data *)arg)->scope;
     const OL_URI* uri = ((struct _thread_data *)arg)->uri;
+    int fd = ((struct _thread_data *)arg)->fd;
 
     // cast self_ to correct data type
     Provider* self = (Provider*)self_;
@@ -292,6 +298,7 @@ static void *_Gadget_Get_thread(void *arg)
     free(arg);
 
     unsigned long nsent = 0;
+    int result = OL_Result_Failed;
     OL_Scope_INFO(scope, "async provider GET thread started\n");
 
     sleep(1);
@@ -309,15 +316,14 @@ static void *_Gadget_Get_thread(void *arg)
             OL_Scope_DEBUG(scope, "countOption\n");
             if (!(obj = OL_Scope_NewObject(scope)))
             {
-                OL_Scope_SendResult(scope, OL_Result_Failed);
-                goto out;
+                goto send_result;
             }
 
             OL_Object_AddInt64(obj, "count", _ngadgets);
             OL_Scope_SendEntity(scope, obj);
             OL_Object_Release(obj);
-            OL_Scope_SendResult(scope, OL_Result_Ok);
-            goto out;
+            result = OL_Result_Ok;
+            goto send_result;
         }
 
         OL_Scope_SendBeginEntitySet(scope);
@@ -350,8 +356,8 @@ static void *_Gadget_Get_thread(void *arg)
         }
 
         OL_Scope_DEBUG(scope, "SendResult\n");
-        OL_Scope_SendResult(scope, OL_Result_Ok);
-        goto out;
+        result = OL_Result_Ok;
+        goto send_result;
     }
 
     /* Send requested gadget: service/Gadgets(1) */
@@ -363,8 +369,8 @@ static void *_Gadget_Get_thread(void *arg)
 
         if (OL_URI_GetKeyInt64(uri, 0, "$0", &id) != OL_Result_Ok)
         {
-            OL_Scope_SendResult(scope, OL_Result_NotSupported);
-            goto out;
+            result = OL_Result_NotSupported;
+            goto send_result;
         }
 
         for (i = 0; i < _ngadgets; i++)
@@ -372,21 +378,31 @@ static void *_Gadget_Get_thread(void *arg)
             if (_gadgets[i].Id == id)
             {
                 _SendGadget(scope, &_gadgets[i]);
-                OL_Scope_SendResult(scope, OL_Result_Ok);
-                goto out;
+                result = OL_Result_Ok;
+                goto send_result;
             }
         }
 
-        OL_Scope_SendResult(scope, OL_Result_NotFound);
-        goto out;
+        result = OL_Result_NotFound;
+        goto send_result;
     }
 
-    OL_Scope_SendResult(scope, OL_Result_NotSupported);
+    result = OL_Result_NotSupported;
 
-out:
+send_result:
     OL_URI_Release((OL_URI *)uri);
     OL_Scope_INFO(scope, "async provider GET thread exiting\n");
+    write(fd, &result, sizeof(result));
     return NULL;
+}
+
+static int _request_complete(int fd, void *arg)
+{
+    OL_Scope *scope = (OL_Scope *)arg;
+    OL_Scope_DEBUG(scope, "COMPLETING REQUEST!\n");
+    int result;
+    read(fd, &result, sizeof(result));
+    OL_Scope_SendResult(scope, result);
 }
 
 static void _Gadget_Get(
@@ -465,6 +481,11 @@ static void _Gadget_Get(
     d->self_ = self_;
     d->scope = scope;
     d->uri = uri;
+
+    int fd[2];
+    socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0, fd);
+    d->fd = fd[1];
+    OL_Scope_AddFDCallback(scope, fd[0], _request_complete, scope);
 
     pthread_t id;
     pthread_create(&id, NULL, _Gadget_Get_thread, (void*)d);
