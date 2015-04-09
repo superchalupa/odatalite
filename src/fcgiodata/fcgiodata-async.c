@@ -193,8 +193,6 @@ out:
 // TODO: all messages we get in process_msg must have a response, so we don't
 // hang up an fcgi frontent thread forever. All error paths must send a
 // response unless the error is in the message send function.
-
-int send_response(zloop_t *loop, int timer_id, void *arg);
 int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
 {
     int ret = -1;
@@ -240,8 +238,6 @@ int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
         c->content,
         strlen(c->content));
 
-    int timer_id = zloop_timer (loop, 50, 0, send_response, c);
-    DEBUG_PRINTF("HandleRequest DONE. Scheduling response loop: timer id: %d\n", timer_id);
     DEBUG_PRINTF("process msg: CHECK EOC: %d\n", c->context.postedEOC);
 
     ret = 0;
@@ -256,99 +252,6 @@ out:
 }
 
 
-int send_response(zloop_t *loop, int timer_id, void *arg)
-{
-    DEBUG_PRINTF("send_response\n");
-    Connection *c = (Connection *)arg;
-    Context* ctx = (Context*)(&c->context);
-
-    // return from timer: 0 == keep running timer, -1 == stop timer
-    int ret = 0;
-
-    int z_ret = 0;
-    DEBUG_PRINTF("CHECK EOC: %d\n", ctx->postedEOC);
-
-    if( ! ctx->postedEOC ) {
-        DEBUG_PRINTF("Connection NOT complete, waiting: %d\n", timer_id);
-        goto out_incomplete;
-    }
-
-    DEBUG_PRINTF("GOT EOC\n");
-
-    // Create response message
-    zmsg_t *response = zmsg_new();
-    if(!response) {
-        DEBUG_PRINTF("Error creating response message\n");
-        goto error_sending;
-    }
-
-    // IDENTITY frame (dup existing because the original message still owns it)
-    zframe_t *response_dest = zframe_dup(c->return_identity);
-    if(!response_dest) {
-        DEBUG_PRINTF("Error dup response identity\n");
-        goto error_sending;
-    }
-
-    z_ret = zmsg_append( response, &response_dest );
-    if(z_ret) {
-        DEBUG_PRINTF("Error appending response identity\n");
-        goto error_sending;
-    }
-
-    // NULL separator frame
-    z_ret = zmsg_addstr( response, "" );
-    if(z_ret) {
-        DEBUG_PRINTF("Error appending null frame\n");
-        goto error_sending;
-    }
-
-    // HEADER frame
-    z_ret = zmsg_addmem( response, c->wbuf.data, c->wbuf.size );
-    if(z_ret){
-        DEBUG_PRINTF("Error appending http response headers\n");
-        goto error_sending;
-    }
-
-    // CONTENT frame
-    z_ret = zmsg_addmem( response, c->out.data, c->out.size );
-    if(z_ret){
-        DEBUG_PRINTF("Error appending http response content\n");
-        goto error_sending;
-    }
-
-    // Actually send response message
-    z_ret = zmsg_send(&response, c->socket);
-    if(z_ret) {
-        DEBUG_PRINTF("Error sending response message\n");
-        goto error_sending;
-    }
-
-    ret = -1; // stop timer
-    goto out_free;
-
-error_sending:
-    // normally zmq will take over message and destroy it, however if send
-    // fails or we fail to add all our frames, we have to dispose of it
-    // ourselves.
-    DEBUG_PRINTF("ERROR sending message, destroying it.\n");
-    zmsg_destroy(&response);
-    // drop through below...
-
-out_free:
-    DEBUG_PRINTF("FCGI_ConnectionDelete\n");
-    FCGI_ConnectionDelete(&c);
-    // drop through below...
-
-out_incomplete:
-    DEBUG_PRINTF("Processed message, returning. Ret=%d\n", ret);
-
-    if(ret == -1)
-        zloop_timer_end (loop, timer_id);
-
-    return 0;
-}
-
-
 
 int server_task (zloop_t *loop, zmq_pollitem_t *item, void *arg)
 {
@@ -357,7 +260,7 @@ int server_task (zloop_t *loop, zmq_pollitem_t *item, void *arg)
     zmsg_t *msg = zmsg_recv (reader);
     if(msg) {
         DEBUG_PRINTF("connectionnew\n");
-        Connection* c = FCGI_ConnectionNew(reader, msg);
+        Connection* c = FCGI_ConnectionNew(loop, reader, msg);
         DEBUG_PRINTF("process_msg\n");
         process_msg(loop, reader, c, msg);
     }

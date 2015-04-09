@@ -54,7 +54,7 @@
 #include "fcgiodata/connection.h"
 #include "fcgiodata/context.h"
 
-Connection* FCGI_ConnectionNew(zsock_t *socket, zmsg_t *msg)
+Connection* FCGI_ConnectionNew(zloop_t *reactor, zsock_t *socket, zmsg_t *msg)
 {
     Connection* self;
 
@@ -64,6 +64,7 @@ Connection* FCGI_ConnectionNew(zsock_t *socket, zmsg_t *msg)
     self->magic = CONNECTION_MAGIC;
     ContextInit(&self->context, self);
 
+    self->reactor = reactor;
     self->socket = socket;
     self->msg = msg;
     self->return_identity = zmsg_first (self->msg); // client identity frame

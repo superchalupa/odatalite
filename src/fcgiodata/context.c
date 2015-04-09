@@ -182,6 +182,100 @@ static void _PostContent(
     }
 }
 
+static int send_response(zloop_t *loop, int timer_id, void *arg)
+{
+    Connection *c = (Connection *)arg;
+    Context* ctx = (Context*)(&c->context);
+#define DEBUG_PRINTF(args...) PHIT_Context_DEBUG((PHIT_Context *)(&(c->context)), args)
+    PHIT_Context_DEBUG((PHIT_Context *)(&(c->context)), "send_response\n");
+
+    // return from timer: 0 == keep running timer, -1 == stop timer
+    int ret = 0;
+
+    int z_ret = 0;
+    DEBUG_PRINTF("CHECK EOC: %d\n", ctx->postedEOC);
+
+    if( ! ctx->postedEOC ) {
+        DEBUG_PRINTF("Connection NOT complete, waiting: %d\n", timer_id);
+        goto out_incomplete;
+    }
+
+    DEBUG_PRINTF("GOT EOC\n");
+
+    // Create response message
+    zmsg_t *response = zmsg_new();
+    if(!response) {
+        DEBUG_PRINTF("Error creating response message\n");
+        goto error_sending;
+    }
+
+    // IDENTITY frame (dup existing because the original message still owns it)
+    zframe_t *response_dest = zframe_dup(c->return_identity);
+    if(!response_dest) {
+        DEBUG_PRINTF("Error dup response identity\n");
+        goto error_sending;
+    }
+
+    z_ret = zmsg_append( response, &response_dest );
+    if(z_ret) {
+        DEBUG_PRINTF("Error appending response identity\n");
+        goto error_sending;
+    }
+
+    // NULL separator frame
+    z_ret = zmsg_addstr( response, "" );
+    if(z_ret) {
+        DEBUG_PRINTF("Error appending null frame\n");
+        goto error_sending;
+    }
+
+    // HEADER frame
+    z_ret = zmsg_addmem( response, c->wbuf.data, c->wbuf.size );
+    if(z_ret){
+        DEBUG_PRINTF("Error appending http response headers\n");
+        goto error_sending;
+    }
+
+    // CONTENT frame
+    z_ret = zmsg_addmem( response, c->out.data, c->out.size );
+    if(z_ret){
+        DEBUG_PRINTF("Error appending http response content\n");
+        goto error_sending;
+    }
+
+    // Actually send response message
+    z_ret = zmsg_send(&response, c->socket);
+    if(z_ret) {
+        DEBUG_PRINTF("Error sending response message\n");
+        goto error_sending;
+    }
+
+    ret = -1; // stop timer
+    goto out_free;
+
+error_sending:
+    // normally zmq will take over message and destroy it, however if send
+    // fails or we fail to add all our frames, we have to dispose of it
+    // ourselves.
+    DEBUG_PRINTF("ERROR sending message, destroying it.\n");
+    zmsg_destroy(&response);
+    // drop through below...
+
+out_free:
+    DEBUG_PRINTF("FCGI_ConnectionDelete\n");
+    DEBUG_PRINTF("Processed message, returning. Ret=%d\n", ret);
+    // no more DEBUG_PRINTF after connection delete!
+    FCGI_ConnectionDelete(&c);
+    // drop through below...
+
+out_incomplete:
+    if(ret == -1)
+        zloop_timer_end (loop, timer_id);
+
+    return 0;
+}
+
+
 static void _PostEOC(
     PHIT_Context* context)
 {
@@ -207,6 +301,9 @@ static void _PostEOC(
     self->plugin = NULL;
     self->postedEOC = 1;
     self->connection->chunkFinal = 1;
+
+    // start up an immediate timer to send the results on the next async loop pass
+    int timer_id = zloop_timer (self->connection->reactor, 1, 0, send_response, self->connection);
 }
 
 void _PostError(
@@ -331,6 +428,68 @@ static int _GetLogPriority(
     return self->loglevel;
 }
 
+struct _cb_args
+{
+    zmq_pollitem_t *p;
+    int (*fn)(int, void *);
+    void *arg;
+};
+
+#include <syslog.h>
+static int _callback_shim (zloop_t *loop, zmq_pollitem_t *item, void *arg)
+{
+    struct _cb_args *a = (struct _cb_args *)arg;
+    syslog(LOG_WARNING, "CALLBACK_SHIM!");
+    /* callback should return -1 to end calls and free memory */
+    int ret = a->fn(item->fd, a->arg);
+    if (ret == -1)
+    {
+        zloop_poller_end(loop, item);
+        free(a->p);
+        free(a);
+    }
+    return 0;
+}
+
+static int _AddFDCallback(
+    PHIT_Context* context,
+    int fd,
+    int (*fn)(int fd, void *arg),
+    void *arg)
+{
+    Context* self = (Context*)context;
+
+    PHIT_Context_DEBUG(context, "Hello from AddFDCallback\n");
+    struct _cb_args *a = calloc(1, sizeof(struct _cb_args));
+    zmq_pollitem_t *poller = calloc(1, sizeof(zmq_pollitem_t));
+    a->p = poller;
+    a->fn = fn;
+    a->arg = arg;
+
+    // set up pollitem
+    poller->fd = fd;
+    poller->events = ZMQ_POLLIN;
+    zloop_poller(self->connection->reactor, poller, _callback_shim, a);
+    return 0;
+}
+
+static int _RemoveFDCallback(
+    PHIT_Context* context, int fd)
+{
+    assert(1==0); /* this function is not yet safe to call as I need to figure out a way to free the memory held by the pollitem */
+
+    Context* self = (Context*)context;
+    zmq_pollitem_t poller = {NULL, fd, ZMQ_POLLIN };
+    zloop_poller_end(self->connection->reactor, &poller);
+    return 0;
+}
+
+static int _DeferResult(
+    PHIT_Context* context)
+{
+    return 0;
+}
+
 static PHIT_Context _base =
 {
     .magic = PHIT_CONTEXT_MAGIC,
@@ -347,7 +506,10 @@ static PHIT_Context _base =
     .GetOption = _GetOption,
     .SetLogPriority = _SetLogPriority,
     .GetLogPriority = _GetLogPriority,
-    .VLogMessage = _FCGI_Context_VLogMessage
+    .VLogMessage = _FCGI_Context_VLogMessage,
+    .AddFDCallback = _AddFDCallback,
+    .RemoveFDCallback = _RemoveFDCallback,
+    .DeferResult = _DeferResult,
 };
 
 void ContextInit(

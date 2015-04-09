@@ -76,6 +76,7 @@ struct _Connection
     /* Provider invocation context */
     Context context;
 
+    zloop_t *reactor;
     zsock_t *socket;
     zmsg_t *msg;
     zframe_t *return_identity;
@@ -93,7 +94,7 @@ struct _Connection
     int chunkFinal;
 };
 
-Connection* FCGI_ConnectionNew(zsock_t *socket, zmsg_t *msg);
+Connection* FCGI_ConnectionNew(zloop_t *reactor, zsock_t *socket, zmsg_t *msg);
 void FCGI_ConnectionDelete( Connection** self);
 
 #endif /* _connection_h */
