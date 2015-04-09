@@ -393,6 +393,7 @@ send_result:
     OL_URI_Release((OL_URI *)uri);
     OL_Scope_INFO(scope, "async provider GET thread exiting\n");
     write(fd, &result, sizeof(result));
+    close(fd);
     return NULL;
 }
 
@@ -403,6 +404,7 @@ static int _request_complete(int fd, void *arg)
     int result;
     read(fd, &result, sizeof(result));
     OL_Scope_SendResult(scope, result);
+    return -1;
 }
 
 static void _Gadget_Get(
@@ -485,12 +487,12 @@ static void _Gadget_Get(
     int fd[2];
     socketpair(PF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0, fd);
     d->fd = fd[1];
-    OL_Scope_AddFDCallback(scope, fd[0], _request_complete, scope);
 
     pthread_t id;
     pthread_create(&id, NULL, _Gadget_Get_thread, (void*)d);
     pthread_detach(id);
     OL_Scope_INFO(scope, "_Gadget_Get spawn work to background\n");
+    OL_Scope_AddFDCallback(scope, fd[0], _request_complete, scope);
 }
 
 static void _Gadget_Post(

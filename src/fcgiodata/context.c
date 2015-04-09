@@ -444,7 +444,9 @@ static int _callback_shim (zloop_t *loop, zmq_pollitem_t *item, void *arg)
     int ret = a->fn(item->fd, a->arg);
     if (ret == -1)
     {
+        syslog(LOG_WARNING, "CALLBACK_SHIM: remove fd %d!", item->fd);
         zloop_poller_end(loop, item);
+        close(item->fd);
         free(a->p);
         free(a);
     }
@@ -459,7 +461,7 @@ static int _AddFDCallback(
 {
     Context* self = (Context*)context;
 
-    PHIT_Context_DEBUG(context, "Hello from AddFDCallback\n");
+    PHIT_Context_DEBUG(context, "Hello from AddFDCallback: add fd %d\n", fd);
     struct _cb_args *a = calloc(1, sizeof(struct _cb_args));
     zmq_pollitem_t *poller = calloc(1, sizeof(zmq_pollitem_t));
     a->p = poller;
