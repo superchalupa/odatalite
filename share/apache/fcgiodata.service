@@ -3,9 +3,9 @@ Description=Async odatalite fcgi process on port 4200
 
 [Service]
 Type=notify
-ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgiodata-async -p 4200
-ExecStartPost=/bin/sh -c "/bin/pidof fcgiodata-async > /run/fcgiodata-async.pid"
-PIDFile=/run/fcgiodata-async.pid
+ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgiodata -p 4200
+ExecStartPost=/bin/sh -c "/bin/pidof fcgiodata > /run/fcgiodata.pid"
+PIDFile=/run/fcgiodata.pid
 RestartSec=10s
 WatchdogSec=10s
 NotifyAccess=all
