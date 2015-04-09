@@ -28,6 +28,7 @@
 **
 **==============================================================================
 */
+#include <syslog.h>
 #include <cstdio>
 #include <cstdlib>
 #include "RootProvider.h"
@@ -40,12 +41,12 @@ using namespace odata;
 
 void RootProvider::Load(odata::Scope& scope)
 {
-    D( printf("=== RootProvider::Load()\n"); )
+    D( syslog(LOG_INFO, "=== RootProvider::Load()\n"); )
 }
 
 void RootProvider::Unload(odata::Scope& scope)
 {
-    D( printf("=== RootProvider::Unload()\n"); )
+    D( syslog(LOG_INFO, "=== RootProvider::Unload()\n"); )
 
     /* Avoid calling 'operator delete()' (requires standard C++ library */
     this->~RootProvider();
@@ -67,7 +68,7 @@ void RootProvider::Get(
     odata::Scope& scope,
     const odata::URI& uri)
 {
-    D( printf("=== RootProvider::Get()\n"); )
+    D( syslog(LOG_INFO, "=== RootProvider::Get(), uri.Count=%d\n", uri.Count()); )
     D( uri.Print(); )
 
     if (uri.Count() == 0)
@@ -90,7 +91,7 @@ void RootProvider::Get(
 
 extern "C" OL_EXPORT OL_Provider* OL_ProviderEntryPoint()
 {
-    D( printf("=== OL_ProviderEntryPoint()\n"); )
+    D( syslog(LOG_INFO, "=== OL_ProviderEntryPoint()\n"); )
 
     /* Avoid calling 'operator new()' (requires standard C++ library */
     RootProvider* self = (RootProvider*)calloc(1, sizeof(RootProvider));

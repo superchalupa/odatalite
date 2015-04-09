@@ -431,9 +431,10 @@ static void _ODATAPlugin_HandleRequest(
         }
     }
 
-    /* Format the context URL */
+    /* Format the context URL; use the ServiceRoot from the phit headers */
     if (URIFormatContextURL(
         uri,
+        serviceRoot,
         ((Scope*)scope)->contextURI,
         sizeof(((Scope*)scope)->contextURI)) != OL_Result_Ok)
     {

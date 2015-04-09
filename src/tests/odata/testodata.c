@@ -1222,7 +1222,7 @@ int CheckURLContext(
         return 0;
     }
 
-    r = URIFormatContextURL(uri, urlContext, sizeof(urlContext));
+    r = URIFormatContextURL(uri, NULL, urlContext, sizeof(urlContext));
 
     if (r != OL_Result_Ok)
     {

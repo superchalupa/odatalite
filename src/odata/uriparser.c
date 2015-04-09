@@ -712,6 +712,7 @@ int FormatValue(char* buf, size_t size, const OL_Value* value)
 
 OL_Result URIFormatContextURL(
     const URI* self,
+    char *serviceRoot,
     char* buf,
     size_t size)
 {
@@ -721,7 +722,16 @@ OL_Result URIFormatContextURL(
     if (self->magic != URI_MAGIC)
         return OL_Result_Failed;
 
-    if (Strlcpy(buf, "odata/$metadata", size) >= size)
+    if (!serviceRoot) 
+    { 
+      syslog(LOG_WARNING, "%s(): serviceRoot not defined.\n", __FUNCTION__);
+      serviceRoot = "odata";
+    }
+
+    if (Strlcpy(buf, serviceRoot, size) >= size)
+        return OL_Result_Failed;
+
+    if (Strlcat(buf, "/$metadata", size) >= size)
         return OL_Result_Failed;
 
     if (self->segments.size == 0)

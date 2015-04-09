@@ -44,6 +44,7 @@ OL_Result URIParse(
 
 OL_Result URIFormatContextURL(
     const URI* self,
+    char *serviceRoot,
     char* buf,
     size_t size);
 
