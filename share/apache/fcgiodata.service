@@ -3,12 +3,10 @@ Description=Async odatalite fcgi process on port 4200
 
 [Service]
 Type=notify
-ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgiodata -p 4200
-ExecStartPost=/bin/sh -c "/bin/pidof fcgiodata > /run/fcgiodata.pid"
-PIDFile=/run/fcgiodata.pid
+ExecStart=/usr/bin/fcgiodata
 RestartSec=10s
 WatchdogSec=10s
-NotifyAccess=all
-
-[Install]
-WantedBy=multi-user.target network.target
+NotifyAccess=main
+StandardInput=socket
+User=odatalite
+Group=odatalite

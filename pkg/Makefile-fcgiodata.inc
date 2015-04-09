@@ -18,4 +18,4 @@ out_fcgiodata_SOURCES = \
 dist_apache_conf_DATA += share/apache/fcgiodata.conf
 
 # odata service install
-dist_systemdsystemunit_DATA += share/apache/fcgiodata.service
+dist_systemdsystemunit_DATA += share/apache/fcgiodata.service share/apache/fcgiodata.socket
