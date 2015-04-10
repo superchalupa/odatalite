@@ -712,7 +712,7 @@ int FormatValue(char* buf, size_t size, const OL_Value* value)
 
 OL_Result URIFormatContextURL(
     const URI* self,
-    char *serviceRoot,
+    const char *serviceRoot,
     char* buf,
     size_t size)
 {
