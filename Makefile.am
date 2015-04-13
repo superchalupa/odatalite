@@ -84,6 +84,7 @@ endif
 
 if BUILD_ODATA_FASTCGI
 include pkg/Makefile-fcgiodata.inc
+include pkg/Makefile-fcgiauth.inc
 endif
 
 if BUILD_METADATA_PROVIDER

@@ -1,0 +1,10 @@
+[Unit]
+Description=fcgi authenticator/authorizer
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/fcgistarter -c /usr/bin/fcgiauth -p 4300
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target network.target
