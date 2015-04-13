@@ -405,7 +405,7 @@ static OL_Result _Scope_SendEntityAux(
         &chunkedEncoding,
         sizeof(chunkedEncoding)) != 0)
     {
-        LOGE(("PHIT_Context_GetOption(CHUNKED_ENCODING)"));
+        OL_Scope_ERR(self_, "PHIT_Context_GetOption(CHUNKED_ENCODING)");
         self->error = OL_TRUE;
         return OL_Result_Failed;
     }
@@ -448,7 +448,7 @@ static OL_Result _Scope_SendEntityAux(
 
             if (OL_Object_Get(object, propertyName, &value) != OL_Result_Ok)
             {
-                LOGE(("property not found: %s", propertyName));
+                OL_Scope_ERR(self_, "property not found: %s", propertyName);
                 self->error = OL_TRUE;
                 return OL_Result_Failed;
             }
@@ -457,7 +457,7 @@ static OL_Result _Scope_SendEntityAux(
 
             if (self->out->err)
             {
-                LOGE(("serialize failed"));
+                OL_Scope_ERR(self_, "serialize failed");
                 self->error = OL_TRUE;
                 return OL_Result_Failed;
             }
@@ -475,7 +475,7 @@ static OL_Result _Scope_SendEntityAux(
 
             if (self->out->err)
             {
-                LOGE(("serialize failed"));
+                OL_Scope_ERR(self_, "serialize failed");
                 self->error = OL_TRUE;
                 return OL_Result_Failed;
             }
