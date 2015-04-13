@@ -3,9 +3,9 @@
 #EXTRA_DIST += src/base-include
 base_includes = src/base src
 
-pkgconf_list+=libbase-static
-LIBBASE_STATIC_LIBS = -lbase
-LIBBASE_STATIC_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
+pkgconf_list+=libbase
+LIBBASE_LIBS = -lbase
+LIBBASE_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
 
 # this is a convenience library so we dont recompile
 # base .c files repeatedly for each binary

@@ -2,9 +2,9 @@
 
 odata_includes = src/plugins/odata src
 
-pkgconf_list+=libodata-static
-LIBODATA_STATIC_LIBS = -lodata
-LIBODATA_STATIC_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
+pkgconf_list+=libodata
+LIBODATA_LIBS = -lodata
+LIBODATA_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
 
 # this is a convenience library so we dont recompile
 # odata .c files repeatedly for each binary
