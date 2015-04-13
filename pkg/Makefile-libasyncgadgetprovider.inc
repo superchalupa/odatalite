@@ -3,6 +3,7 @@
 provider_LTLIBRARIES += out/libasyncgadgetprovider.la
 out_libasyncgadgetprovider_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(provider_includes))
 out_libasyncgadgetprovider_la_LDFLAGS = $(AM_LDFLAGS) $(call STD_LDFLAGS_LIB,WIDGETPROVIDER) -avoid-version -fvisibility=hidden
+# for Calloc():
 out_libasyncgadgetprovider_la_LIBADD = out/libbase.la
 
 out_libasyncgadgetprovider_la_SOURCES = \
