@@ -26,7 +26,7 @@ bin_includes = src
 
 # Apache2 conf file for fastcgi
 apache_confdir=$(sysconfdir)/apache2/conf.d
-dist_apache_conf_DATA = share/apache/load-proxy.conf
+dist_apache_conf_DATA =
 
 # odata service install
 dist_systemdsystemunit_DATA =

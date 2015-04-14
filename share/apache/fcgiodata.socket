@@ -6,4 +6,4 @@ ListenStream=127.0.0.1:4200
 Accept=false
 
 [Install]
-WantedBy=multi-user.target network.target
+WantedBy=sockets.target

@@ -15,7 +15,7 @@ out_fcgiodata_SOURCES = \
 
 
 # Apache2 conf file for fastcgi
-dist_apache_conf_DATA += share/apache/fcgiodata.conf
+dist_apache_conf_DATA += share/apache/fcgiodata.conf share/apache/01-load-modules.conf
 
 # odata service install
 dist_systemdsystemunit_DATA += share/apache/fcgiodata.service share/apache/fcgiodata.socket

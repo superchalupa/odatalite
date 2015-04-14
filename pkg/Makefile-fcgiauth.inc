@@ -11,4 +11,4 @@ out_fcgiauth_SOURCES = \
 dist_apache_conf_DATA += share/apache/fcgiauth.conf
 
 # odata service install
-dist_systemdsystemunit_DATA += share/apache/fcgiauth.service
+dist_systemdsystemunit_DATA += share/apache/fcgiauth.service share/apache/fcgiauth.socket
