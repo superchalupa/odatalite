@@ -117,6 +117,7 @@ install-data-hook:
 sdk_HEADERS += \
 src/odata/odatacxx.h	\
 src/odata/odatacxxinlines.h	\
+src/odata/odatamacros.h	\
 src/odata/odata.h	\
 src/phit.h
 
