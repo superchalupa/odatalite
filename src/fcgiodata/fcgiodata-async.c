@@ -219,6 +219,12 @@ int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
         goto error_out;
     }
 
+    char *remoteUser = FCGX_GetParam("REMOTE_USER", c->envp);
+    if(remoteUser) {
+        strncpy(c->user, remoteUser, USERNAME_SIZE-1);
+    }
+    DEBUG_PRINTF("Got REMOTE_USER: '%s'\n", c->user);
+
     // HTTP Headers to PHIT format
     HTTPBuf buf={};
     z_ret = FASTCGI_HeadersParse( &(c->headers), &buf, c->envp);
