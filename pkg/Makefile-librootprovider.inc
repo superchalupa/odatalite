@@ -6,7 +6,6 @@ out_librootprovider_la_LDFLAGS = $(AM_LDFLAGS) $(call STD_LDFLAGS_LIB,ROOTPROVID
 out_librootprovider_la_LIBADD =
 
 out_librootprovider_la_SOURCES = \
-	src/odata/providers/root/RootProvider.h \
-	src/odata/providers/root/RootProvider.cpp
+	src/odata/providers/root/rootprovider.c
 
 INSTALL_COMMANDS += ;echo  'rootprovider:/:' >> $(DESTDIR)/$(phit_confdir)/providers.conf

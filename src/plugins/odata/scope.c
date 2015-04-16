@@ -71,6 +71,7 @@ size_t _scopeCacheSize;
 
 OL_Scope* ScopeCache_Get()
 {
+    syslog(LOG_INFO, "%s(): _scopeCacheSize=%d\n", __FUNCTION__, _scopeCacheSize);
     if (_scopeCacheSize == 0)
         return _Scope_New();
     else

@@ -268,6 +268,37 @@ OL_Result __SerializeArray(
     return OL_Result_Ok;
 }
 
+OL_Result __SerializeHash(
+    Buf* out,
+    const JSON_Value* v,
+    size_t depth,
+    OL_MetadataType metadataType)
+{
+    size_t i = 0;
+    const JSONArray* arr = (JSONArray*)v->u.array;
+
+    BufCatCh2(out, '[', '\n');
+    depth++;
+
+    for (i = 0; i < arr->count; i++)
+    {
+        const JSON_Value* value = &arr->elements[i].value;
+
+        _Indent(out, depth);
+        SerializeElement(out, value, depth, metadataType);
+
+        if (i + 1 != arr->count)
+            BufCatCh2(out, ',', '\n');
+        else
+            BufCatCh(out, '\n');
+    }
+
+    depth--;
+    _Indent(out, depth);
+    BufCatCh(out, ']');
+
+    return OL_Result_Ok;
+}
 
 ALWAYS_INLINE int NeedOdataTypeAnnotation(unsigned short type)
 {
