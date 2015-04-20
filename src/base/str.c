@@ -179,7 +179,7 @@ size_t Strtoks(
     return n;
 }
 
-char *File2String(char *filepath)
+char *File2String(const char *filepath)
 {
   char * buffer = 0;
   long length;

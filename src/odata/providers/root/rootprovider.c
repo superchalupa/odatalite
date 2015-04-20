@@ -33,11 +33,18 @@ static void _Get(
   OL_Scope* scope,
   const OL_URI* uri)
 {
-  OL_Scope_DEBUG(scope, "%s(): Entered.\n", __FUNCTION__);
-
   OL_Object* obj;
   size_t offset;
   OL_Result result = OL_Result_Ok;
+
+  // Only service the root from this provider.
+  if (OL_URI_Count(uri) != 0)
+  {
+    syslog(LOG_WARNING, "%s(): uri '%s' not supported by rootprovider.\n", 
+           __FUNCTION__, OL_URI_GetName(uri, 0));
+    OL_Scope_SendResult(scope, OL_Result_Failed);
+    return;
+  }
 
   char *serviceRoot = File2String(filename);
   if (!serviceRoot)

@@ -507,6 +507,6 @@ size_t Strtoks(
     char** toks,
     size_t ntoks);
 
-char *File2String(char *filepath);
+char *File2String(const char *filepath);
 
 #endif /* _phit_base_str_h */
