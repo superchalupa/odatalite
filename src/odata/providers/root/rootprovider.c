@@ -37,32 +37,37 @@ static void _Get(
 
   OL_Object* obj;
   size_t offset;
+  OL_Result result = OL_Result_Ok;
 
   char *serviceRoot = File2String(filename);
   if (!serviceRoot)
   {
     syslog(LOG_WARNING, "%s(): Error loading %s: errno=%d\n", 
            __FUNCTION__, filename, errno);
-    OL_Scope_SendResult(scope, OL_Result_InternalError);
+    result = OL_Result_InternalError;
+    goto send_result;
   }
 
   if (!(obj = OL_Scope_NewObject(scope)))
-      return ;
+  {
+    result = OL_Result_InternalError;
+    goto send_result;
+  }
 
   OL_Result r = OL_Object_Deserialize(obj, serviceRoot, strlen(serviceRoot), &offset);
   if (r)
   {
     syslog(LOG_WARNING, "%s(): OL_Object_Deserialize() failed, result=%d\n", __FUNCTION__, r);
-    OL_Scope_SendResult(scope, OL_Result_InternalError);
+    result = OL_Result_InternalError;
+    goto send_result;
   }
 
   OL_Scope_SendEntity(scope, obj);
   OL_Object_Release(obj);
 
-  OL_Scope_SendResult(scope, OL_Result_Ok);
-  free(serviceRoot);
-
-  return;
+  send_result:
+    OL_Scope_SendResult(scope, result);
+    free(serviceRoot);
 }
 
 static void _Post(
