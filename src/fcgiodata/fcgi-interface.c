@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <syslog.h>
+#include <string.h>
 
 #include <czmq.h>
 #include <fcgiapp.h>
@@ -127,6 +128,29 @@ static void *handle_cgi_request(void *a)
     return NULL;
 }
 
+static void SetRedfishVersion()
+{
+  char *conf = File2String("/etc/phit/redfish.conf");
+  char *version = "=0.00.0", *ptr = NULL;
+  int memreserved = 1;
+  if (!conf)
+  {
+    conf = "SchemaVersion=0.00.0";
+    memreserved = 0;
+  }
+
+  // find and remove the property name
+  ptr = strchr(conf, '=');
+  if (!ptr) { ptr = version; }
+  ptr++;
+
+  // Terminate possible trailing \n
+  if (ptr[strlen(ptr)-1] < 32) { ptr[strlen(ptr)-1] = '\0'; }
+
+  // Set an enviroment variable
+  setenv("REDFISH_VERSION", ptr, 1);
+  if (memreserved) { free(conf); }
+}
 
 int watchdog_ping (zloop_t *loop, int timer_id, void *arg)
 {
@@ -146,6 +170,12 @@ int main(void)
 
     // let all the zmq printing functions use syslog since it's not safe to use printf()
     zsys_set_logsystem(1);
+
+    // stuff the redfish version into the environment.
+    SetRedfishVersion();
+    char *schema = getenv("RedfishVersion");
+    DEBUG_PRINTF("%s(): RedfishVersion='%s'\n", 
+                  __FUNCTION__, schema ? schema : "<NULL>");
 
     // initialization of odata
     __odataPlugin.base.Load(&__odataPlugin.base);

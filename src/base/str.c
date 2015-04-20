@@ -188,12 +188,13 @@ char *File2String(const char *filepath)
   if (f)
   {
     fseek (f, 0, SEEK_END);
-    length = ftell (f)+1;
+    length = ftell (f);
     fseek (f, 0, SEEK_SET);
-    buffer = malloc (length);
+    buffer = malloc (length+1);
     if (buffer)
     {
       fread (buffer, 1, length, f);
+      buffer[length] = 0;
     }
     fclose (f);
   }

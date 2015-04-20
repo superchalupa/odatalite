@@ -718,6 +718,12 @@ OL_Result URIFormatContextURL(
 {
     size_t i;
     size_t j;
+    char *service = self->service;
+
+   if (!strncmp(service, serviceRoot, sizeof(serviceRoot)))
+    { // Base case: Service is "ServiceRoot"
+      service = "ServiceRoot";
+    }
 
     if (self->magic != URI_MAGIC)
         return OL_Result_Failed;
@@ -731,14 +737,32 @@ OL_Result URIFormatContextURL(
     if (Strlcpy(buf, serviceRoot, size) >= size)
         return OL_Result_Failed;
 
-    if (Strlcat(buf, "/$metadata", size) >= size)
+    if (Strlcat(buf, "$metadata", size) >= size)
         return OL_Result_Failed;
 
     if (self->segments.size == 0)
-        return OL_Result_Ok;
+    { // Add the service to the metadata name.
+      if (Strlcat(buf, "#", size) >= size)
+          return OL_Result_Failed;
+
+      if (Strlcat(buf, service, size) >= size)
+          return OL_Result_Failed;
+
+      return OL_Result_Ok;
+    }
 
     if (Strlcat(buf, "#", size) >= size)
         return OL_Result_Failed;
+
+    /* Append extras to "@odata.context" */
+    // TODO: what reason do I insert this at the end of the odata.context?
+    //if (!self->postEntity && !self->postBeginEntitySet &&
+    //    strcmp(self->contextURI, "odata/$metadata") != 0 &&
+    //    !propertyName)
+    //{
+    //    Strlcat(self->contextURI, "/$entity", sizeof(self->contextURI));
+    //}
+
 
     /* If the final segment of path is "$ref" */
     {
@@ -782,6 +806,5 @@ OL_Result URIFormatContextURL(
                 return OL_Result_Failed;
         }
     }
-
     return OL_Result_Ok;
 }

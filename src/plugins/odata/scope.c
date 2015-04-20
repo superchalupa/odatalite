@@ -427,15 +427,6 @@ static OL_Result _Scope_SendEntityAux(
         BufCatCh2(out, ',', '\n');
     }
 
-    /* Append extras to "@odata.context" */
-    /* ATTN: move this logic into URIFormatContextURL() */
-    if (!self->postEntity && !self->postBeginEntitySet &&
-        strcmp(self->contextURI, "odata/$metadata") != 0 &&
-        !propertyName)
-    {
-        Strlcat(self->contextURI, "/$entity", sizeof(self->contextURI));
-    }
-
     /* Serialize the object */
     {
         if (self->uriQueryOptions & OL_QUERY_OPTION_COUNT)

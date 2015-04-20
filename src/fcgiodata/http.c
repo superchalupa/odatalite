@@ -377,9 +377,14 @@ static void GetServiceRoot(
     value = getenv("SERVICE_ROOT");
     self->ServiceRoot.found = 1;
     self->ServiceRoot.value = value;
-
     // SERVICE_ROOT ex: '/rest-sync/v1'
     DEBUG_PRINTF("%s(): SERVICE_ROOT    ='%s'\n", __FUNCTION__, value);
+
+    value = getenv("REDFISH_VERSION");
+    self->RedfishVersion.found = 1;    
+    self->RedfishVersion.value = value;
+    // REDFISH_VERSION ex: 0.94.0
+    DEBUG_PRINTF("%s(): REDFISH_VERSION ='%s'\n", __FUNCTION__, value);
 }
 
 int FASTCGI_HeadersParse(

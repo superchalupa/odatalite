@@ -645,7 +645,7 @@ OL_Result Object_Serialize(
         OL_MetadataType_Minimal, NULL)) != OL_Result_Ok)
         goto done;
 
-    /* If not an OutSteram, then append data to out-stream */
+    /* If not an OutStream, then append data to out-stream */
     if (outStream->ft == &__OutStreamFT)
         r = OL_Result_Ok;
     else
