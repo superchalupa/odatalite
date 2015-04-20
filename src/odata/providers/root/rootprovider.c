@@ -28,8 +28,6 @@ static void _Unload(
   free(self);
 }
 
-static char *serviceRoot = NULL;
-
 static void _Get(
   OL_Provider* self_,
   OL_Scope* scope,
@@ -40,15 +38,12 @@ static void _Get(
   OL_Object* obj;
   size_t offset;
 
+  char *serviceRoot = File2String(filename);
   if (!serviceRoot)
   {
-    serviceRoot = File2String(filename);
-    if (!serviceRoot)
-    {
-      syslog(LOG_WARNING, "%s(): Error loading %s: errno=%d\n", 
-             __FUNCTION__, filename, errno);
-      OL_Scope_SendResult(scope, OL_Result_InternalError);
-    }
+    syslog(LOG_WARNING, "%s(): Error loading %s: errno=%d\n", 
+           __FUNCTION__, filename, errno);
+    OL_Scope_SendResult(scope, OL_Result_InternalError);
   }
 
   if (!(obj = OL_Scope_NewObject(scope)))
@@ -65,6 +60,7 @@ static void _Get(
   OL_Object_Release(obj);
 
   OL_Scope_SendResult(scope, OL_Result_Ok);
+  free(serviceRoot);
 
   return;
 }
