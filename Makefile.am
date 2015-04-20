@@ -33,7 +33,12 @@ dist_systemdsystemunit_DATA =
 
 # config files
 phit_confdir=$(sysconfdir)/phit
-dist_phit_conf_DATA = etc/phit/phitd.conf  etc/phit/plugins.conf  etc/phit/providers.conf  etc/phit/roles.conf
+dist_phit_conf_DATA = \
+        etc/phit/phitd.conf \
+        etc/phit/plugins.conf \
+        etc/phit/providers.conf \
+        etc/phit/roles.conf \
+        etc/phit/ServiceRoot.json
 
 # PAM config
 pam_confdir=$(sysconfdir)/pam.d

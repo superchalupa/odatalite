@@ -28,6 +28,8 @@
 **
 **==============================================================================
 */
+#include <errno.h>
+#include <syslog.h>
 #include "str.h"
 
 int Strncaseeq(const char* s1, const char* s2, size_t n)
@@ -176,3 +178,30 @@ size_t Strtoks(
 
     return n;
 }
+
+char *File2String(char *filepath)
+{
+  char * buffer = 0;
+  long length;
+  FILE * f = fopen (filepath, "rb");
+  
+  if (f)
+  {
+    fseek (f, 0, SEEK_END);
+    length = ftell (f)+1;
+    fseek (f, 0, SEEK_SET);
+    buffer = malloc (length);
+    if (buffer)
+    {
+      fread (buffer, 1, length, f);
+    }
+    fclose (f);
+  }
+  else
+  {
+    syslog(LOG_WARNING, "%s(): filepath '%s' errno=%d\n", 
+                        __FUNCTION__, filepath, errno);
+  }
+  return buffer;
+}
+

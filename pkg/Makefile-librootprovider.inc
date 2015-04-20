@@ -3,7 +3,7 @@
 provider_LTLIBRARIES += out/librootprovider.la
 out_librootprovider_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(provider_includes))
 out_librootprovider_la_LDFLAGS = $(AM_LDFLAGS) $(call STD_LDFLAGS_LIB,ROOTPROVIDER) -avoid-version -fvisibility=hidden
-out_librootprovider_la_LIBADD =
+out_librootprovider_la_LIBADD = out/libbase.la
 
 out_librootprovider_la_SOURCES = \
 	src/odata/providers/root/rootprovider.c

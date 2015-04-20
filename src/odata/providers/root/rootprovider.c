@@ -1,5 +1,11 @@
-#include <odata/odata.h>
 #include <syslog.h>
+#include <errno.h>
+#include <odata/odata.h>
+#include <odata/json.h>
+#include "base/str.h"
+
+// Service Root is static taken from this file.
+static const char *filename = "/etc/phit/ServiceRoot.json";
 
 typedef struct _Provider /* Extends OL_Provider */
 {
@@ -12,8 +18,6 @@ static void _Load(
   OL_Provider* self,
   OL_Scope* scope)
 {
-  syslog(LOG_INFO, "%s(): Entered.\n", __FUNCTION__);
-  //OL_Scope_DEBUG(scope, "%s(): Entered.\n", __FUNCTION__);
 }
 
 static void _Unload(
@@ -24,6 +28,8 @@ static void _Unload(
   free(self);
 }
 
+static char *serviceRoot = NULL;
+
 static void _Get(
   OL_Provider* self_,
   OL_Scope* scope,
@@ -32,33 +38,34 @@ static void _Get(
   OL_Scope_DEBUG(scope, "%s(): Entered.\n", __FUNCTION__);
 
   OL_Object* obj;
+  size_t offset;
 
-  OL_Scope_SendBeginEntitySet(scope);
+  if (!serviceRoot)
+  {
+    serviceRoot = File2String(filename);
+    if (!serviceRoot)
+    {
+      syslog(LOG_WARNING, "%s(): Error loading %s: errno=%d\n", 
+             __FUNCTION__, filename, errno);
+      OL_Scope_SendResult(scope, OL_Result_InternalError);
+    }
+  }
 
   if (!(obj = OL_Scope_NewObject(scope)))
       return ;
 
-  OL_Object_AddInt64(obj, "Id", 1001);
-  OL_Object_AddString(obj, "Color", "Blue");
-  OL_Object_AddString(obj, "Model", "Polara 500");
-  OL_Object_AddInt32(obj, "Weight", 4200);
+  OL_Result r = OL_Object_Deserialize(obj, serviceRoot, strlen(serviceRoot), &offset);
+  if (r)
+  {
+    syslog(LOG_WARNING, "%s(): OL_Object_Deserialize() failed, result=%d\n", __FUNCTION__, r);
+    OL_Scope_SendResult(scope, OL_Result_InternalError);
+  }
 
   OL_Scope_SendEntity(scope, obj);
   OL_Object_Release(obj);
 
-  if (!(obj = OL_Scope_NewObject(scope)))
-      return ;
-
-  OL_Object_AddInt64(obj, "Id", 1002);
-  OL_Object_AddString(obj, "Color", "Gold");
-  OL_Object_AddString(obj, "Model", "Imperial Crown");
-  OL_Object_AddInt32(obj, "Weight", 5100);
-
-  OL_Scope_SendEntity(scope, obj);
-  OL_Object_Release(obj);
-
-  OL_Scope_SendEndEntitySet(scope);
   OL_Scope_SendResult(scope, OL_Result_Ok);
+
   return;
 }
 
