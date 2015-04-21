@@ -1,1 +1,8 @@
-get role and perms into odata
+move phitd.service to src/server/ and put install in pkg/Makefile-phitd.inc
+
+get role and perms into odata:
+    - Need API in scope object to get roles and perms
+
+CSRF?
+Session ID?
+

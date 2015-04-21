@@ -11,7 +11,8 @@ out_fcgiodata_SOURCES = \
 	src/fcgiodata/connection.c	\
 	src/fcgiodata/connection.h	\
 	src/fcgiodata/http.c	\
-	src/fcgiodata/fcgiodata-async.c
+	src/fcgiodata/odata-interface.c	\
+	src/fcgiodata/fcgi-interface.c
 
 
 # Apache2 conf file for fastcgi
