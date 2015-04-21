@@ -79,6 +79,7 @@
 #define ENABLE_LOGP
 
 #undef ENABLE_ALWAYS_INLINE
+#define ENABLE_FILE_LINE_FN_LOGGING
 
 /*
 **==============================================================================

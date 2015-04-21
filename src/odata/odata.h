@@ -815,6 +815,15 @@ OL_Scope* __OL_Scope_New();
 **
 **==============================================================================
 */
+#ifdef ENABLE_FILE_LINE_FN_LOGGING
+#define PHIT_FILE __FILE__
+#define PHIT_LINE __LINE__
+#define PHIT_FUNCTION __FUNCTION__
+#else
+#define PHIT_FILE ""
+#define PHIT_LINE ""
+#define PHIT_FUNCTION ""
+#endif
 
 // purpose of this is to ensure that we always have valid well-formed logging calls instead of just throwing away the result
 // compiler should optimize away completely
@@ -824,7 +833,7 @@ __scope_log_null(OL_Scope *self, const char *format, ...) {}
 #define __scope_log_cond(ctx, prio, arg...) \
   do { \
      if (OL_Scope_GetLogPriority(ctx) >= prio) \
-      OL_Scope_LogMessage(ctx, prio, __FILE__, __LINE__, __FUNCTION__, ## arg); \
+      OL_Scope_LogMessage(ctx, prio, PHIT_FILE, PHIT_LINE, PHIT_FUNCTION, ## arg); \
   } while (0)
 
 #ifdef ENABLE_LOGGING

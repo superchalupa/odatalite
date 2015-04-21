@@ -719,6 +719,16 @@ PHIT_INLINE int PHIT_Context_GetOption(
 **
 **==============================================================================
 */
+#ifdef ENABLE_FILE_LINE_FN_LOGGING
+#define OL_FILE __FILE__
+#define OL_LINE __LINE__
+#define OL_FUNCTION __FUNCTION__
+#else
+#define OL_FILE ""
+#define OL_LINE ""
+#define OL_FUNCTION ""
+#endif
+
 // purpose of this is to ensure that we always have valid well-formed logging calls instead of just throwing away the result
 // compiler should optimize away completely
 static inline void __attribute__((always_inline, format(printf, 2, 3)))
@@ -727,7 +737,7 @@ __context_log_null(PHIT_Context *self, const char *format, ...) {}
 #define __context_log_cond(ctx, prio, arg...) \
   do { \
      if (PHIT_Context_GetLogPriority(ctx) >= prio) \
-      PHIT_Context_LogMessage(ctx, prio, __FILE__, __LINE__, __FUNCTION__, ## arg); \
+      PHIT_Context_LogMessage(ctx, prio, OL_FILE, OL_LINE, OL_FUNCTION, ## arg); \
   } while (0)
 
 #ifdef ENABLE_LOGGING
