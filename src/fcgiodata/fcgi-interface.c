@@ -38,6 +38,9 @@ static void *handle_cgi_request(void *a)
     zctx_t *ctx = ((struct cgi_thread_parameters *)a)->ctx;
     FCGX_Request request;
 
+    // Allow thread to be cancelled at any time
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+
     // create ZMQ context for IPC to our server task
     void *cgiserver = zsocket_new (ctx, ZMQ_REQ);
 
@@ -117,7 +120,9 @@ static void *handle_cgi_request(void *a)
         FCGX_Finish_r(&request);
     }
 
-    zctx_destroy (&ctx);
+    DEBUG_PRINTF("ACCEPT THREAD ENDED");
+
+    zsocket_destroy(ctx, &cgiserver);
 
     return NULL;
 }
@@ -126,7 +131,6 @@ static void *handle_cgi_request(void *a)
 int watchdog_ping (zloop_t *loop, int timer_id, void *arg)
 {
     (void)timer_id;
-    DEBUG_PRINTF("Ping watchdog\n");
     sd_notify(0, "WATCHDOG=1");
     return 0;
 }
@@ -140,53 +144,65 @@ int main(void)
     // CZMQ context
     zctx_t *ctx = zctx_new ();
 
+    // let all the zmq printing functions use syslog since it's not safe to use printf()
+    zsys_set_logsystem(1);
+
     // initialization of odata
     __odataPlugin.base.Load(&__odataPlugin.base);
 
     // Initialize FCGI and start handler threads
     FCGX_Init();
+    pthread_attr_t attr;
+    int s = pthread_attr_init(&attr);
+    if (s != 0) {
+        DEBUG_PRINTF("pthread_attr_init failed: %d", s);
+        exit(1);
+    }
+    pthread_attr_setdetachstate(&attr, 1);
+
     for (long i = 0; i < FCGI_ACCEPT_HANDLER_THREAD_COUNT; i++) {
         // pass in our context to the fcgi thread so that we can use inproc:// between threads
         thread_params[i].ctx = ctx;
-        pthread_create(&thread_params[i].thread_id, NULL, handle_cgi_request, (void*)(&thread_params[i]));
+        pthread_create(&thread_params[i].thread_id, &attr, handle_cgi_request, (void*)(&thread_params[i]));
     }
 
-    // let all the zmq printing functions use syslog since it's not safe to use printf()
-    zsys_set_logsystem(1);
+    pthread_attr_destroy(&attr);
 
     // Create our event reactor
-    DEBUG_PRINTF("   Create reactor\n");
     zloop_t *reactor = zloop_new ();
     assert (reactor);
-    zloop_set_verbose (reactor, 1);
+    //zloop_set_verbose (reactor, 1);
 
-    // Listen for incoming requests on localhost:5570
-    zsock_t *cgiserver = zsocket_new (ctx, ZMQ_ROUTER);
+    // Listen for incoming requests on inproc socket, call handler on incoming messages
+    void *cgiserver = zsocket_new (ctx, ZMQ_ROUTER);
     zsocket_bind (cgiserver, "inproc://cgi-thread");
-
-    // create handler for incoming messages
-    DEBUG_PRINTF("   Create reader\n");
     zmq_pollitem_t poller = { cgiserver, 0, ZMQ_POLLIN };
     zloop_poller (reactor, &poller, server_task, NULL);
 
     // register watchdog timer
     char *wd_usec_str = getenv("WATCHDOG_USEC");
     if(wd_usec_str) {
-        int wd_timeout_us = strtoul(wd_usec_str, NULL, 0);
-        DEBUG_PRINTF("   watchdog interval: %dms\n", (wd_timeout_us /1000) / 3);
-        if (wd_timeout_us > 0) {
+        int wd_interval_ms = strtoul(wd_usec_str, NULL, 0) / 1000 / 3;
+        DEBUG_PRINTF("  Setting up systemd process watchdog handler every %dms\n", wd_interval_ms);
+        if (wd_interval_ms > 0) {
             // send in three watchdog pings per watchdog timeout period. zloop expects ms timeout.
-            zloop_timer (reactor, (wd_timeout_us /1000) / 3, 0, watchdog_ping, NULL);
+            zloop_timer (reactor, wd_interval_ms, 0, watchdog_ping, NULL);
         }
     }
 
-    DEBUG_PRINTF("   Start reactor\n");
+    DEBUG_PRINTF("Async odata fastcgi server entering request handling loop.\n");
+    // don't notify systemd about startup complete until we are about to enter processing loop
     sd_notify(0, "READY=1");
     zloop_start(reactor);  // never returns until SIGINT
 
+    DEBUG_PRINTF("ZLOOP ENDED.\n");
+
+    DEBUG_PRINTF("zloop_destroy");
     zloop_destroy(&reactor);
-    zsock_destroy(&cgiserver);
+    DEBUG_PRINTF("zsocket_destroy");
+    zsocket_destroy(ctx, cgiserver);
+    DEBUG_PRINTF("zctx_destroy");
     zctx_destroy (&ctx);
 
-    return 0;
+    exit(0);
 }
