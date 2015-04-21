@@ -25,21 +25,27 @@ int sd_notify(int unset_environment, const char *state) {return 0;}
 
 int server_task (zloop_t *loop, zmq_pollitem_t *item, void *arg);
 
+struct cgi_thread_parameters
+{
+    zctx_t *ctx;
+    pthread_t thread_id;
+};
+
 static void *handle_cgi_request(void *a)
 {
     int rc;
-    long thread_id = (long)a;
+    pthread_t thread_id = ((struct cgi_thread_parameters *)a)->thread_id;
+    zctx_t *ctx = ((struct cgi_thread_parameters *)a)->ctx;
     FCGX_Request request;
 
     // create ZMQ context for IPC to our server task
-    zctx_t *ctx = zctx_new ();
     void *cgiserver = zsocket_new (ctx, ZMQ_REQ);
 
     //  Set random identity to make tracing easier
     char identity [30]={0};
     sprintf (identity, "fcgi-listener-%ld", thread_id);
     zsocket_set_identity (cgiserver, identity);
-    zsocket_connect (cgiserver, "tcp://localhost:5570");
+    zsocket_connect (cgiserver, "inproc://cgi-thread");
 
     FCGX_InitRequest(&request, 0, 0);
 
@@ -127,25 +133,23 @@ int watchdog_ping (zloop_t *loop, int timer_id, void *arg)
 
 int main(void)
 {
-    long i;
-    pthread_t id[FCGI_ACCEPT_HANDLER_THREAD_COUNT];
+    struct cgi_thread_parameters thread_params[FCGI_ACCEPT_HANDLER_THREAD_COUNT] = {};
 
     DEBUG_PRINTF("Async odata fastcgi server starting up.\n");
+
+    // CZMQ context
+    zctx_t *ctx = zctx_new ();
 
     // initialization of odata
     __odataPlugin.base.Load(&__odataPlugin.base);
 
     // Initialize FCGI and start handler threads
     FCGX_Init();
-    for (i = 0; i < FCGI_ACCEPT_HANDLER_THREAD_COUNT; i++)
-        pthread_create(&id[i], NULL, handle_cgi_request, (void*)i);
-
-    // CZMQ context
-    zctx_t *ctx = zctx_new ();
-
-    // Listen for incoming requests on localhost:5570
-    zsock_t *cgiserver = zsocket_new (ctx, ZMQ_ROUTER);
-    zsocket_bind (cgiserver, "tcp://lo:5570");
+    for (long i = 0; i < FCGI_ACCEPT_HANDLER_THREAD_COUNT; i++) {
+        // pass in our context to the fcgi thread so that we can use inproc:// between threads
+        thread_params[i].ctx = ctx;
+        pthread_create(&thread_params[i].thread_id, NULL, handle_cgi_request, (void*)(&thread_params[i]));
+    }
 
     // let all the zmq printing functions use syslog since it's not safe to use printf()
     zsys_set_logsystem(1);
@@ -156,6 +160,10 @@ int main(void)
     assert (reactor);
     zloop_set_verbose (reactor, 1);
 
+    // Listen for incoming requests on localhost:5570
+    zsock_t *cgiserver = zsocket_new (ctx, ZMQ_ROUTER);
+    zsocket_bind (cgiserver, "inproc://cgi-thread");
+
     // create handler for incoming messages
     DEBUG_PRINTF("   Create reader\n");
     zmq_pollitem_t poller = { cgiserver, 0, ZMQ_POLLIN };
@@ -163,13 +171,14 @@ int main(void)
 
     // register watchdog timer
     char *wd_usec_str = getenv("WATCHDOG_USEC");
-    if(!wd_usec_str) wd_usec_str = "0";
-    int wd_timeout_us = strtoul(wd_usec_str, NULL, 0);
-    int wd_interval_ms = (wd_timeout_us /1000) / 3;
-
-    DEBUG_PRINTF("   watchdog interval: %d\n", wd_interval_ms);
-    if (wd_interval_ms > 0)
-        zloop_timer (reactor, wd_interval_ms, 0, watchdog_ping, NULL);
+    if(wd_usec_str) {
+        int wd_timeout_us = strtoul(wd_usec_str, NULL, 0);
+        DEBUG_PRINTF("   watchdog interval: %dms\n", (wd_timeout_us /1000) / 3);
+        if (wd_timeout_us > 0) {
+            // send in three watchdog pings per watchdog timeout period. zloop expects ms timeout.
+            zloop_timer (reactor, (wd_timeout_us /1000) / 3, 0, watchdog_ping, NULL);
+        }
+    }
 
     DEBUG_PRINTF("   Start reactor\n");
     sd_notify(0, "READY=1");
