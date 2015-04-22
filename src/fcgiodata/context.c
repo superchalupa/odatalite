@@ -36,6 +36,9 @@
 #include "connection.h"
 #include "contextoptions.h"
 
+// simple helper to reduce typing (cast looks somewhat ugly, no need to repeat it every time).
+#define DEBUG_PRINTF(args...) PHIT_Context_DEBUG((PHIT_Context *)(&(c->context)), args)
+
 static void _FCGI_Context_VLogMessage(
         PHIT_Context* context,
         int priority,
@@ -186,7 +189,6 @@ static int send_response(zloop_t *loop, int timer_id, void *arg)
 {
     Connection *c = (Connection *)arg;
     Context* ctx = (Context*)(&c->context);
-#define DEBUG_PRINTF(args...) PHIT_Context_DEBUG((PHIT_Context *)(&(c->context)), args)
     PHIT_Context_DEBUG((PHIT_Context *)(&(c->context)), "send_response\n");
 
     // return from timer: 0 == keep running timer, -1 == stop timer
@@ -303,7 +305,7 @@ static void _PostEOC(
     self->connection->chunkFinal = 1;
 
     // start up an immediate timer to send the results on the next async loop pass
-    int timer_id = zloop_timer (self->connection->reactor, 1, 0, send_response, self->connection);
+    zloop_timer (self->connection->reactor, 1, 0, send_response, self->connection);
 }
 
 void _PostError(
