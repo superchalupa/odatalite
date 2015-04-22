@@ -173,7 +173,7 @@ int main(void)
 
     // stuff the redfish version into the environment.
     SetRedfishVersion();
-    char *schema = getenv("RedfishVersion");
+    char *schema = getenv("REDFISH_VERSION");
     DEBUG_PRINTF("%s(): RedfishVersion='%s'\n", 
                   __FUNCTION__, schema ? schema : "<NULL>");
 
