@@ -35,13 +35,25 @@ struct authContext
 };
 
 /***
+ * Print all enviromental variables  
+ */
+void printEnviron()
+{
+	extern char **environ;
+	
+	int i = 0;
+	while(environ[i]) {
+	  DEBUG_PRINT_INFO("%s\n", environ[i++]);
+	}
+}
+
+/***
  * Get PAM service name 
  */
 const char* pamGetService()
 {
-	// TODO: may need to change, currently 
-	// using the "login" permissions
-	return "login";
+	// using the "redfish" pam service config
+	return "redfish";
 }
 
 /**
@@ -49,32 +61,14 @@ const char* pamGetService()
  */
 void getEnvContext(struct authContext* context)
 {
+	//printEnviron();
+
 	// username and password
 	context->user = getenv("REMOTE_USER");
 	context->password = getenv("REMOTE_PASSWD");
 	context->ssl_DN_CN = getenv("SSL_CLIENT_S_DN_CN");
 }
 
-
-void printEvn()
-{
-	const char* envPtr;
-
-	envPtr = getenv("SSL_CLIENT_S_DN_CN");
-	DEBUG_PRINT_DEBUG("SSL_CLIENT_S_DN_CN %s\n", GETSTR(envPtr));
-
-	envPtr = getenv("SSL_CLIENT_CERT");
-	DEBUG_PRINT_DEBUG("SSL_CLIENT_CERT %s\n", GETSTR(envPtr));
-
-	envPtr = getenv("SSL_SERVER_CERT");
-	DEBUG_PRINT_DEBUG("SSL_SERVER_CERT %s\n", GETSTR(envPtr));
-
-	envPtr = getenv("SSL_SESSION_ID");
-	DEBUG_PRINT_DEBUG("SSL_SESSION_ID %s\n", GETSTR(envPtr));
-
-
-
-}
 
 /***
  * PAM conversation function.  
@@ -189,12 +183,14 @@ int pamAuth(struct authContext* context)
 	   account is valid. It checks for authentication token and account
 	   expiration and verifies access restrictions. It is typically
 	   called after the user has been authenticated. */
-    if ((status = pam_acct_mgmt(handle, flags)) != PAM_SUCCESS)
-    {
-		DEBUG_PRINT_ERR("PAM acct_mgmt status:%s\n", pam_strerror(handle, status));
-        r = -1;
-        goto done;
-    }
+
+	// DISABLED - may need to be used when the roles are added
+//  if ((status = pam_acct_mgmt(handle, flags)) != PAM_SUCCESS)
+//  {
+//  	DEBUG_PRINT_ERR("PAM acct_mgmt status:%s\n", pam_strerror(handle, status));
+//      r = -1;
+//      goto done;
+//  }
 	
 	DEBUG_PRINT_INFO("PAM authenticate complete:%s\n", pam_strerror(handle, status));
 done:
@@ -214,9 +210,6 @@ int main (int argc, char *argv[])
 	while (FCGI_Accept() >= 0) {
 		DEBUG_PRINT_INFO("FCGI Auth req received\n");
 		getEnvContext(&context);
-
-		//printEvn();
-
 		authenticate = pamAuth(&context);
 
 		DEBUG_PRINT_INFO("PAM status = %i\n", authenticate);

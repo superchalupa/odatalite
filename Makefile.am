@@ -24,6 +24,9 @@ provider_LTLIBRARIES=
 provider_includes = src
 bin_includes = src
 
+# password files
+dist_sysconf_DATA = etc/redfish_passwd
+
 # Apache2 conf file for fastcgi
 apache_confdir=$(sysconfdir)/apache2/conf.d
 dist_apache_conf_DATA =
@@ -44,7 +47,7 @@ dist_phit_providers_conf_DATA = etc/phit/providers.d/01-providers-header.conf
 
 # PAM config
 pam_confdir=$(sysconfdir)/pam.d
-dist_pam_conf_DATA=etc/pam.d/phit
+dist_pam_conf_DATA=etc/pam.d/phit etc/pam.d/redfish
 
 # tmpfiles
 tmpfiledir=$(libdir)/tmpfiles.d
