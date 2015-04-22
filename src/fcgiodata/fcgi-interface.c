@@ -223,15 +223,14 @@ int main(void)
     DEBUG_PRINTF("Async odata fastcgi server entering request handling loop.\n");
     // don't notify systemd about startup complete until we are about to enter processing loop
     sd_notify(0, "READY=1");
+    sd_notify(0, "STATUS=Processing requests.");
     zloop_start(reactor);  // never returns until SIGINT
+    sd_notify(0, "STATUS=Exiting due to interrupt signal.");
 
-    DEBUG_PRINTF("ZLOOP ENDED.\n");
+    DEBUG_PRINTF("Interrupted. Exiting...\n");
 
-    DEBUG_PRINTF("zloop_destroy");
     zloop_destroy(&reactor);
-    DEBUG_PRINTF("zsocket_destroy");
     zsocket_destroy(ctx, cgiserver);
-    DEBUG_PRINTF("zctx_destroy");
     zctx_destroy (&ctx);
 
     exit(0);
