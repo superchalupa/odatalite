@@ -718,9 +718,9 @@ OL_Result URIFormatContextURL(
 {
     size_t i;
     size_t j;
-    char *service = self->service;
+    char *service = (char*)self->service;
 
-   if (!strncmp(service, serviceRoot, sizeof(serviceRoot)))
+   if (!strncmp(service, serviceRoot, strlen(service)))
     { // Base case: Service is "ServiceRoot"
       service = "ServiceRoot";
     }

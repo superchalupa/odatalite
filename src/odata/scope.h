@@ -42,18 +42,6 @@
 #define CONTEXT_OBJECT_CACHE_SIZE 4
 #define CONTEXT_ARRAY_CACHE_SIZE 4
 
-#define MAX_CONTEXT_URI 128
-
-typedef struct _ResourceProperties
-{
-  char contextURI[MAX_CONTEXT_URI]; // The "@odata.context" annotation
-  char odataID[MAX_CONTEXT_URI];
-  char odataType[MAX_CONTEXT_URI];
-  char Modified[MAX_CONTEXT_URI];
-  char redfishVersion[MAX_CONTEXT_URI];
-  char uuid[MAX_CONTEXT_URI];
-} ResourceProperties;
-
 typedef struct _Scope
 {
     OL_Scope base;

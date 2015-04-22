@@ -833,7 +833,7 @@ __scope_log_null(OL_Scope *self, const char *format, ...) {}
 #define __scope_log_cond(ctx, prio, arg...) \
   do { \
      if (OL_Scope_GetLogPriority(ctx) >= prio) \
-      OL_Scope_LogMessage(ctx, prio, PHIT_FILE, PHIT_LINE, PHIT_FUNCTION, ## arg); \
+      OL_Scope_LogMessage(ctx, prio, PHIT_FILE, (int)PHIT_LINE, PHIT_FUNCTION, ## arg); \
   } while (0)
 
 #ifdef ENABLE_LOGGING
@@ -3498,6 +3498,18 @@ struct _EDM_ExtendedTerm /* extends EDM_Term */
     const char* Scale;
     const char* SRID;
 };
+
+#define MAX_CONTEXT_URI 128
+
+typedef struct _ResourceProperties
+{
+  char contextURI[MAX_CONTEXT_URI]; // The "@odata.context" annotation
+  char odataID[MAX_CONTEXT_URI];
+  char odataType[MAX_CONTEXT_URI];
+  char Modified[MAX_CONTEXT_URI];
+  char redfishVersion[MAX_CONTEXT_URI];
+  char uuid[MAX_CONTEXT_URI];
+} ResourceProperties;
 
 OL_EXTERNC_END
 

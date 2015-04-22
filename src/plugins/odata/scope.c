@@ -458,7 +458,7 @@ static OL_Result _Scope_SendEntityAux(
         {
             SerializeObject(
                 (JSONObject*)object,
-                self->postBeginEntitySet ? NULL : self->responseProperties.contextURI,
+                self->postBeginEntitySet ? NULL : &(self->responseProperties),
                 self->out,
                 indent,
                 1,
