@@ -11,5 +11,5 @@ AM_LDFLAGS = \
 	-Wl,--warn-common -Wl,--gc-sections
 
 # C and C++ compiler flags. Use to set warnings, etc
-AM_CFLAGS = -Wall -ffunction-sections -fdata-sections -pthread -fPIC  -std=gnu99
+AM_CFLAGS = -Wall -ffunction-sections -fdata-sections -pthread -fPIC  -std=gnu99 -Werror
 AM_CXXFLAGS = -Wall -ffunction-sections -fdata-sections -pthread -fPIC -Werror
