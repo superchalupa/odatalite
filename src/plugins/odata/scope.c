@@ -196,7 +196,7 @@ static OL_Result _Scope_SendBeginEntitySet(
         if (self->metadataType != OL_MetadataType_None)
         {
             BufCat(&buf, STRLIT("  \"@odata.context\": \""));
-            BufCatStr(&buf, self->contextURI);
+            BufCatStr(&buf, self->responseProperties.contextURI);
             BufCat(&buf, STRLIT("\",\n"));
         }
 
@@ -458,7 +458,7 @@ static OL_Result _Scope_SendEntityAux(
         {
             SerializeObject(
                 (JSONObject*)object,
-                self->postBeginEntitySet ? NULL : self->contextURI,
+                self->postBeginEntitySet ? NULL : self->responseProperties.contextURI,
                 self->out,
                 indent,
                 1,
@@ -762,7 +762,8 @@ static OL_Scope* _Scope_New()
     scope->ft->AddFDCallback = _Scope_AddFDCallback;
     scope->ft->RemoveFDCallback = _Scope_RemoveFDCallback;
 
-    ((Scope*)scope)->contextURI[0] = '\0';
+    memset(&((Scope*)scope)->responseProperties, 0,
+           sizeof(((Scope*)scope)->responseProperties));
 
     return scope;
 }

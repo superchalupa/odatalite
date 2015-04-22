@@ -44,6 +44,16 @@
 
 #define MAX_CONTEXT_URI 128
 
+typedef struct _ResourceProperties
+{
+  char contextURI[MAX_CONTEXT_URI]; // The "@odata.context" annotation
+  char odataID[MAX_CONTEXT_URI];
+  char odataType[MAX_CONTEXT_URI];
+  char Modified[MAX_CONTEXT_URI];
+  char redfishVersion[MAX_CONTEXT_URI];
+  char uuid[MAX_CONTEXT_URI];
+} ResourceProperties;
+
 typedef struct _Scope
 {
     OL_Scope base;
@@ -87,8 +97,8 @@ typedef struct _Scope
     /* Copy of the request URI */
     char* requestURI;
 
-    /* The "@odata.contex" annotation */
-    char contextURI[MAX_CONTEXT_URI];
+    // Resource properties
+    ResourceProperties responseProperties;
 
     /* Default: odata.metadata=minimal */
     OL_MetadataType metadataType;

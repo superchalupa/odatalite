@@ -435,8 +435,8 @@ static void _ODATAPlugin_HandleRequest(
     if (URIFormatContextURL(
         uri,
         serviceRoot,
-        ((Scope*)scope)->contextURI,
-        sizeof(((Scope*)scope)->contextURI)) != OL_Result_Ok)
+        ((Scope*)scope)->responseProperties.contextURI,
+        sizeof(((Scope*)scope)->responseProperties.contextURI)) != OL_Result_Ok)
     {
         PostError(context, OL_Result_NotSupported, "Unknown URI format");
         goto failed;

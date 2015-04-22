@@ -239,7 +239,8 @@ static OL_Result _Reset(
         self->requestURI = NULL;
     }
 
-    self->contextURI[0] = '\0';
+    memset(&(self->responseProperties), 0,
+           sizeof(self->responseProperties));
     self->version = 0;
     self->phitContext = NULL;
 
