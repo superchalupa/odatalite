@@ -8,4 +8,4 @@ out_libcheckprovider_la_LIBADD =
 out_libcheckprovider_la_SOURCES = \
 	src/odata/providers/check/checkprovider.c
 
-INSTALL_COMMANDS += ;echo  'checkprovider:/Check:' >> $(DESTDIR)/$(phit_confdir)/providers.conf
+INSTALL_COMMANDS += ;echo  'checkprovider:/Check:' > $(DESTDIR)/$(phit_confdir)/providers.d/checkprovider.conf

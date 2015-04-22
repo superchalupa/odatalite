@@ -8,4 +8,4 @@ out_librootprovider_la_LIBADD = out/libbase.la
 out_librootprovider_la_SOURCES = \
 	src/odata/providers/root/rootprovider.c
 
-INSTALL_COMMANDS += ;echo  'rootprovider:/:' >> $(DESTDIR)/$(phit_confdir)/providers.conf
+INSTALL_COMMANDS += ;echo  'rootprovider:/:' > $(DESTDIR)/$(phit_confdir)/providers.d/rootprovider.conf

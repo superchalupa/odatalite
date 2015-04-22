@@ -8,4 +8,4 @@ out_libwidgetprovider_la_LIBADD = out/libbase.la
 out_libwidgetprovider_la_SOURCES = \
 	src/odata/providers/widget/widgetprovider.c
 
-INSTALL_COMMANDS += ;echo  'widgetprovider:/Widgets:' >> $(DESTDIR)/$(phit_confdir)/providers.conf
+INSTALL_COMMANDS += ;echo  'widgetprovider:/Widgets:' > $(DESTDIR)/$(phit_confdir)/providers.d/widgetprovider.conf

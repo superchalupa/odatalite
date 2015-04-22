@@ -9,4 +9,4 @@ out_libheapprovider_la_SOURCES = \
 	src/odata/providers/heap/HeapProvider.cpp \
 	src/odata/providers/heap/HeapProvider.h
 
-INSTALL_COMMANDS += ;echo  'heapprovider:/GetHeapUsage:' >> $(DESTDIR)/$(phit_confdir)/providers.conf
+INSTALL_COMMANDS += ;echo  'heapprovider:/GetHeapUsage:' > $(DESTDIR)/$(phit_confdir)/providers.d/heapprovider.conf

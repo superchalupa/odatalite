@@ -36,9 +36,11 @@ phit_confdir=$(sysconfdir)/phit
 dist_phit_conf_DATA = \
         etc/phit/phitd.conf \
         etc/phit/plugins.conf \
-        etc/phit/providers.conf \
         etc/phit/roles.conf \
         etc/phit/ServiceRoot.json
+
+phit_providers_confdir=$(phit_confdir)/providers.d
+dist_phit_providers_conf_DATA = etc/phit/providers.d/01-providers-header.conf
 
 # PAM config
 pam_confdir=$(sysconfdir)/pam.d
@@ -59,7 +61,7 @@ dist_phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/
 	PATH=$$PATH:$(top_builddir)/out csdl2c $<
 	mv $(notdir $@) $@
 
-INSTALL_COMMANDS=:
+INSTALL_COMMANDS = mkdir -p $(DESTDIR)/$(phit_confdir)/providers.d
 
 include pkg/Makefile-libbase.inc
 include pkg/Makefile-libodata.inc
@@ -106,7 +108,6 @@ include pkg/Makefile-libfrogprovider.inc
 endif
 if BUILD_GADGET_PROVIDER
 include pkg/Makefile-libgadgetprovider.inc
-include pkg/Makefile-libasyncgadgetprovider.inc
 endif
 if BUILD_HEAP_PROVIDER
 include pkg/Makefile-libheapprovider.inc
