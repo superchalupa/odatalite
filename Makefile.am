@@ -77,9 +77,10 @@ include pkg/Makefile-olcli.inc
 include pkg/Makefile-csdl2c.inc
 include pkg/Makefile-testcsdl.inc
 
+include pkg/Makefile-libodataplugin.inc
+
 if BUILD_PHITD
 # can't build phitd without the odata plugin due to static linking
-include pkg/Makefile-libodataplugin.inc
 include pkg/Makefile-phitd.inc
 endif
 if BUILD_ECHO_PLUGIN
@@ -130,6 +131,10 @@ src/odata/odatamacros.h	\
 src/odata/odata.h	\
 src/phit.h
 
+
+# most of these don't belong here. They should be in _HEADERS or _SOURCES.
+# Remove them from here once we have verified that they are in the appropriate
+# _SOURCES or _HEADERS.
 EXTRA_DIST += 	\
 src/server/help.h	\
 src/server/context.h	\
@@ -160,7 +165,6 @@ src/odata/jsonobject.h	\
 src/odata/name.h	\
 src/odata/types.h	\
 src/odata/scope.h	\
-src/odata/odatamacros.h	\
 src/odata/providers/heap/HeapProvider.h	\
 src/odata/providers/frog/FrogProvider.h	\
 src/odata/providers/frog/strings.h	\

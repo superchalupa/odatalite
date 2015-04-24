@@ -164,9 +164,7 @@ AC_CHECK_LIB([fcgi], [FCGI_Accept], [FASTCGI_LIBS="$FASTCGI_LIBS -lfcgi"],
 AC_SUBST([FASTCGI_LIBS])
 ])
 fi
-
 fi
-
 
 # the build system and spec files
 AC_CONFIG_FILES([Makefile])

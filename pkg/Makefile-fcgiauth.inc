@@ -3,7 +3,7 @@
 bin_PROGRAMS += out/fcgiauth
 out_fcgiauth_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(bin_includes)) \
 	$(FASTCGI_CFLAGS) 
-out_fcgiauth_LDADD = out/libbase.la out/libclient.la $(FASTCGI_LIBS) -lpam
+out_fcgiauth_LDADD = out/libodatabase.la out/libodataclient.la $(FASTCGI_LIBS) -lpam
 out_fcgiauth_SOURCES = \
 	src/fcgiauth/fcgiauth.c
 

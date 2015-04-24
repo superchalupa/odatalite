@@ -6,7 +6,7 @@ out_csdl2c_CPPFLAGS = \
 	$(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(bin_includes))	\
 	$(EXPAT_CFLAGS)
 
-out_csdl2c_LDADD = $(EXPAT_LIBS) out/libbase.la
+out_csdl2c_LDADD = $(EXPAT_LIBS) out/libodatabase.la
 
 out_csdl2c_SOURCES = \
 	src/csdl2c/csdl2c.c \

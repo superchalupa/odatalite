@@ -3,7 +3,7 @@
 provider_LTLIBRARIES += out/libwidgetprovider.la
 out_libwidgetprovider_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(provider_includes))
 out_libwidgetprovider_la_LDFLAGS = $(AM_LDFLAGS) $(call STD_LDFLAGS_LIB,WIDGETPROVIDER) -avoid-version -fvisibility=hidden
-out_libwidgetprovider_la_LIBADD = out/libbase.la
+out_libwidgetprovider_la_LIBADD = out/libodatabase.la
 
 out_libwidgetprovider_la_SOURCES = \
 	src/odata/providers/widget/widgetprovider.c

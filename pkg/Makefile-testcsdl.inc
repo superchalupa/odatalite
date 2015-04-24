@@ -6,7 +6,7 @@ out_testcsdl_CPPFLAGS = \
 	$(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(bin_includes))	\
 	$(EXPAT_CFLAGS)
 
-out_testcsdl_LDADD = out/libbase.la out/libodata.la
+out_testcsdl_LDADD = out/libodatabase.la out/libodata.la
 
 out_testcsdl_SOURCES = \
     src/tests/csdl/testcsdl.c

@@ -4,7 +4,7 @@ phitd_includes = src/server src src/odata
 
 sbin_PROGRAMS += out/phitd
 out_phitd_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(phitd_includes))
-out_phitd_LDADD = out/libodataplugin.la  out/libodata.la out/libbase.la $(PAM_LIBS)
+out_phitd_LDADD = out/libodataplugin.la  out/libodata.la out/libodatabase.la $(PAM_LIBS)
 out_phitd_LDFLAGS = -rpath $(libdir) -rpath $(providerdir) -static
 out_phitd_SOURCES = \
 	src/server/listener.c \

@@ -9,7 +9,7 @@ LIBODATAPLUGIN_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
 # this is a convenience library so we dont recompile
 # odataplugin .c files repeatedly for each binary
 lib_LTLIBRARIES += out/libodataplugin.la
-out_libodataplugin_la_LIBADD = out/libbase.la out/libodata.la
+out_libodataplugin_la_LIBADD = out/libodatabase.la out/libodata.la
 out_libodataplugin_la_CPPFLAGS = $(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(odataplugin_includes))
 out_libodataplugin_la_LDFLAGS = $(AM_LDFLAGS) $(call STD_LDFLAGS_LIB,ODATAPLUGIN)
 out_libodataplugin_la_SOURCES = \

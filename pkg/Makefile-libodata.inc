@@ -10,7 +10,7 @@ LIBODATA_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
 # odata .c files repeatedly for each binary
 lib_LTLIBRARIES += out/libodata.la
 out_libodata_la_CPPFLAGS = $(addprefix -I$(top_srcdir)/,$(odata_includes)) $(AM_CPPFLAGS)
-out_libodata_la_LIBADD = out/libbase.la
+out_libodata_la_LIBADD = out/libodatabase.la
 out_libodata_la_LDFLAGS = $(AM_LDFLAGS) $(call STD_LDFLAGS_LIB,ODATA)
 out_libodata_la_SOURCES = \
     src/odata/alloc.c \

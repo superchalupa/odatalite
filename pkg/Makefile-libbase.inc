@@ -3,20 +3,21 @@
 #EXTRA_DIST += src/base-include
 base_includes = src/base src
 
-pkgconf_list+=libbase
-LIBBASE_LIBS = -lbase
-LIBBASE_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
+pkgconf_list+=libodatabase
+LIBODATABASE_LIBS = -lodatabase
+LIBODATABASE_CFLAGS=-I$(SDK_DEFAULT_INC_PATH) $(PKGCONFIG_CPPFLAGS)
+LIBODATABASE_ADD_PKGCONFIG := odata_provider_dir=$(pkglibexecdir)
 
 # this is a convenience library so we dont recompile
 # base .c files repeatedly for each binary
-lib_LTLIBRARIES += out/libbase.la
-out_libbase_la_CPPFLAGS = \
+lib_LTLIBRARIES += out/libodatabase.la
+out_libodatabase_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) $(addprefix -I$(top_srcdir)/,$(base_includes)) \
  	$(PAM_CFLAGS)
 
-out_libbase_la_LDFLAGS = -ldl $(PAM_LIBS)
+out_libodatabase_la_LDFLAGS = -ldl $(PAM_LIBS)
 
-out_libbase_la_SOURCES = \
+out_libodatabase_la_SOURCES = \
 	src/base/pidfile.c \
 	src/base/parse.c \
 	src/base/err.h \
