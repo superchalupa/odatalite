@@ -44,7 +44,7 @@ OL_Result SerializeElement(
 
 OL_Result SerializeObject(
     const JSONObject* self,
-    const ResourceProperties *responseProperties,
+    const char* contextURI,
     Buf* out,
     size_t depth,
     int indentOpeningBrace,

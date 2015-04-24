@@ -42,6 +42,8 @@
 #define CONTEXT_OBJECT_CACHE_SIZE 4
 #define CONTEXT_ARRAY_CACHE_SIZE 4
 
+#define MAX_CONTEXT_URI 128
+
 typedef struct _Scope
 {
     OL_Scope base;
@@ -85,8 +87,8 @@ typedef struct _Scope
     /* Copy of the request URI */
     char* requestURI;
 
-    // Resource properties
-    ResourceProperties responseProperties;
+    /* The "@odata.contex" annotation */
+    char contextURI[MAX_CONTEXT_URI];
 
     /* Default: odata.metadata=minimal */
     OL_MetadataType metadataType;

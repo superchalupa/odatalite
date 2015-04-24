@@ -46,7 +46,6 @@
 #include "outstream.h"
 #include "format.h"
 #include "odatamacros.h"
-#include <odata/odata.h>
 
 static void _SerializeReal(Buf* out, double x)
 {
@@ -548,42 +547,17 @@ static OL_Result _SerializePair(
     return OL_Result_Ok;
 }
 
-static void _SerializeProperty(
+/* Serialize the "@odata.context property */
+static void _SerializeContextURI(
     Buf* out,
-    size_t depth,
-    char *property,
-    char *value)
-{
-  if (!value) { return; } //BURP
-
-  BufCatCh(out, '\n');
-  _Indent(out, depth);
-  _SerializeNamePlusColonSpace(out, property, strlen(property));
-  _SerializeString(out, value);
-}
-
-/* Serialize the Resource Properties */
-static void _SerializeResourceProperties(
-    Buf* out,
-    const ResourceProperties *responseProperties,
+    const char* contextURI,
     size_t depth,
     size_t numProperties)
 {
-    if (!responseProperties) { return; }
-
     _Indent(out, depth);
 
     BufCat(out, STRLIT("\"@odata.context\": \""));
-    BufCatStr(out, responseProperties->contextURI);
-
-    /* There likely needs to be a test here
-       (i.e. /redfish/v1/odata and others don't have the extra properties
-     */
-    _SerializeProperty(out, depth, "@odata.id", "odataID");
-    _SerializeProperty(out, depth, "@odata.type", "odataType");
-    _SerializeProperty(out, depth, "Modified", "Modified");
-    _SerializeProperty(out, depth, "RedfishVersion", "redfishVersion");
-    _SerializeProperty(out, depth, "UUID", "uuid");
+    BufCatStr(out, contextURI);
 
     if (numProperties)
         BufCat(out, STRLIT("\",\n"));
@@ -593,7 +567,7 @@ static void _SerializeResourceProperties(
 
 OL_Result SerializeObject(
     const JSONObject* self,
-    const ResourceProperties *responseProperties,
+    const char* contextURI,
     Buf* out,
     size_t depth,
     int indentOpeningBrace,
@@ -610,8 +584,8 @@ OL_Result SerializeObject(
     depth++;
 
     /* Write the "@odata.context property */
-    if (metadataType != OL_MetadataType_None && responseProperties)
-        _SerializeResourceProperties(out, responseProperties, depth, self->count);
+    if (metadataType != OL_MetadataType_None && contextURI)
+        _SerializeContextURI(out, contextURI, depth, self->count);
 
     for (i = 0; i < self->count; i++)
     {

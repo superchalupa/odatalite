@@ -3499,18 +3499,6 @@ struct _EDM_ExtendedTerm /* extends EDM_Term */
     const char* SRID;
 };
 
-#define MAX_CONTEXT_URI 128
-
-typedef struct _ResourceProperties
-{
-  char contextURI[MAX_CONTEXT_URI]; // The "@odata.context" annotation
-  char odataID[MAX_CONTEXT_URI];
-  char odataType[MAX_CONTEXT_URI];
-  char Modified[MAX_CONTEXT_URI];
-  char redfishVersion[MAX_CONTEXT_URI];
-  char uuid[MAX_CONTEXT_URI];
-} ResourceProperties;
-
 OL_EXTERNC_END
 
 #endif /* _odata_h */
