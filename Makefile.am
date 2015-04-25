@@ -127,7 +127,7 @@ install-data-hook:
 pkgconf_list+=odata-provider-sdk
 ODATA_PROVIDER_SDK_LIBS =
 ODATA_PROVIDER_SDK_CFLAGS=-I$(SDK_DEFAULT_INC_PATH)/odata-provider-sdk $(PKGCONFIG_CPPFLAGS)
-ODATA_PROVIDER_SDK_ADD_PKGCONFIG := odata_provider_dir=$(pkglibexecdir)
+ODATA_PROVIDER_SDK_ADD_PKGCONFIG := odata_provider_dir=$(pkglibexecdir)\nodata_provider_conf_dir=$(phit_confdir)
 odata_provider_sdkdir=$(sdkdir)/odata-provider-sdk
 odata_provider_sdk_HEADERS = \
 	src/odata/odatacxx.h	\
