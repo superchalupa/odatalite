@@ -28,7 +28,6 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include "uriparser.h"
 #include <stdlib.h>
 #include <base/format.h>

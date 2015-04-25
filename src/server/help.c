@@ -29,6 +29,7 @@
 **==============================================================================
 */
 #include "help.h"
+#include <stdio.h>
 
 static const char HELP[] = "\n\
 Usage: %s [OPTIONS]\n\

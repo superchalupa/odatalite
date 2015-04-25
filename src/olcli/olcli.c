@@ -28,7 +28,6 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include <client/client.h>
 #include <base/str.h>
 #include <base/err.h>

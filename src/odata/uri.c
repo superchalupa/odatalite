@@ -28,7 +28,6 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include <stdlib.h>
 #include <base/format.h>
 #include <base/str.h>

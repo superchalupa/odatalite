@@ -28,11 +28,13 @@
 **
 **==============================================================================
 */
-#include <stdio.h>
-#include <stdlib.h>
 #include <odata/jsonparser.h>
 #include <base/file.h>
 #include <base/alloc.h>
+
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 const char* arg0;
 

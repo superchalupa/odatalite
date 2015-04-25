@@ -6,9 +6,10 @@ base_includes = src/base src
 pkgconf_list+=libodatabase
 LIBODATABASE_LIBS = -lodatabase
 LIBODATABASE_CFLAGS=-I$(SDK_DEFAULT_INC_PATH)/libodatabase $(PKGCONFIG_CPPFLAGS)
-LIBODATABASE_ADD_PKGCONFIG := odata_provider_dir=$(pkglibexecdir)
+LIBODATABASE_ADD_PKGCONFIG := Requires: odata-provider-sdk
 odatabasedir=$(sdkdir)/libodatabase
 odatabase_HEADERS = \
+	src/phitfeatures.h \
 	src/common.h	\
 	src/base/addr.h \
 	src/base/alloc.h \

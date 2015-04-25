@@ -28,7 +28,6 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include "chars.h"
 #include <base/chars.h>
 #include <base/buf.h>

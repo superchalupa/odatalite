@@ -31,19 +31,6 @@
 #ifndef _common_h
 #define _common_h
 
-#if defined(_MSC_VER)
-# include "winconfig.h"
-#else
-# include "config.h"
-#endif
-
-#include <stddef.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <limits.h>
-#include <assert.h>
 #include "phitfeatures.h"
 
 /*

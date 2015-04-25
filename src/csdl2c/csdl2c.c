@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <assert.h>
 #include "xml.h"
 #include <base/file.h>
 #include <base/str.h>

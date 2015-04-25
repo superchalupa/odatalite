@@ -1,0 +1,9 @@
+
+Header file includes:
+  -- All header files should compile standalone without warnings
+  -- include order: local to global
+        -- module specific header first
+        -- local package specific headers
+        -- external package headers
+        -- system headers
+  -- no exported header should include "config.h", in general, only C files should include "config.h"
