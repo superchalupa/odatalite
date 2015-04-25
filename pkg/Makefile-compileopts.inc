@@ -2,7 +2,7 @@
 
 # preprocessor flags only: include dirs (-I...) and defines (-Dxxx)
 # dev can *add* flags using "make CPPFLAGS=..."
-AM_CPPFLAGS =
+AM_CPPFLAGS = -D_GNU_SOURCE
 
 # Linker flags
 # dev can *add* flags using "make LDFLAGS=..."
