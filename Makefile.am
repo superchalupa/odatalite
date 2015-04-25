@@ -124,29 +124,22 @@ install-data-hook:
 	mkdir -p $(DESTDIR)/$(pkgrundir) ||:
 	$(INSTALL_COMMANDS)
 
-sdk_HEADERS += \
-src/odata/odatacxx.h	\
-src/odata/odatacxxinlines.h	\
-src/odata/odatamacros.h	\
-src/odata/odata.h	\
-src/phit.h
-
+pkgconf_list+=odata-provider-sdk
+ODATA_PROVIDER_SDK_LIBS =
+ODATA_PROVIDER_SDK_CFLAGS=-I$(SDK_DEFAULT_INC_PATH)/odata-provider-sdk $(PKGCONFIG_CPPFLAGS)
+ODATA_PROVIDER_SDK_ADD_PKGCONFIG := odata_provider_dir=$(pkglibexecdir)
+odata_provider_sdkdir=$(sdkdir)/odata-provider-sdk
+odata_provider_sdk_HEADERS = \
+	src/odata/odatacxx.h	\
+	src/odata/odatacxxinlines.h	\
+	src/odata/odatamacros.h	\
+	src/odata/odata.h	\
+	src/phit.h
 
 # most of these don't belong here. They should be in _HEADERS or _SOURCES.
 # Remove them from here once we have verified that they are in the appropriate
 # _SOURCES or _HEADERS.
 EXTRA_DIST += 	\
-src/server/help.h	\
-src/server/context.h	\
-src/server/webpage.h	\
-src/server/contextoptions.h	\
-src/server/defaultplugin.h	\
-src/server/listener.h	\
-src/server/disp.h	\
-src/server/connection.h	\
-src/server/plugin.h	\
-src/server/options.h	\
-src/common.h	\
 src/plugins/odata/scope.h	\
 src/plugins/odata/post.h	\
 src/plugins/odata/webpage.h	\
@@ -155,7 +148,6 @@ src/plugins/odata/options.h	\
 src/plugins/odata/odataplugin.h	\
 src/winconfig.h	\
 src/json2schema/objects.h	\
-src/phitfeatures.h	\
 src/phitcli/options.h	\
 src/tests/test.h	\
 src/client/client.h	\
