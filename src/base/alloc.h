@@ -32,6 +32,8 @@
 #define _alloc_h
 
 #include "common.h"
+#include <string.h>
+#include <stddef.h>
 
 /*
 **==============================================================================

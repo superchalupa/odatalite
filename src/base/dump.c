@@ -30,6 +30,8 @@
 */
 #include "dump.h"
 
+#include <ctype.h>
+
 void Dump(
     FILE* out,
     const char* msg,

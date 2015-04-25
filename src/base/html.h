@@ -31,9 +31,9 @@
 #ifndef _base_html_h
 #define _base_html_h
 
+#include "buf.h"
 #include "common.h"
 #include <phit.h>
-#include "buf.h"
 
 int HTMLPostFile(
     PHIT_Context* context,

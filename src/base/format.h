@@ -31,25 +31,10 @@
 #ifndef _phit_base_format_h
 #define _phit_base_format_h
 
+#include "str.h"
+#include "common.h"
 #include <stdarg.h>
 #include <string.h>
-#include "common.h"
-#include "str.h"
-
-INLINE int Vsnprintf(
-    char* str,
-    size_t size,
-    const char* format,
-    va_list ap)
-{
-#if defined(_MSC_VER)
-    return _vsnprintf_s(str, size, _TRUNCATE, format, ap);
-#elif defined(HAVE_VSNPRINTF)
-    return vsnprintf(str, size, format, ap);
-#else
-# error "vsnprintf() defined"
-#endif
-}
 
 PRINTF_FORMAT(3, 4)
 int Snprintf(

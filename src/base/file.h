@@ -31,11 +31,13 @@
 #ifndef _file_h
 #define _file_h
 
+#include "alloc.h"
+#include "common.h"
+
+#include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "common.h"
-#include "alloc.h"
 
 EXTERNC_BEGIN
 

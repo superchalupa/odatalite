@@ -29,7 +29,11 @@
 **==============================================================================
 */
 #include "common.h"
+#include "str.h"
+#include "pam.h"
 
+// config.h should be included last, followed by anything that relies on #defines in config.h
+#include "config.h"
 #if defined(HAVE_POSIX)
 # include <unistd.h>
 # include <errno.h>
@@ -37,9 +41,6 @@
 # include <sys/socket.h>
 # include <sys/wait.h>
 #endif
-
-#include "str.h"
-#include "pam.h"
 
 #if defined(ENABLE_PAM_AUTH)
 

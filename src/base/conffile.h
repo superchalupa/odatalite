@@ -31,7 +31,8 @@
 #ifndef _base_conffile_h
 #define _base_conffile_h
 
-#include <common.h>
+#include "common.h"
+#include <stddef.h>
 
 typedef int (*ConfFileCallback)(
     const char* path,

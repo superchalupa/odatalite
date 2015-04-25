@@ -28,11 +28,13 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include "sock.h"
 #include "path.h"
 #include "cleanup.h"
 #include "file.h"
+
+// config.h should be included last, followed by anything that relies on #defines in config.h
+#include "config.h"
 
 #if defined(ENABLE_SOCKTRACE)
 

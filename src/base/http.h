@@ -31,16 +31,13 @@
 #ifndef _phit_base_http_h
 #define _phit_base_http_h
 
-#include "common.h"
-
-#if defined(HAVE_POSIX)
-# include <unistd.h>
-#endif
-
 #include "buf.h"
 #include "phit.h"
 #include "phit.h"
 #include "str.h"
+#include "common.h"
+
+#include <unistd.h>
 
 #define CHUNK_PREFIX_NULL "00000000\r\n"
 #define MIN_CHUNK_PREFIX_SIZE STRN("0\r\n")

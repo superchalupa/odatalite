@@ -31,9 +31,9 @@
 #ifndef _phit_plugininfo_h
 #define _phit_plugininfo_h
 
-#include "common.h"
 #include "shlib.h"
-#include <phit.h>
+#include "phit.h"
+#include "common.h"
 
 #define HTTP_METHOD_ANY (-1)
 

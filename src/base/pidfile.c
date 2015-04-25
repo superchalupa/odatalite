@@ -29,7 +29,13 @@
 **==============================================================================
 */
 #include "common.h"
+#include "pidfile.h"
+#include "str.h"
+#include "path.h"
+#include <stdlib.h>
 
+// config.h should be included last, followed by anything that relies on #defines in config.h
+#include "config.h"
 #if defined(HAVE_POSIX)
 # include <sys/types.h>
 # include <sys/errno.h>
@@ -39,10 +45,6 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 #endif
-
-#include "pidfile.h"
-#include "str.h"
-#include "path.h"
 
 #if defined(ENABLE_PIDFILE)
 

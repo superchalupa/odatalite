@@ -28,7 +28,6 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include "find.h"
 #include <sys/types.h>
 #include <sys/stat.h>

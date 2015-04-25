@@ -31,9 +31,11 @@
 #ifndef _phit_parse_h
 #define _phit_parse_h
 
-#include "common.h"
 #include "alloc.h"
 #include "chars.h"
+#include "common.h"
+
+#include <ctype.h>
 
 /* Parse a C-style identifier: "[A-Za-a_0-9]+" */
 INLINE const char* ParseToken(const char* text)

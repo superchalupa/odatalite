@@ -28,9 +28,9 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include <limits.h>
 #include "str.h"
+#include <stdlib.h>
 
 void UIntToStrZeroPadded(
     char *buf,

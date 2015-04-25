@@ -40,7 +40,7 @@ int Snprintf(
     int r;
 
     va_start(ap, format);
-    r = Vsnprintf(buffer, size, format, ap);
+    r = vsnprintf(buffer, size, format, ap);
     va_end(ap);
 
     return r;

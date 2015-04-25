@@ -30,6 +30,8 @@
 */
 #include <stdarg.h>
 #include "err.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 const char* __arg0;
 

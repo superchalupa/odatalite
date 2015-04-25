@@ -28,7 +28,6 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -235,7 +234,7 @@ int BufFmtV(Buf* self, const char* format, va_list ap_)
 
         Va_copy(ap, ap_);
 
-        n = Vsnprintf(data, size, format, ap);
+        n = vsnprintf(data, size, format, ap);
 
 #if defined(__GNUC__)
         if (n < 0)

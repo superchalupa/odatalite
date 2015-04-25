@@ -31,8 +31,8 @@
 #ifndef __phit_paths_h
 #define __phit_paths_h
 
-#include "common.h"
 #include "alloc.h"
+#include "common.h"
 
 typedef enum _PathID
 {

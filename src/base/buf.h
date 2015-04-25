@@ -31,9 +31,10 @@
 #ifndef _buf_h
 #define _buf_h
 
-#include <stdarg.h>
-#include "common.h"
 #include "alloc.h"
+#include "common.h"
+#include <string.h>
+#include <stdarg.h>
 
 #define BUF_INITIALIZER { NULL, NULL, 0, 0, 0 }
 

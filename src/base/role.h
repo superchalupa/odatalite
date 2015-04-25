@@ -31,9 +31,9 @@
 #ifndef _phit_role_h
 #define _phit_role_h
 
-#include "common.h"
 #include "conffile.h"
-#include <phit.h>
+#include "phit.h"
+#include "common.h"
 
 /* The number of roles (admin, operator, guest) */
 #define NUM_ROLES 3

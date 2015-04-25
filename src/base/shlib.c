@@ -28,8 +28,11 @@
 **
 **==============================================================================
 */
-#define _GNU_SOURCE
 #include "shlib.h"
+#include <dlfcn.h>
+
+// config.h should be included last, followed by anything that relies on #defines in config.h
+#include "config.h"
 
 Shlib* ShlibOpen(const char* path)
 {
@@ -43,4 +46,81 @@ Shlib* ShlibOpen(const char* path)
 #else
     return (Shlib*)LoadLibraryExA(path, NULL, 0);
 #endif
+}
+
+int ShlibClose(Shlib* self)
+{
+#if defined(HAVE_POSIX)
+    return dlclose(self);
+#else
+    return FreeLibrary((HMODULE)self) ? 0 : -1;
+#endif
+}
+
+
+void* ShlibSym(
+    Shlib* self,
+    const char* symbol)
+{
+#if defined(_MSC_VER)
+# pragma warning(disable:4054)
+# pragma warning(disable:4055)
+
+    FARPROC result;
+    result = GetProcAddress((HMODULE)self, symbol);
+    return (void*)result;
+#else
+    return dlsym(self, symbol);
+#endif
+}
+
+size_t ShlibErr(char* buf, size_t bufSize)
+{
+#if defined(_MSC_VER)
+    char* err = NULL;
+    size_t r;
+
+    if (!FormatMessageA(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER|
+        FORMAT_MESSAGE_FROM_SYSTEM|
+        FORMAT_MESSAGE_IGNORE_INSERTS,
+        NULL,
+        GetLastError(),
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        (LPSTR)&err,
+        0,
+        NULL))
+    {
+        return 0;
+    }
+
+    r = Strlcpy(buf, err, bufSize);
+    LocalFree(err);
+    return r;
+#else
+
+    char* err;
+
+    if (!(err = dlerror()))
+        return 0;
+
+    return Strlcpy(buf, err, bufSize);
+#endif
+}
+
+int MakeShlibName(
+    char buf[MAX_PATH_SIZE],
+    const char* libname)
+{
+    if (Strlcpy3(
+        buf,
+        SHLIB_PREFIX,
+        libname,
+        SHLIB_SUFFIX,
+        MAX_PATH_SIZE) >= MAX_PATH_SIZE)
+    {
+	return -1;
+    }
+
+    return 0;
 }

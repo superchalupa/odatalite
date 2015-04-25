@@ -31,8 +31,8 @@
 #ifndef _env_h
 #define _env_h
 
-#include <stdlib.h>
 #include "common.h"
+#include <stdlib.h>
 
 INLINE const char* GetEnv(const char* name)
 {

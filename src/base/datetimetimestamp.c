@@ -28,14 +28,18 @@
 **
 **==============================================================================
 */
-#include "common.h"
 
+#include <stdio.h>
+
+#include "common.h"
+#include "datetime.h"
+
+// config.h should be included last, followed by anything that relies on #defines in config.h
+#include "config.h"
 #if defined(HAVE_POSIX)
 # include <sys/time.h>
 # include <time.h>
 #endif
-
-#include "datetime.h"
 
 int GetTimeStamp(char buf[TIMESTAMP_SIZE])
 {

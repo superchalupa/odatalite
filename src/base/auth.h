@@ -33,10 +33,8 @@
 
 #include "common.h"
 
-#if defined(HAVE_POSIX)
-# include <unistd.h>
-# include <sys/types.h>
-#endif
+#include <unistd.h>
+#include <sys/types.h>
 
 # define AUTH_DATA_SIZE 64
 

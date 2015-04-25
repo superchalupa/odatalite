@@ -32,6 +32,7 @@
 #define _phit_dump_h
 
 #include "common.h"
+#include <stdio.h>
 
 void Dump(
     FILE* out,

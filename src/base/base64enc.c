@@ -29,6 +29,7 @@
 **==============================================================================
 */
 #include "base64.h"
+#include <string.h>
 
 /* Indexed by 6-bit integer */
 static const char _base64CharacterSet[] =

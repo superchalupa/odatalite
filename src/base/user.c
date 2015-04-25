@@ -29,15 +29,15 @@
 **==============================================================================
 */
 #include "common.h"
+#include "str.h"
+#include "user.h"
 
+#include "config.h"
 #if defined(HAVE_POSIX)
 # include <unistd.h>
 # include <sys/types.h>
 # include <pwd.h>
 #endif
-
-#include "str.h"
-#include "user.h"
 
 int GetCurrentUserName(
     char name[USERNAME_SIZE])

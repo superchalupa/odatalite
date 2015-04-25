@@ -29,6 +29,7 @@
 **==============================================================================
 */
 #include "alloc.h"
+#include <stdio.h>
 
 #if defined(ENABLE_ALLOCATOR)
 

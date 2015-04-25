@@ -31,9 +31,12 @@
 #ifndef _phit_base_str_h
 #define _phit_base_str_h
 
-#include "common.h"
 #include "alloc.h"
+#include "common.h"
+
+#include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 
 #define STRLIT(STR) STR, sizeof(STR)-1
 #define STRN(STR) (sizeof(STR)-1)

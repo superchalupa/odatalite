@@ -31,8 +31,8 @@
 #ifndef _base_array_h
 #define _base_array_h
 
-#include "common.h"
 #include "alloc.h"
+#include "common.h"
 
 typedef struct _Array
 {

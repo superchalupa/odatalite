@@ -33,10 +33,9 @@
 
 #include "common.h"
 #include <stdarg.h>
-
-// TODO: windows compat? (ie. no syslog.h)
-// for definitions
+#include <stdio.h>
 #include <syslog.h>
+
 // back compat for syslog defs
 #define LOG_VERBOSE LOG_DEBUG
 

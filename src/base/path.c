@@ -36,6 +36,9 @@
 #include "env.h"
 #include "cleanup.h"
 
+// config.h should be included last, followed by anything that relies on #defines in config.h
+#include "config.h"
+
 typedef struct _PathEntry
 {
     const char* lhs;

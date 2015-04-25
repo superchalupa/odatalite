@@ -31,8 +31,10 @@
 #ifndef _sock_h
 #define _sock_h
 
+#include "addr.h"
 #include "common.h"
 
+#include <string.h>
 #if defined(_MSC_VER)
 # include <winsock2.h>
 #else
@@ -57,10 +59,6 @@
 #if defined(__APPLE__)
 # include <sys/ucred.h>
 #endif
-
-#include <string.h>
-#include "common.h"
-#include "addr.h"
 
 #if defined(_MSC_VER)
 # define EINTR WSAEINTR
@@ -88,12 +86,10 @@ void SockLogClose();
 typedef int ssize_t;
 #endif
 
-#if defined(HAVE_POSIX)
 int __SetFDFlag(
     int fd,
     int flag,
     int value);
-#endif /* defined(HAVE_POSIX) */
 
 INLINE int SockStart()
 {

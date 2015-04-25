@@ -32,6 +32,7 @@
 #define _ptrarray_h
 
 #include "common.h"
+#include <stddef.h>
 
 EXTERNC_BEGIN
 

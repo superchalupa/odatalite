@@ -31,7 +31,11 @@
 #ifndef _selector_h
 #define _selector_h
 
+#include "addr.h"
+#include "sock.h"
 #include "common.h"
+
+#include <string.h>
 
 #if defined(_MSC_VER)
 # include <winsock2.h>
@@ -42,11 +46,6 @@
 # include <sys/time.h>
 # include <sys/types.h>
 #endif
-
-#include <string.h>
-#include "common.h"
-#include "addr.h"
-#include "sock.h"
 
 /*
 **==============================================================================

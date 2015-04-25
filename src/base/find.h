@@ -31,8 +31,8 @@
 #ifndef _base_find_h
 #define _base_find_h
 
-#include <common.h>
 #include "str.h"
+#include "common.h"
 
 int FindFile(
     char path[MAX_PATH_SIZE],

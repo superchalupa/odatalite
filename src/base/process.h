@@ -33,8 +33,6 @@
 
 #include "common.h"
 
-#if defined(HAVE_POSIX)
 int ProcessDaemonize();
-#endif
 
 #endif /* _process_h */
