@@ -1,15 +1,49 @@
+/*
+**==============================================================================
+**
+** ODatatLite ver. 0.0.3
+**
+** Copyright (c) Microsoft Corporation
+**
+** All rights reserved.
+**
+** MIT License
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the ""Software""), to
+** deal in the Software without restriction, including without limitation the
+** rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+** sell copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions: The above copyright
+** notice and this permission notice shall be included in all copies or
+** substantial portions of the Software.
+**
+** THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.
+**
+**==============================================================================
+*/
+
+#include "plugins/odata/odataplugin.h"
+#include "fcgiodata/connection.h"
+#include "base/http.h"
+#include "base/path.h"
+
+#include <czmq.h>
+#include <fcgiapp.h>
+
 #include <pthread.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <syslog.h>
 #include <string.h>
 
-#include <czmq.h>
-#include <fcgiapp.h>
-#include "plugins/odata/odataplugin.h"
-#include "fcgiodata/connection.h"
-#include "base/http.h"
-#include "base/path.h"
+#include "config.h"
 
 #ifndef FCGI_ACCEPT_HANDLER_THREAD_COUNT
 #define FCGI_ACCEPT_HANDLER_THREAD_COUNT 20
@@ -55,12 +89,7 @@ static void *handle_cgi_request(void *a)
 
     for (;;)
     {
-        static pthread_mutex_t accept_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-        /* Some platforms require accept() serialization, some don't.. */
-        pthread_mutex_lock(&accept_mutex);
         rc = FCGX_Accept_r(&request);
-        pthread_mutex_unlock(&accept_mutex);
 
         if (rc < 0)
             break;
@@ -119,6 +148,7 @@ static void *handle_cgi_request(void *a)
         zstr_free(&content);
 
         FCGX_Finish_r(&request);
+        FCGX_Free(&request, 1);
     }
 
     DEBUG_PRINTF("ACCEPT THREAD ENDED");

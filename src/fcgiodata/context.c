@@ -448,7 +448,6 @@ static int _callback_shim (zloop_t *loop, zmq_pollitem_t *item, void *arg)
     {
         syslog(LOG_WARNING, "CALLBACK_SHIM: remove fd %d!", item->fd);
         zloop_poller_end(loop, item);
-        close(item->fd);
         free(a->p);
         free(a);
     }
