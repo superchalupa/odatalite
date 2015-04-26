@@ -28,9 +28,6 @@
 **
 **==============================================================================
 */
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
 
 #include "buf.h"
 #include "str.h"
@@ -38,6 +35,10 @@
 #include "path.h"
 #include "file.h"
 #include "log.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 #if defined(__GNUC__)
 # define Va_copy  __va_copy

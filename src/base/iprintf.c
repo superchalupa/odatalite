@@ -28,9 +28,9 @@
 **
 **==============================================================================
 */
+#include "iprintf.h"
 #include <stdarg.h>
 #include <syslog.h>
-#include "iprintf.h"
 
 PRINTF_FORMAT(2, 3)
 

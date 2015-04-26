@@ -29,10 +29,9 @@
 **==============================================================================
 */
 
-#include <string.h>
-
-#include "common.h"
 #include "datetime.h"
+#include "common.h"
+#include <string.h>
 
 // config.h should be included last, followed by anything that relies on #defines in config.h
 #include "config.h"

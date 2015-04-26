@@ -28,10 +28,10 @@
 **
 **==============================================================================
 */
-#include "common.h"
 #include "pidfile.h"
-#include "str.h"
 #include "path.h"
+#include "str.h"
+#include "common.h"
 #include <stdlib.h>
 
 // config.h should be included last, followed by anything that relies on #defines in config.h

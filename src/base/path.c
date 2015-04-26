@@ -28,13 +28,13 @@
 **
 **==============================================================================
 */
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 #include "path.h"
 #include "str.h"
-#include "env.h"
 #include "cleanup.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 // config.h should be included last, followed by anything that relies on #defines in config.h
 #include "config.h"
@@ -70,7 +70,7 @@ const char* GetPrefix()
 {
     if (!_prefix)
     {
-        _prefix = GetEnv("PHIT_PREFIX");
+        _prefix = getenv("PHIT_PREFIX");
         if(!_prefix)
         {
             /* Changed from previous: defining PREFIX and other directories in

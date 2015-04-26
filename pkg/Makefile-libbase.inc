@@ -22,7 +22,6 @@ odatabase_HEADERS = \
 	src/base/conffile.h \
 	src/base/datetime.h \
 	src/base/dump.h \
-	src/base/env.h \
 	src/base/err.h \
 	src/base/file.h \
 	src/base/find.h \
@@ -75,7 +74,6 @@ out_libodatabase_la_SOURCES = \
 	src/base/datetime.c \
 	src/base/datetimetimestamp.c \
 	src/base/dump.c \
-	src/base/env.c \
 	src/base/err.c \
 	src/base/file.c \
 	src/base/find.c \
@@ -102,7 +100,6 @@ out_libodatabase_la_SOURCES = \
 	src/base/ptrarray.c \
 	src/base/role.c \
 	src/base/roledump.c \
-	src/base/roundpow2.c \
 	src/base/selector.c \
 	src/base/shlib.c \
 	src/base/sock.c \

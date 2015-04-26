@@ -29,11 +29,11 @@
 **==============================================================================
 */
 #include "find.h"
+#include "path.h"
+#include "str.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include "path.h"
-#include "str.h"
 
 #define MAX_DIRS 64
 

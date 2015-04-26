@@ -28,10 +28,10 @@
 **
 **==============================================================================
 */
-#include <assert.h>
 #include "alloc.h"
 #include "roundpow2.h"
 #include <stdlib.h>
+#include <assert.h>
 
 #if 0
 # define ENABLE_FILLING

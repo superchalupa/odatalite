@@ -28,9 +28,9 @@
 **
 **==============================================================================
 */
-#include <stdarg.h>
 #include "http.h"
 #include "iprintf.h"
+#include <stdarg.h>
 
 void PHIT_HeadersDump(
     const PHIT_Headers* self,

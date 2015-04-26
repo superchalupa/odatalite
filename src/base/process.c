@@ -28,7 +28,11 @@
 **
 **==============================================================================
 */
+#include "process.h"
 #include "common.h"
+# include <stdlib.h>
+// config.h should be included last, followed by anything that relies on #defines in config.h
+#include "config.h"
 
 #if defined(HAVE_POSIX)
 # include <unistd.h>
@@ -36,8 +40,6 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 #endif
-
-#include "process.h"
 
 #if defined(HAVE_POSIX)
 

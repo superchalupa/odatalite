@@ -34,8 +34,6 @@
 #include "parse.h"
 #include "chars.h"
 
-#define T(X)
-
 /* ATTN: use BufFmt to collapse all these redundant sphitngs */
 
 #if 0

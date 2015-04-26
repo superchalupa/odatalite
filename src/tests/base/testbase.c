@@ -44,7 +44,6 @@
 #include <base/alloc.h>
 #include <base/plugininfo.h>
 #include <base/path.h>
-#include <base/env.h>
 #include <base/cleanup.h>
 #include <base/find.h>
 #include <limits.h>

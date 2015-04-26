@@ -33,31 +33,9 @@
 
 #include "common.h"
 #include <string.h>
-
-#if defined(_MSC_VER)
-# include <winsock2.h>
-#else
-# include <unistd.h>
-# include <errno.h>
-# include <fcntl.h>
-# include <sys/socket.h>
-# include <netinet/tcp.h>
-# include <netinet/in.h>
-# include <sys/time.h>
-# include <sys/types.h>
-# include <netdb.h>
-# include <arpa/inet.h>
-# include <sys/un.h>
-#endif
-
-#if defined(_MSC_VER)
-typedef int socklen_t;
-#endif
-
-#if defined(_MSC_VER)
-typedef unsigned long in_addr_t;
-#endif
-
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <sys/un.h>
 
 typedef enum _AddrType
 {
@@ -71,9 +49,7 @@ typedef struct _Addr
     union
     {
         struct sockaddr_in in;
-#if defined(HAVE_POSIX)
         struct sockaddr_un un;
-#endif
     }
     u;
     AddrType type;
@@ -98,10 +74,8 @@ int AddrInitInet(
     const char* host,
     unsigned short port);
 
-#if defined(HAVE_POSIX)
 int AddrInitUnix(
     Addr* self,
     const char* path);
-#endif
 
 #endif /* _addr_h */

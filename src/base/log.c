@@ -29,14 +29,13 @@
 **==============================================================================
 */
 
-#include <syslog.h>
-
 #include "log.h"
 #include "datetime.h"
 #include "path.h"
 #include "cleanup.h"
 #include "str.h"
 #include "file.h"
+#include <syslog.h>
 
 #if defined(ENABLE_LOGGING)
 

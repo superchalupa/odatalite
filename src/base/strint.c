@@ -28,9 +28,9 @@
 **
 **==============================================================================
 */
-#include <limits.h>
 #include "str.h"
 #include <stdlib.h>
+#include <limits.h>
 
 void UIntToStrZeroPadded(
     char *buf,

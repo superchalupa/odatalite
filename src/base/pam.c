@@ -28,9 +28,9 @@
 **
 **==============================================================================
 */
-#include "common.h"
-#include "str.h"
 #include "pam.h"
+#include "str.h"
+#include "common.h"
 
 // config.h should be included last, followed by anything that relies on #defines in config.h
 #include "config.h"

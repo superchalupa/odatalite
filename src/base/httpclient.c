@@ -37,8 +37,6 @@
 
 #define MAX_AUTHORIZATION_VALUE 128
 
-#define T(X)
-
 int HTTPFormatRequest(
     Buf* out,
     const char* command,
@@ -128,8 +126,6 @@ int HTTPResponseParse(
     }
 
     *crlf = '\0';
-
-    T( printf("LINE{%.*s}\n", (int)(crlf - p), p); )
 
     /* Parse the start line */
     {

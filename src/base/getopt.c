@@ -29,8 +29,8 @@
 **==============================================================================
 */
 
-#include <string.h>
 #include "getopt.h"
+#include <string.h>
 
 int GetOpt(
     GetOptState* state,

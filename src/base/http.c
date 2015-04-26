@@ -28,15 +28,12 @@
 **
 **==============================================================================
 */
-#include <string.h>
-
 #include "http.h"
 #include "parse.h"
 #include "str.h"
 #include "chars.h"
 #include "dump.h"
-
-# define T(X)
+#include <string.h>
 
 const char* __HTTPMethodNames[10] =
 {

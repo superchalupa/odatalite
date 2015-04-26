@@ -28,15 +28,16 @@
 **
 **==============================================================================
 */
+#include "auth.h"
+#include "str.h"
 #include "common.h"
+// config.h should be included last, followed by anything that relies on #defines in config.h
+#include "config.h"
 
 #if defined(HAVE_POSIX)
 # include <sys/types.h>
 # include <pwd.h>
 #endif
-
-#include "str.h"
-#include "auth.h"
 
 #if defined(ENABLE_LOCAL_AUTH)
 
