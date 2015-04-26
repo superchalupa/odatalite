@@ -550,9 +550,6 @@ struct _PHIT_Context
     int (*RemoveFDCallback)(
         PHIT_Context* self, int fd);
 
-    int (*DeferResult)(
-        PHIT_Context* self);
-
     /* Set client data */
     void* (*SetPluginData)(
         PHIT_Context* context,
@@ -685,12 +682,6 @@ PHIT_INLINE int PHIT_Context_RemoveFDCallback(
     PHIT_Context* context, int fd)
 {
     return context->RemoveFDCallback(context, fd);
-}
-
-PHIT_INLINE int PHIT_Context_DeferResult(
-    PHIT_Context* context)
-{
-    return context->DeferResult(context);
 }
 
 PHIT_INLINE void* PHIT_Context_SetPluginData(

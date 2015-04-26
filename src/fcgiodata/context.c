@@ -487,12 +487,6 @@ static int _RemoveFDCallback(
     return 0;
 }
 
-static int _DeferResult(
-    PHIT_Context* context)
-{
-    return 0;
-}
-
 static PHIT_Context _base =
 {
     .magic = PHIT_CONTEXT_MAGIC,
@@ -512,7 +506,6 @@ static PHIT_Context _base =
     .VLogMessage = _FCGI_Context_VLogMessage,
     .AddFDCallback = _AddFDCallback,
     .RemoveFDCallback = _RemoveFDCallback,
-    .DeferResult = _DeferResult,
 };
 
 void ContextInit(

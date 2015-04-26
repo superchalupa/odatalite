@@ -551,9 +551,6 @@ typedef struct _OL_ScopeFT
     OL_Result (*RemoveFDCallback)(
         OL_Scope* self, int fd);
 
-    OL_Result (*DeferResult)(
-        OL_Scope* self);
-
     int (*SetLogPriority)(
         OL_Scope* self,
         int priority
