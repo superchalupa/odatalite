@@ -67,13 +67,15 @@
 static OL_Scope* _Scope_New();
 
 static OL_Scope* _scopeCache[4];
-size_t _scopeCacheSize;
+// can't use size_t here because size_t is unsigned, and I want to use -1 to disable scope cache.
+long _scopeCacheSize;
 
 OL_Scope* ScopeCache_Get()
 {
-    syslog(LOG_INFO, "%s(): _scopeCacheSize=%zd\n", __FUNCTION__, _scopeCacheSize);
-    if (_scopeCacheSize == 0)
+    syslog(LOG_INFO, "%s(): _scopeCacheSize=%ld\n", __FUNCTION__, _scopeCacheSize);
+    if (_scopeCacheSize <= 0) {
         return _Scope_New();
+    }
     else
     {
         OL_Scope* scope = _scopeCache[--_scopeCacheSize];
@@ -84,7 +86,7 @@ OL_Scope* ScopeCache_Get()
 
 void ScopeCache_Put(OL_Scope* scope)
 {
-    if (_scopeCacheSize != OL_ARRAYSIZE(_scopeCache))
+    if (_scopeCacheSize != OL_ARRAYSIZE(_scopeCache) && _scopeCacheSize >= 0)
         _scopeCache[_scopeCacheSize++] = scope;
     else
         OL_Scope_Release(scope);
