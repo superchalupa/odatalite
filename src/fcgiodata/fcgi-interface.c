@@ -110,7 +110,7 @@ static void *handle_cgi_request(void *a)
         zstr_sendfm(cgiserver, "%s", "");
 
         // Read Content from Apache over FCGI connection
-        // TODO: not sure if this is robust, check docs for best way... probably dont want to do char at a time
+        // TODO: this isn't the best way to do this: it does one char at a time and doesn't do EOF checking.
         char *content = NULL;
         if (len>0){
             content = calloc(len+1, 1);

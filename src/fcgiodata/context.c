@@ -195,14 +195,10 @@ static int send_response(zloop_t *loop, int timer_id, void *arg)
     int ret = 0;
 
     int z_ret = 0;
-    DEBUG_PRINTF("CHECK EOC: %d\n", ctx->postedEOC);
-
     if( ! ctx->postedEOC ) {
         DEBUG_PRINTF("Connection NOT complete, waiting: %d\n", timer_id);
         goto out_incomplete;
     }
-
-    DEBUG_PRINTF("GOT EOC\n");
 
     // Create response message
     zmsg_t *response = zmsg_new();
@@ -264,8 +260,6 @@ error_sending:
     // drop through below...
 
 out_free:
-    DEBUG_PRINTF("FCGI_ConnectionDelete\n");
-    DEBUG_PRINTF("Processed message, returning. Ret=%d\n", ret);
     // no more DEBUG_PRINTF after connection delete!
     FCGI_ConnectionDelete(&c);
     // drop through below...
@@ -441,12 +435,10 @@ struct _cb_args
 static int _callback_shim (zloop_t *loop, zmq_pollitem_t *item, void *arg)
 {
     struct _cb_args *a = (struct _cb_args *)arg;
-    syslog(LOG_WARNING, "CALLBACK_SHIM!");
     /* callback should return -1 to end calls and free memory */
     int ret = a->fn(item->fd, a->arg);
     if (ret == -1)
     {
-        syslog(LOG_WARNING, "CALLBACK_SHIM: remove fd %d!", item->fd);
         zloop_poller_end(loop, item);
         free(a->p);
         free(a);
@@ -462,7 +454,6 @@ static int _AddFDCallback(
 {
     Context* self = (Context*)context;
 
-    PHIT_Context_DEBUG(context, "Hello from AddFDCallback: add fd %d\n", fd);
     struct _cb_args *a = calloc(1, sizeof(struct _cb_args));
     zmq_pollitem_t *poller = calloc(1, sizeof(zmq_pollitem_t));
     a->p = poller;

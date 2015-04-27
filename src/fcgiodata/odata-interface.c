@@ -137,7 +137,6 @@ int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
         methodStr = "GET";
     PHIT_Method phit_method;
     ParseHTTPMethod(methodStr, &phit_method);
-    DEBUG_PRINTF("method: %s(%d)\n", methodStr, (int)phit_method);
 
     // Parse Request URI
     char *requestUri = FCGX_GetParam("REQUEST_URI", c->envp);
@@ -150,7 +149,6 @@ int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
     if(remoteUser) {
         strncpy(c->user, remoteUser, USERNAME_SIZE-1);
     }
-    DEBUG_PRINTF("Got REMOTE_USER: '%s'\n", c->user);
 
     // HTTP Headers to PHIT format
     HTTPBuf buf={};
@@ -161,7 +159,6 @@ int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
     }
 
     // Finally call into ODATA. output is in the connection buffers.
-    DEBUG_PRINTF("HandleRequest\n");
     __odataPlugin.base.HandleRequest(
         &__odataPlugin.base,
         (PHIT_Context *)(&c->context),
@@ -170,8 +167,6 @@ int process_msg(zloop_t *loop, void *socket, Connection *c, zmsg_t *msg)
         &(c->headers),
         c->content,
         strlen(c->content));
-
-    DEBUG_PRINTF("process msg: CHECK EOC: %d\n", c->context.postedEOC);
 
     ret = 0;
     goto out;
@@ -186,13 +181,10 @@ out:
 
 int server_task (zloop_t *loop, zmq_pollitem_t *item, void *arg)
 {
-    DEBUG_PRINTF("GOT message for server_task\n");
     zsock_t *reader = item->socket;
     zmsg_t *msg = zmsg_recv (reader);
     if(msg) {
-        DEBUG_PRINTF("connectionnew\n");
         Connection* c = FCGI_ConnectionNew(loop, reader, msg);
-        DEBUG_PRINTF("process_msg\n");
         process_msg(loop, reader, c, msg);
     }
     return 0;
