@@ -31,6 +31,7 @@
 #include "iprintf.h"
 #include <stdarg.h>
 #include <syslog.h>
+#include <stdio.h>
 
 PRINTF_FORMAT(2, 3)
 

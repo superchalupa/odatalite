@@ -124,6 +124,7 @@
 */
 
 #if defined(ENABLE_DEBUG)
+#include <assert.h>
 # define DEBUG_ASSERT(COND) assert(COND)
 #else
 # define DEBUG_ASSERT(COND)
