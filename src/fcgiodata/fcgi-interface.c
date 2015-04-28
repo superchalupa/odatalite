@@ -189,6 +189,8 @@ int watchdog_ping (zloop_t *loop, int timer_id, void *arg)
     return 0;
 }
 
+extern long _scopeCacheSize;
+
 int main(void)
 {
     struct cgi_thread_parameters thread_params[FCGI_ACCEPT_HANDLER_THREAD_COUNT] = {};
@@ -249,6 +251,9 @@ int main(void)
             zloop_timer (reactor, wd_interval_ms, 0, watchdog_ping, NULL);
         }
     }
+
+    // disable scope cache since it is not compatible with multithreading
+    _scopeCacheSize=-1;
 
     DEBUG_PRINTF("Async odata fastcgi server entering request handling loop.\n");
     // don't notify systemd about startup complete until we are about to enter processing loop
