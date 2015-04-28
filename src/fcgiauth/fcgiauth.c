@@ -86,7 +86,7 @@ int pamConversation(
 	struct authContext* authPtr = (struct authContext*)applicationData;
     int i;
 
-	DEBUG_PRINT_DEBUG("PAM authenticating nmsg:%d\n", nMsgs);
+	//DEBUG_PRINT_DEBUG("PAM authenticating nmsg:%d\n", nMsgs);
 
 	// if no messages or messages more then max...
 	if (nMsgs <= 0 || nMsgs > PAM_MAX_NUM_MSG) 
@@ -102,7 +102,7 @@ int pamConversation(
         resp[i]->resp = NULL;
         switch (messages[i]->msg_style) {
 			case PAM_PROMPT_ECHO_OFF:
-				DEBUG_PRINT_DEBUG("PAM prompt echo off\n");
+				//DEBUG_PRINT_DEBUG("PAM prompt echo off\n");
 				if (strcmp(authPtr->password, "blah") == 0) {
 					goto fail;
 				}
@@ -113,7 +113,7 @@ int pamConversation(
 					goto fail;
             break;
 			case PAM_PROMPT_ECHO_ON:
-				DEBUG_PRINT_ERR("PAM prompt:%s\n", GETSTR(messages[i]->msg));
+				//DEBUG_PRINT_ERR("PAM prompt:%s\n", GETSTR(messages[i]->msg));
 				// usually used to get the user name, but that was passed with
 				// the start so this shouldn't happen, so fail
 				goto fail;
@@ -130,7 +130,7 @@ int pamConversation(
             goto fail;
         }
     }
-	DEBUG_PRINT_DEBUG("PAM authenticating success\n");
+	//DEBUG_PRINT_DEBUG("PAM authenticating success\n");
 	return (PAM_SUCCESS);
 
 fail:
@@ -157,7 +157,7 @@ int pamAuth(struct authContext* context)
 	int status = 0, r = 0;
 	int flags = PAM_SILENT; // Do not emit any messages.
 
-	DEBUG_PRINT_INFO("PAM authenticate %s\n", GETSTR(context->user));
+	//DEBUG_PRINT_INFO("PAM authenticate %s\n", GETSTR(context->user));
 
     memset(&conv, 0, sizeof(conv));
 	conv.appdata_ptr = (void*)context;
@@ -192,7 +192,7 @@ int pamAuth(struct authContext* context)
 //      goto done;
 //  }
 	
-	DEBUG_PRINT_INFO("PAM authenticate complete:%s\n", pam_strerror(handle, status));
+	//DEBUG_PRINT_INFO("PAM authenticate complete:%s\n", pam_strerror(handle, status));
 done:
 	/* The pam_end function terminates the PAM transaction and is
 	   the last function an application should call in the PAM context.
@@ -208,11 +208,11 @@ int main (int argc, char *argv[])
 	int authenticate = 0;
 
 	while (FCGI_Accept() >= 0) {
-		DEBUG_PRINT_INFO("FCGI Auth req received\n");
+		//DEBUG_PRINT_INFO("FCGI Auth req received\n");
 		getEnvContext(&context);
 		authenticate = pamAuth(&context);
 
-		DEBUG_PRINT_INFO("PAM status = %i\n", authenticate);
+		//DEBUG_PRINT_INFO("PAM status = %i\n", authenticate);
 		/* take from apache.org documentation on mod_authnz_fcgi */
 		if (authenticate != 0) {
 			FCGI_printf("Status: 401\n");

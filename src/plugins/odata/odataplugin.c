@@ -335,7 +335,6 @@ static void _ODATAPlugin_HandleRequest(
                             headers->ServiceRoot.value : DEFAULT_SERVICE_ROOT;
     strncpy(uri->service, serviceRoot, sizeof(uri->service));
     uri->serviceLen = strlen(uri->service);
-    syslog(LOG_INFO, "%s(): serviceRoot='%s'\n", __FUNCTION__, serviceRoot);
     
     /* Parse the URI (destroy requestURI in place) */
     if (URIParse(uri, (char*)requestURI, err, sizeof(err)) != OL_Result_Ok)

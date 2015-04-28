@@ -72,7 +72,6 @@ long _scopeCacheSize;
 
 OL_Scope* ScopeCache_Get()
 {
-    syslog(LOG_INFO, "%s(): _scopeCacheSize=%ld\n", __FUNCTION__, _scopeCacheSize);
     if (_scopeCacheSize <= 0) {
         return _Scope_New();
     }
@@ -579,8 +578,10 @@ static OL_Result _Scope_SendResult(
     /* Check whether context is invalid */
     if (self->magic != CONTEXT_MAGIC)
     {
-        LOGP(self_, "SendResult: called with corrupt context");
+        // can't use LOGP here!
+        syslog(LOG_ERR, "SendResult: called with corrupt context");
         self->error = OL_TRUE;
+        *((int*)0) = 0; // force crash for now
         return OL_Result_Failed;
     }
 
