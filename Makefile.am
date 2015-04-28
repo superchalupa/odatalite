@@ -40,7 +40,8 @@ dist_phit_conf_DATA = \
         etc/phit/phitd.conf \
         etc/phit/plugins.conf \
         etc/phit/roles.conf \
-        etc/phit/ServiceRoot.json
+        etc/phit/ServiceRoot.json \
+        etc/phit/OdataService.json
 
 phit_providers_confdir=$(phit_confdir)/providers.d
 dist_phit_providers_conf_DATA = etc/phit/providers.d/01-providers-header.conf

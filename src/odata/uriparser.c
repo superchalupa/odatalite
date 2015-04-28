@@ -30,6 +30,7 @@
 */
 #include "uriparser.h"
 #include <stdlib.h>
+#include <string.h>
 #include <base/format.h>
 #include <base/str.h>
 #include <base/chars.h>
@@ -719,7 +720,7 @@ OL_Result URIFormatContextURL(
     size_t j;
     const char *service = self->service;
 
-   if (!strncmp(service, serviceRoot, strlen(service)))
+    if (!strncmp(service, serviceRoot, strlen(service)))
     { // Base case: Service is "ServiceRoot"
       service = "ServiceRoot";
     }
@@ -747,6 +748,11 @@ OL_Result URIFormatContextURL(
       if (Strlcat(buf, service, size) >= size)
           return OL_Result_Failed;
 
+      return OL_Result_Ok;
+    }
+
+    if ((self->segments.size == 1) && !strcmp(self->segments.data[0].name, "odata"))
+    { // Special case for /rest/v1/odata
       return OL_Result_Ok;
     }
 

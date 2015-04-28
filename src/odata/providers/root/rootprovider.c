@@ -4,7 +4,8 @@
 #include "base/str.h"
 
 // Service Root is static taken from this file.
-static const char *filename = "/etc/phit/ServiceRoot.json";
+static char *serviceRootFile = "/etc/phit/ServiceRoot.json";
+static char *odataServiceFile = "/etc/phit/OdataService.json";
 
 typedef struct _Provider /* Extends OL_Provider */
 {
@@ -36,16 +37,26 @@ static void _Get(
   OL_Result result = OL_Result_Ok;
 
   // Only service the root from this provider.
-  if (OL_URI_Count(uri) != 0)
+  size_t count = OL_URI_Count(uri);
+  char *filename = "";
+
+  switch (count)
   {
+  case 0:
+    filename = serviceRootFile;
+    break;
+  case 1:
+    filename = odataServiceFile;
+    break;
+  default:
     OL_Scope_ERR(scope, "uri '%s' not supported by rootprovider.\n",
                         OL_URI_GetName(uri, 0));
     OL_Scope_SendResult(scope, OL_Result_Failed);
     return;
   }
 
-  char *serviceRoot = File2String(filename);
-  if (!serviceRoot)
+  char *data = File2String(filename);
+  if (!data)
   {
     OL_Scope_ERR(scope, "Error loading %s: errno=%d\n", filename, errno);
     result = OL_Result_InternalError;
@@ -62,19 +73,21 @@ static void _Get(
            Needs the following info: 
            ServiceRoot: /rest/v1
            SchemaVersion: 0.94.0
-   */ 
-  OL_Object_AddString(obj, "@odata.id", "/rest/v1");
-  OL_Object_AddString(obj, "@odata.type", "#ServiceRoot.0.94.0.ServiceRoot");
-  OL_Object_AddString(obj, "Modified", "2013-01-31T23:45:04+00:00");
-  OL_Object_AddString(obj, "RedfishVersion", "0.94.0");
-  OL_Object_AddString(obj, "UUID", "00000000-0000-0000-0000-000000000000");
+   */
+  if (!count)
+  {
+    OL_Object_AddString(obj, "@odata.id", "/rest/v1");
+    OL_Object_AddString(obj, "@odata.type", "#ServiceRoot.0.94.0.ServiceRoot");
+    OL_Object_AddString(obj, "Modified", "2013-01-31T23:45:04+00:00");
+    OL_Object_AddString(obj, "RedfishVersion", "0.94.0");
+    OL_Object_AddString(obj, "UUID", "00000000-0000-0000-0000-000000000000");
 
-  // These go in the provider itself.
-  OL_Object_AddString(obj, "Id", "RootService");
-  OL_Object_AddString(obj, "Name", "Root Service");
+    // These go in the provider itself.
+    OL_Object_AddString(obj, "Id", "RootService");
+    OL_Object_AddString(obj, "Name", "Root Service");
+  }
 
-  OL_Result r = OL_Object_Deserialize(obj, serviceRoot, 
-                                      strlen(serviceRoot), &offset);
+  OL_Result r = OL_Object_Deserialize(obj, data, strlen(data), &offset);
   if (r)
   {
     OL_Scope_ERR(scope, "OL_Object_Deserialize() failed, result=%d\n", r);
@@ -87,7 +100,7 @@ static void _Get(
 
   send_result:
     OL_Scope_SendResult(scope, result);
-    free(serviceRoot);
+    free(data);
 }
 
 static void _Post(

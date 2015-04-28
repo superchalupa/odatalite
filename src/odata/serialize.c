@@ -589,11 +589,13 @@ OL_Result SerializeObject(
 
     for (i = 0; i < self->count; i++)
     {
+        /* TODO: not sure exactly what purpose this serves... If we pass in an
+           object, I want it serialized, period. Asking Mike Brasher about this...
         if (propertyName && strcmp(self->pairs[i].name, propertyName) != 0)
         {
             continue;
         }
-
+        */
         if (_SerializePair(out, &self->pairs[i], depth,
             metadataType) != OL_Result_Ok)
         {
