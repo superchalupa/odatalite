@@ -38,21 +38,23 @@ static void _Get(
 
   // Only service the root from this provider.
   size_t count = OL_URI_Count(uri);
-  char *filename = "";
 
-  switch (count)
+  char *filename = serviceRootFile;
+
+  if (count == 1)
   {
-  case 0:
-    filename = serviceRootFile;
-    break;
-  case 1:
-    filename = odataServiceFile;
-    break;
-  default:
-    OL_Scope_ERR(scope, "uri '%s' not supported by rootprovider.\n",
-                        OL_URI_GetName(uri, 0));
-    OL_Scope_SendResult(scope, OL_Result_Failed);
-    return;
+    const char *endpoint = OL_URI_GetName(uri, 0);
+    if (!strcmp(endpoint, "odata"))
+    {
+      filename = odataServiceFile;
+    }
+    else
+    {
+      OL_Scope_ERR(scope, "uri '%s' not supported by rootprovider.\n",
+                          endpoint);
+      OL_Scope_SendResult(scope, OL_Result_Failed);
+      return;
+    }
   }
 
   char *data = File2String(filename);
