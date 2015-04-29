@@ -240,18 +240,6 @@ static OL_Result _SendGadget(
 typedef struct _Provider
 {
     OL_Provider base;
-
-    /* Number of elements sent so far */
-    unsigned long count;
-
-    /* Handle the $top query option */
-    unsigned long top;
-
-    /* Handle the $skip query option */
-    unsigned long skip;
-
-    /* Whether $count option was present */
-    OL_Boolean countOption;
 }
 Provider;
 
@@ -275,22 +263,27 @@ static void _Gadget_Get(
     OL_Scope* scope,
     const OL_URI* uri)
 {
-    Provider* self = (Provider*)self_;
     const char* entityType;
     const char* skiptoken = NULL;
     unsigned long nsent = 0;
+
+
+    /* Number of elements sent so far */
+    unsigned long count = 0;
+
+    /* Handle the $top query option */
+    unsigned long top = UINT_MAX;
+
+    /* Handle the $skip query option */
+    unsigned long skip = 0;
+
+    /* Whether $count option was present */
+    OL_Boolean countOption;
 
     OL_Scope_DEBUG(scope, "DEBUG HELLO WORLD\n");
     OL_Scope_INFO(scope, "INFO HELLO WORLD\n");
     OL_Scope_ERR(scope, "ERR HELLO WORLD\n");
     D( printf("_Gadget_Get()\n"); )
-
-    /* Initialize top and skip */
-    self->skip = 0;
-    self->top = UINT_MAX;
-
-    /* Zero elements sent so far */
-    self->count = 0;
 
 #if 0
     OL_URI_Print(uri);
@@ -300,7 +293,7 @@ static void _Gadget_Get(
     if (OL_URI_GetQueryOption(uri, OL_QUERY_OPTION_SKIPTOKEN, &skiptoken,
         sizeof(skiptoken)) == OL_Result_Ok)
     {
-        if (!skiptoken || StrToULong(skiptoken, &self->skip) != 0)
+        if (!skiptoken || StrToULong(skiptoken, &skip) != 0)
         {
             OL_Scope_SendResultF(scope, OL_Result_Failed, "bad skiptoken");
             return;
@@ -308,17 +301,17 @@ static void _Gadget_Get(
     }
 
     /* Handle $top query option */
-    OL_URI_GetQueryOption(uri, OL_QUERY_OPTION_TOP, &self->top,
-        sizeof(self->top));
+    OL_URI_GetQueryOption(uri, OL_QUERY_OPTION_TOP, &top,
+        sizeof(top));
 
     /* Handle $skip query option */
-    OL_URI_GetQueryOption(uri, OL_QUERY_OPTION_SKIP, &self->skip,
-        sizeof(self->skip));
+    OL_URI_GetQueryOption(uri, OL_QUERY_OPTION_SKIP, &skip,
+        sizeof(skip));
 
     if (OL_URI_GetQueryOptionFlags(uri) & OL_QUERY_OPTION_COUNT)
-        self->countOption = 1;
+        countOption = 1;
     else
-        self->countOption = 0;
+        countOption = 0;
 
 #if 0
     /* Expecting one entity type in path: service/Gadgets */
@@ -348,7 +341,7 @@ static void _Gadget_Get(
     {
         size_t i;
 
-        if (self->countOption)
+        if (countOption)
         {
             OL_Object * obj;
 
@@ -369,12 +362,12 @@ static void _Gadget_Get(
 
         for (i = 0; i < _ngadgets && nsent < BATCH_SIZE; i++)
         {
-            self->count++;
+            count++;
 
-            if (self->count <= self->skip)
+            if (count <= skip)
                 continue;
 
-            if (self->count > self->top)
+            if (count > top)
                 break;
 
             _SendGadget(scope, &_gadgets[i]);
