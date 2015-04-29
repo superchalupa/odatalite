@@ -40,11 +40,6 @@
 
 using namespace odata;
 
-void HeapProvider::Load(odata::Scope& scope)
-{
-    D( printf("=== HeapProvider::Load()\n"); )
-}
-
 void HeapProvider::Unload(odata::Scope& scope)
 {
     D( printf("=== HeapProvider::Unload()\n"); )

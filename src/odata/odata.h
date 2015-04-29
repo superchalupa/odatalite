@@ -1672,10 +1672,6 @@ typedef struct _OL_Provider OL_Provider;
 
 typedef struct _OL_ProviderFT
 {
-    void (*Load)(
-        OL_Provider* self,
-        OL_Scope* scope);
-
     void (*Unload)(
         OL_Provider* self,
         OL_Scope* scope);

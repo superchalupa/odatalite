@@ -37,8 +37,6 @@ class HeapProvider : public odata::Provider
 {
 public:
 
-    virtual void Load(odata::Scope& scope);
-
     virtual void Unload(odata::Scope& scope);
 
     virtual void Get(

@@ -1617,13 +1617,6 @@ class Provider
 {
 private:
 
-    virtual void _Load(
-        OL_Scope* scope)
-    {
-        Scope c(scope, true);
-        Load(c);
-    }
-
     virtual void _Unload(
         OL_Scope* scope)
     {
@@ -1690,12 +1683,6 @@ private:
     }
 
 public:
-
-    virtual void Load(
-        Scope& scope)
-    {
-        scope.SendResult(OL_Result_NotSupported);
-    }
 
     virtual void Unload(
         Scope& scope)

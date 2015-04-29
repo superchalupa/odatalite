@@ -46,12 +46,6 @@ typedef struct _Provider
 }
 Provider;
 
-static void _Metadata_Load(
-    OL_Provider* self,
-    OL_Scope* scope)
-{
-}
-
 static void _Metadata_Unload(
     OL_Provider* self,
     OL_Scope* scope)
@@ -128,7 +122,6 @@ static void _Metadata_Delete(
 
 static OL_ProviderFT _ft =
 {
-    _Metadata_Load,
     _Metadata_Unload,
     _Metadata_Get,
     _Metadata_Post,

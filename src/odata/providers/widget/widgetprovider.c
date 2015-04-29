@@ -58,12 +58,6 @@ typedef struct _Provider /* Extends OL_Provider */
 }
 Provider;
 
-static void _Load(
-    OL_Provider* self,
-    OL_Scope* scope)
-{
-}
-
 static void _Unload(
     OL_Provider* self,
     OL_Scope* scope)
@@ -222,7 +216,6 @@ static void _Delete(
 
 static OL_ProviderFT _ft =
 {
-    _Load,
     _Unload,
     _Get,
     _Post,

@@ -44,13 +44,6 @@ typedef struct _Provider
 }
 Provider;
 
-static void _Check_Load(
-    OL_Provider* self,
-    OL_Scope* scope)
-{
-    D( printf("=== _Check_Load\n"); )
-}
-
 static void _Check_Unload(
     OL_Provider* self,
     OL_Scope* scope)
@@ -139,7 +132,6 @@ static void _Check_Delete(
 
 static OL_ProviderFT _ft =
 {
-    _Check_Load,
     _Check_Unload,
     _Check_Get,
     _Check_Post,

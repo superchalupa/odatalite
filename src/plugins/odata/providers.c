@@ -99,23 +99,6 @@ static int _LoadProvider(ProviderEntry* entry)
         return -1;
     }
 
-    /* Call the provider Load() */
-    {
-        OL_Scope* context;
-
-        if (!(context = __OL_Scope_New()))
-        {
-            LOGW(("failed to create context: %s(%d)", __FILE__, __LINE__));
-            return -1;
-        }
-
-        /* ATTN: handle PostResult() */
-
-        (*entry->provider->ft->Load)(entry->provider, context);
-
-        OL_Scope_Release(context);
-    }
-
     return 0;
 }
 

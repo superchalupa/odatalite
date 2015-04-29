@@ -151,11 +151,6 @@ FrogProvider::FrogProvider()
 #endif
 }
 
-void FrogProvider::Load(odata::Scope& scope)
-{
-    D( printf("=== FrogProvider::Load()\n"); )
-}
-
 void FrogProvider::Unload(odata::Scope& scope)
 {
     D( printf("=== FrogProvider::Unload()\n"); )

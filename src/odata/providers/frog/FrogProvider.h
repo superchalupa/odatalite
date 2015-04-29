@@ -43,8 +43,6 @@ public:
 
     FrogProvider();
 
-    virtual void Load(odata::Scope& scope);
-
     virtual void Unload(odata::Scope& scope);
 
     virtual void Get(

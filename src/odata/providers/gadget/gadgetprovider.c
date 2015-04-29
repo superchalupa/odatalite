@@ -243,12 +243,6 @@ typedef struct _Provider
 }
 Provider;
 
-static void _Gadget_Load(
-    OL_Provider* self,
-    OL_Scope* scope)
-{
-}
-
 static void _Gadget_Unload(
     OL_Provider* self,
     OL_Scope* scope)
@@ -464,7 +458,6 @@ static void _Gadget_Delete(
 
 static OL_ProviderFT _ft =
 {
-    _Gadget_Load,
     _Gadget_Unload,
     _Gadget_Get,
     _Gadget_Post,
