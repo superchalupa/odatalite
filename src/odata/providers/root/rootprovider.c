@@ -6,6 +6,7 @@
 // Service Root is static taken from this file.
 static char *serviceRootFile = "/etc/phit/ServiceRoot.json";
 static char *odataServiceFile = "/etc/phit/OdataService.json";
+static char *metadataFile = "/etc/phit/ServiceRoot.metadata";
 
 typedef struct _Provider /* Extends OL_Provider */
 {
@@ -48,6 +49,10 @@ static void _Get(
     {
       filename = odataServiceFile;
     }
+    else if (!strcmp(endpoint, "$metadata"))
+    {
+      filename = metadataFile;
+    }
     else
     {
       OL_Scope_ERR(scope, "uri '%s' not supported by rootprovider.\n",
@@ -69,6 +74,15 @@ static void _Get(
   {
     result = OL_Result_InternalError;
     goto send_result;
+  }
+
+  if (strstr(data,"<?xml"))
+  {
+    OL_Scope_SendMetadataXML(scope, data, strlen(data));
+    OL_Scope_SendResult(scope, OL_Result_Ok);
+    OL_Object_Release(obj);
+    free(data);
+    return;
   }
 
   /* TODO: These belong in the general odata handler.
