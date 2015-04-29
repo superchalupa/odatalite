@@ -1,5 +1,5 @@
 #%PAM-1.0
-auth            required        pam_pwdfile.so pwdfile=/etc/redfish_passwd debug
+auth            required        pam_pwdfile.so pwdfile=/etc/redfish_passwd
 account         required        pam_unix.so
 session         required        pam_unix.so
 password	required	pam_deny.so
