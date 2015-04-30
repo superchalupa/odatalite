@@ -14,5 +14,5 @@ INSTALL_COMMANDS += ;echo  'rootprovider:/:' > $(DESTDIR)/$(phit_confdir)/provid
 
 install-data-local::
 	sh -c "echo BURP; mkdir -p $(DESTDIR)/$(phit_confdir); \
-	       cp $(top_srcdir)/src/RedfishSchema/ServiceRoot.0.94.0.metadata \
+	       cp $(top_srcdir)/src/RedfishSchema/ServiceRoot.0.96.0.metadata \
                $(DESTDIR)/$(phit_confdir)/ServiceRoot.metadata"

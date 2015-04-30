@@ -60,8 +60,8 @@ dist_phit_data_DATA = share/phit/background.gif share/phit/postamble.html share/
 
 # generate .c files from .metadata files
 # NOTE: version encoded in files, unfortunately...
-# ServiceRoot.0.94.0.metadata
-%.c: %.0.94.0.metadata out/csdl2c
+# ServiceRoot.0.96.0.metadata
+%.c: %.0.96.0.metadata out/csdl2c
 	PATH=$$PATH:$(top_builddir)/out csdl2c $<
 	mv $(notdir $@) $@
 

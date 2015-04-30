@@ -382,7 +382,7 @@ static void GetServiceRoot(
     value = getenv("REDFISH_VERSION");
     self->RedfishVersion.found = 1;    
     self->RedfishVersion.value = value;
-    // REDFISH_VERSION ex: 0.94.0
+    // REDFISH_VERSION ex: 0.96.0
     DEBUG_PRINTF("%s(): REDFISH_VERSION ='%s'\n", __FUNCTION__, value);
 }
 
