@@ -31,6 +31,7 @@
 #ifndef _common_h
 #define _common_h
 
+#include <limits.h>
 #include "phitfeatures.h"
 
 /*
@@ -133,12 +134,14 @@
 /*
 **==============================================================================
 **
-** MAX_PATH_SIZE
+** PATH_MAX should be defined in limits.h; wrapper "just in case" it's not.
 **
 **==============================================================================
 */
 
-#define MAX_PATH_SIZE 1024
+#ifndef PATH_MAX
+  #define PATH_MAX 1024
+#endif
 
 /*
 **==============================================================================

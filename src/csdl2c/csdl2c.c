@@ -2186,23 +2186,23 @@ void Parse(XML* xml, const char* prefix)
     ParseEdmx(xml, &e, prefix);
 }
 
-void MakeOutputFilename(char filename[MAX_PATH_SIZE], const char* path)
+void MakeOutputFilename(char filename[PATH_MAX], const char* path)
 {
     char* dot;
 
-    Strlcpy(filename, Basename(path), MAX_PATH_SIZE);
+    Strlcpy(filename, Basename(path), PATH_MAX);
 
     if ((dot = strchr(filename, '.')))
         *dot = '\0';
 
-    Strlcat(filename, ".c", MAX_PATH_SIZE);
+    Strlcat(filename, ".c", PATH_MAX);
 }
 
-void MakePrefix(char prefix[MAX_PATH_SIZE], const char* filename)
+void MakePrefix(char prefix[PATH_MAX], const char* filename)
 {
     char* dot;
 
-    Strlcpy(prefix, filename, MAX_PATH_SIZE);
+    Strlcpy(prefix, filename, PATH_MAX);
 
     if ((dot = strchr(prefix, '.')))
         *dot = '\0';
@@ -2213,8 +2213,8 @@ void ParseFile(const char* path)
     XML* xml;
     char* data;
     size_t size;
-    char filename[MAX_PATH_SIZE];
-    char prefix[MAX_PATH_SIZE];
+    char filename[PATH_MAX];
+    char prefix[PATH_MAX];
 
     MakeOutputFilename(filename, path);
     MakePrefix(prefix, filename);

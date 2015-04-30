@@ -34,7 +34,7 @@
 int JoinPath(
     const char* const* path,
     int npath,
-    char buf[MAX_PATH_SIZE])
+    char buf[PATH_MAX])
 {
     int i;
 
@@ -42,12 +42,12 @@ int JoinPath(
 
     for (i = 0; i < npath; i++)
     {
-        if (Strlcat(buf, path[i], MAX_PATH_SIZE) >= MAX_PATH_SIZE)
+        if (Strlcat(buf, path[i], PATH_MAX) >= PATH_MAX)
             return -1;
 
         if (i != 0 && i != npath - 1)
         {
-            if (Strlcat(buf, "/", MAX_PATH_SIZE) >= MAX_PATH_SIZE)
+            if (Strlcat(buf, "/", PATH_MAX) >= PATH_MAX)
                 return -1;
         }
     }

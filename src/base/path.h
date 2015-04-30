@@ -56,11 +56,11 @@ const char* GetPrefix();
 
 const char* MakePath(
     PathID id,
-    char buf[MAX_PATH_SIZE]);
+    char buf[PATH_MAX]);
 
 const char* MakePath2(
     PathID id,
-    char buf[MAX_PATH_SIZE],
+    char buf[PATH_MAX],
     const char* basename);
 
 /* Split path into segments, return # of segments or SIZEMAX on failure */
@@ -72,19 +72,19 @@ size_t SplitPath(
 int JoinPath(
     const char* const* path,
     int npath,
-    char buf[MAX_PATH_SIZE]);
+    char buf[PATH_MAX]);
 
 void DumpPaths();
 
 int MakeAbsolutePath(
-    char buf[MAX_PATH_SIZE],
+    char buf[PATH_MAX],
     const char* path);
 
 int NormalizePath(
-    char path[MAX_PATH_SIZE]);
+    char path[PATH_MAX]);
 
 int Rootname(
-    char path[MAX_PATH_SIZE]);
+    char path[PATH_MAX]);
 
 const char* Basename(
     const char* path);

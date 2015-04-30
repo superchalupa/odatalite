@@ -84,7 +84,7 @@ int LogLevelFromString(
 
 FILE* LogGetStream()
 {
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
 
     if (!__log)
     {

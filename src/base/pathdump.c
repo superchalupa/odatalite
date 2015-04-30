@@ -33,7 +33,7 @@
 
 void DumpPaths()
 {
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
     printf("SOCKFILE{%s}\n", MakePath(ID_SOCKFILE, buf));
     printf("PIDFILE{%s}\n", MakePath(ID_PIDFILE, buf));
     printf("AUTHDIR{%s}\n", MakePath(ID_AUTHDIR, buf));

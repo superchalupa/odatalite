@@ -40,6 +40,6 @@ Shlib* ShlibOpen(const char* path);
 int ShlibClose(Shlib* self);
 void* ShlibSym( Shlib* self, const char* symbol);
 size_t ShlibErr(char* buf, size_t bufSize);
-int MakeShlibName( char buf[MAX_PATH_SIZE], const char* libname);
+int MakeShlibName( char buf[PATH_MAX], const char* libname);
 
 #endif /* _phit_base_shlib_h */

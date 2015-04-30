@@ -38,7 +38,7 @@
 #define MAX_DIRS 64
 
 int FindFile(
-    char path[MAX_PATH_SIZE],
+    char path[PATH_MAX],
     const char* root,
     const char* name)
 {
@@ -56,7 +56,7 @@ int FindFile(
     /* Scan directory, looking for binary files */
     while ((ent = readdir(dir)))
     {
-        char buf[MAX_PATH_SIZE];
+        char buf[PATH_MAX];
         struct stat st;
 
         if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
@@ -79,7 +79,7 @@ int FindFile(
             if (strcmp(ent->d_name, name) == 0)
             {
                 r = 0;
-                Strlcpy(path, buf, MAX_PATH_SIZE);
+                Strlcpy(path, buf, PATH_MAX);
                 goto done;
             }
         }

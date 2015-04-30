@@ -750,22 +750,22 @@ void __OL_URI_Construct(URIWithAllocBuf* self_)
 
 int URIMakePath(
     const URI* self,
-    char path[MAX_PATH_SIZE])
+    char path[PATH_MAX])
 {
     size_t i;
 
-    Strlcpy2(path, self->service, "/", MAX_PATH_SIZE);
+    Strlcpy2(path, self->service, "/", PATH_MAX);
 
     for (i = 0; i < self->segments.size; i++)
     {
         const char* name = self->segments.data[i].name;
 
-        if (Strlcat(path, name, MAX_PATH_SIZE) >= MAX_PATH_SIZE)
+        if (Strlcat(path, name, PATH_MAX) >= PATH_MAX)
             return -1;
 
         if (i + 1 != self->segments.size)
         {
-            if (Strlcat(path, "/", MAX_PATH_SIZE) >= MAX_PATH_SIZE)
+            if (Strlcat(path, "/", PATH_MAX) >= PATH_MAX)
                 return -1;
         }
     }

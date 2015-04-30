@@ -17,7 +17,3 @@ DISTCLEANFILES += $(nodist_out_libmetadataprovider_la_SOURCES)
 EXTRA_DIST += src/RedfishSchema/ServiceRoot.0.96.0.metadata
 
 INSTALL_COMMANDS += ;echo  'metadataprovider:/$$metadata:' > $(DESTDIR)/$(phit_confdir)/providers.d/metadataprovider.conf
-INSTALL_COMMANDS += ;echo -n "SchemaVersion=" > $(DESTDIR)/$(phit_confdir)/redfish.conf \
-                    ; grep 'DMTFExtensions\.' src/RedfishSchema/ServiceRoot.c | \
- 		      sed -e 's|^[^.]*\.|| ; s|".*||' \
-                       >> $(DESTDIR)/$(phit_confdir)/redfish.conf

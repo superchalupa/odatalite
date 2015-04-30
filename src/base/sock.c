@@ -135,7 +135,7 @@ INLINE ssize_t _SockReadInline(
     Sock sock,
     void* data,
     size_t size,
-    char buf[MAX_PATH_SIZE])
+    char buf[PATH_MAX])
 {
     int n;
 #if defined(_MSC_VER)
@@ -164,7 +164,7 @@ INLINE ssize_t _SockWriteInline(
     Sock sock,
     const void* data,
     size_t size,
-    char buf[MAX_PATH_SIZE])
+    char buf[PATH_MAX])
 {
     int n;
 #if defined(_MSC_VER)
@@ -195,7 +195,7 @@ ssize_t SockRead(
     void* data,
     size_t size)
 {
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
     return _SockReadInline(sock, data, size, buf);
 }
 #endif /* defined(INCLUDE_UNUSED) */
@@ -206,7 +206,7 @@ ssize_t SockWrite(
     const void* data,
     size_t size)
 {
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
     return _SockWriteInline(sock, data, size, buf);
 }
 #endif /* defined(INCLUDE_UNUSED) */
@@ -218,7 +218,7 @@ ssize_t SockReadN(
 {
     size_t rem = size;
     size_t off = 0;
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
 
     while (rem)
     {
@@ -247,7 +247,7 @@ ssize_t SockWriteN(
 {
     size_t rem = size;
     size_t off = 0;
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
 
     DEBUG_ASSERT(size < 1000000);
 

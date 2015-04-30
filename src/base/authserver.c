@@ -85,7 +85,7 @@ static void _GenerateRandomData(
 
 static int _FormatFileName(
     uid_t uid,
-    char path[MAX_PATH_SIZE])
+    char path[PATH_MAX])
 {
     static unsigned int counter;
     char name[USERNAME_SIZE];
@@ -97,12 +97,12 @@ static int _FormatFileName(
 
     {
         int n;
-        char buf[MAX_PATH_SIZE];
+        char buf[PATH_MAX];
 
-        n = Snprintf(path, MAX_PATH_SIZE, "%s/%s.%u",
+        n = Snprintf(path, PATH_MAX, "%s/%s.%u",
             MakePath(ID_AUTHDIR, buf), name, counter);
 
-        if (n >= MAX_PATH_SIZE)
+        if (n >= PATH_MAX)
             return -1;
     }
 
@@ -142,7 +142,7 @@ failed:
 
 int AuthCreateFile(
     uid_t uid,
-    char path[MAX_PATH_SIZE],
+    char path[PATH_MAX],
     char data[AUTH_DATA_SIZE+1])
 {
     /* Format the file name: <AUTH_DIR>/<USERNAME>.<COUNTER> */

@@ -310,7 +310,7 @@ done:
 
 int BufCatShareFile(Buf* self, const char* basename)
 {
-    char path[MAX_PATH_SIZE];
+    char path[PATH_MAX];
     return BufCatFile(self, MakePath2(ID_DATADIR, path, basename));
 }
 

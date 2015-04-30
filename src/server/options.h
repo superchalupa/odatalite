@@ -40,7 +40,7 @@ typedef struct _Options
 
     /* Unix domain sockets files */
     const char* sockfile;
-    char sockfileBuf[MAX_PATH_SIZE];
+    char sockfileBuf[PATH_MAX];
 
     /* Whether to run in foreground (no daemonize) */
     unsigned char nodaemonize;

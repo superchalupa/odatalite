@@ -372,7 +372,7 @@ int main(int argc, const char* argv[])
     const unsigned short PORT = 8888;
     const char* password = NULL;
     char userBuffer[USERNAME_SIZE];
-    char sockfileBuf[MAX_PATH_SIZE];
+    char sockfileBuf[PATH_MAX];
     CallbackData callbackData;
     char authLine[AUTHORIZATION_LINE_SIZE] = { '\0' };
 

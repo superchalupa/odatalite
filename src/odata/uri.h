@@ -111,6 +111,6 @@ extern OL_URIFT __OL_URI_ft;
 
 int URIMakePath(
     const URI* self,
-    char path[MAX_PATH_SIZE]);
+    char path[PATH_MAX]);
 
 #endif /* _odata_uri_h */

@@ -1250,7 +1250,7 @@ ENDTEST(TestMakePath)
 
 BEGINTEST(TestFindFile)
 {
-    char path[MAX_PATH_SIZE];
+    char path[PATH_MAX];
 
     TEST(FindFile(path, TESTDIR, "testbase.c") == 0);
     TEST(strcmp(path, TESTDIR "/testbase.c") == 0);
@@ -1475,7 +1475,7 @@ ENDTEST(TestStrlcat)
 
 BEGINTEST(TestSplitPath)
 {
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
     const char* segments[4];
 
     {

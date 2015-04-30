@@ -120,9 +120,9 @@ static int _LoadPlugin(PluginInfo* info)
     void* sym;
     PHIT_MainProc proc;
     char err[1024];
-    char path[MAX_PATH_SIZE];
-    char root[MAX_PATH_SIZE];
-    char libname[MAX_PATH_SIZE];
+    char path[PATH_MAX];
+    char root[PATH_MAX];
+    char libname[PATH_MAX];
 
     /* Expand to full shared library name */
     if (MakeShlibName(libname, info->libname) != 0)
@@ -243,7 +243,7 @@ int PluginLoad(
     char* error,
     size_t errorSize)
 {
-    char path[MAX_PATH_SIZE];
+    char path[PATH_MAX];
     size_t newSize;
 
     MakePath(ID_PLUGINS_CONF, path);
@@ -251,7 +251,7 @@ int PluginLoad(
     newSize = PluginInfoLoad(
         path,
         __plugins,
-        MAX_PATH_SIZE,
+        PATH_MAX,
         __nplugins,
         error,
         errorSize);

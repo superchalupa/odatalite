@@ -41,9 +41,9 @@ size_t __entriesSize;
 
 static int _LoadProvider(ProviderEntry* entry)
 {
-    char root[MAX_PATH_SIZE];
-    char path[MAX_PATH_SIZE];
-    char libname[MAX_PATH_SIZE];
+    char root[PATH_MAX];
+    char path[PATH_MAX];
+    char libname[PATH_MAX];
     OL_ProviderEntryPointProc proc;
 
     /* Expand to full shared library name */
@@ -104,7 +104,7 @@ static int _LoadProvider(ProviderEntry* entry)
 
 int ProvidersLoad()
 {
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
     char err[512];
     size_t i;
 

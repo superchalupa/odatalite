@@ -542,7 +542,7 @@ int main(int argc, const char* argv[])
     const char* HOST = "127.0.0.1";
     const char* password = NULL;
     char userBuffer[USERNAME_SIZE];
-    char sockfileBuf[MAX_PATH_SIZE];
+    char sockfileBuf[PATH_MAX];
     CallbackData callbackData;
 
     arg0 = argv[0];

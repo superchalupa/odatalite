@@ -20,3 +20,9 @@ dist_apache_conf_DATA += share/apache/fcgiodata.conf share/apache/01-load-module
 
 # odata service install
 dist_systemdsystemunit_DATA += share/apache/fcgiodata.service share/apache/fcgiodata.socket
+
+INSTALL_COMMANDS += ;echo -n "SchemaVersion=" > $(DESTDIR)/$(phit_confdir)/redfish.conf \
+                    ; grep -m 1 'DMTFExtensions\.' src/RedfishSchema/ServiceRoot.c | \
+		        sed -e 's|^[^.]*\.|| ; s|".*||' \
+                           >> $(DESTDIR)/$(phit_confdir)/redfish.conf
+

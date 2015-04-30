@@ -51,7 +51,7 @@
 int PIDFileCreate()
 {
     int fd;
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
 
     /* Open the PID file */
     if ((fd = open(
@@ -87,7 +87,7 @@ failed:
 int PIDFileDelete()
 {
     int pid;
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
 
     /* Only process owner can delete the PID file */
     if ((pid = PIDFileRead()) == -1 || pid != getpid())
@@ -103,7 +103,7 @@ int PIDFileRead()
 {
     int fd;
     int pid;
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
 
     if ((fd = open(MakePath(ID_PIDFILE, buf), O_RDONLY)) == -1)
         return -1;
@@ -158,7 +158,7 @@ int PIDFileIsRunning()
     int pid;
     int fd;
     int r;
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
 
     /* Open the PID file for write */
     if ((fd = open(MakePath(ID_PIDFILE, buf), O_WRONLY|O_NONBLOCK, 0640)) == -1)

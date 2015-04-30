@@ -134,7 +134,7 @@ static int _ConfFileCallback(
 
 static void _GetConfFileOptions()
 {
-    char path[MAX_PATH_SIZE];
+    char path[PATH_MAX];
     char err[256];
 
     MakePath(ID_PHITD_CONF, path);
@@ -307,10 +307,10 @@ int main(int argc, char** argv)
     Listener unixListener;
 #endif
     Listener inetListener;
-    char sockfileBuf[MAX_PATH_SIZE];
+    char sockfileBuf[PATH_MAX];
 #if defined(ENABLE_PIDFILE)
     int pidfile;
-    char pidfileBuf[MAX_PATH_SIZE];
+    char pidfileBuf[PATH_MAX];
 #endif /* defined(ENABLE_PIDFILE) */
 
     arg0 = argv[0];
@@ -325,7 +325,7 @@ int main(int argc, char** argv)
 #if defined(ENABLE_ROLES)
     /* Load roles.conf */
     {
-        char buf[MAX_PATH_SIZE];
+        char buf[PATH_MAX];
         char err[128];
 
         if (RolesLoad(MakePath(ID_ROLES_CONF, buf), err, sizeof(err)) != 0)
@@ -418,7 +418,7 @@ int main(int argc, char** argv)
     /* Create listener for Unix-domain sockets */
     if (ListenerInit(&unixListener, &selector, g_options.sockfile, 0) != 0)
     {
-        char buf[MAX_PATH_SIZE];
+        char buf[PATH_MAX];
         Err("listen failed (uds): %s", MakePath(ID_SOCKFILE, buf));
     }
 #endif /* defined(HAVE_POSIX) */

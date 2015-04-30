@@ -35,7 +35,7 @@
 #include "common.h"
 
 int FindFile(
-    char path[MAX_PATH_SIZE],
+    char path[PATH_MAX],
     const char* root,
     const char* name);
 

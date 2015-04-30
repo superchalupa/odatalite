@@ -274,7 +274,7 @@ static void _ODATAPlugin_HandleRequest(
     }
     else if (strcmp(requestURI, "/odata/providers.conf") == 0)
     {
-        char buf[MAX_PATH_SIZE];
+        char buf[PATH_MAX];
         MakePath(ID_PROVIDERS_CONF, buf);
         HTMLPostFile(context, buf, "text/plain");
         return;

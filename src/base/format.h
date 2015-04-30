@@ -36,6 +36,10 @@
 #include <stdarg.h>
 #include <string.h>
 
+#ifndef __FILENAME__
+  #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif
+
 PRINTF_FORMAT(3, 4)
 int Snprintf(
     char* buffer,

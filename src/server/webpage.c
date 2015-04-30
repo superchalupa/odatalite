@@ -48,7 +48,7 @@
 
 static void _SendBackgroundGifFile(PHIT_Context* context)
 {
-    char path[MAX_PATH_SIZE];
+    char path[PATH_MAX];
 
     MakePath2(ID_DATADIR, path, "background.gif");
     HTMLPostFile(context, path, "image/gif");
@@ -67,7 +67,7 @@ static void _FormatPath(
     const char* name,
     PathID id)
 {
-    char path[MAX_PATH_SIZE];
+    char path[PATH_MAX];
     BufFmt(out, "<li><b>%s</b>=%s</li>", name, MakePath(id, path));
 }
 
@@ -221,7 +221,7 @@ void HandleGetWebPage(
     PHIT_Context* context,
     const char* requestURI)
 {
-    char buf[MAX_PATH_SIZE];
+    char buf[PATH_MAX];
 
     if (strcmp(requestURI, "/") == 0)
     {

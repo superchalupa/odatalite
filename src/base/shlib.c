@@ -109,7 +109,7 @@ size_t ShlibErr(char* buf, size_t bufSize)
 }
 
 int MakeShlibName(
-    char buf[MAX_PATH_SIZE],
+    char buf[PATH_MAX],
     const char* libname)
 {
     if (Strlcpy3(
@@ -117,7 +117,7 @@ int MakeShlibName(
         SHLIB_PREFIX,
         libname,
         SHLIB_SUFFIX,
-        MAX_PATH_SIZE) >= MAX_PATH_SIZE)
+        PATH_MAX) >= PATH_MAX)
     {
 	return -1;
     }

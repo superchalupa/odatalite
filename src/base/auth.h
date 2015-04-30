@@ -51,7 +51,7 @@ AuthState;
 
 int AuthCreateFile(
     uid_t uid,
-    char path[MAX_PATH_SIZE],
+    char path[PATH_MAX],
     char data[AUTH_DATA_SIZE+1]);
 
 int AuthLoadFile(
