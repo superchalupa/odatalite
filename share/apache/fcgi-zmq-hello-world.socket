@@ -1,0 +1,9 @@
+[Unit]
+Description=fast cgi socket for odata
+
+[Socket]
+ListenStream=127.0.0.1:5201
+Accept=false
+
+[Install]
+WantedBy=sockets.target

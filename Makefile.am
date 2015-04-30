@@ -97,6 +97,8 @@ endif
 if BUILD_ODATA_FASTCGI
 include pkg/Makefile-fcgiodata.inc
 include pkg/Makefile-fcgiauth.inc
+include pkg/Makefile-fcgi-threaded-hello-world.inc 
+include pkg/Makefile-fcgi-zmq-hello-world.inc
 endif
 
 if BUILD_METADATA_PROVIDER

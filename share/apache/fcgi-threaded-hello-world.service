@@ -1,0 +1,10 @@
+[Unit]
+Description=fcgi hello world on 5200
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/fcgi-threaded-hello-world
+RestartSec=10s
+StandardInput=socket
+User=odatalite
+Group=odatalite
