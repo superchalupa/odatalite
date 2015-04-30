@@ -92,7 +92,7 @@ AC_ARG_ENABLE(widget-provider,
 AM_CONDITIONAL(BUILD_WIDGET_PROVIDER, [test "$wantwidget" = "yes"])
 
 AC_ARG_ENABLE(frog-provider,
-    AS_HELP_STRING(--enable-frog-provider,Enable frog-provider build/install. default: disabled),
+    AS_HELP_STRING(--enable-frog-provider,Enable frog-provider build/install. default: enabled),
     [wantfrog=$enableval], [wantfrog=yes])
 AM_CONDITIONAL(BUILD_FROG_PROVIDER, [test "$wantfrog" = "yes"])
 
