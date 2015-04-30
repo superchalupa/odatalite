@@ -9,7 +9,7 @@ out_fcgi_zmq_hello_world_LDADD = $(FASTCGI_LIBS) $(CZMQ_LIBS) $(SYSTEMD_LIBS)
 out_fcgi_zmq_hello_world_SOURCES = src/benchmark/fcgi-zmq-hello-world.c
 
 # Apache2 conf file for fastcgi
-dist_apache_conf_DATA += share/apache/fcgi-zmq-hello-world.conf share/apache/01-load-modules.conf
+dist_apache_conf_DATA += share/apache/fcgi-zmq-hello-world.conf
 
 # odata service install
 dist_systemdsystemunit_DATA += share/apache/fcgi-zmq-hello-world.service share/apache/fcgi-zmq-hello-world.socket
