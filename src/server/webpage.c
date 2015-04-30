@@ -139,6 +139,7 @@ static void _FormatWebPage(
         BufCat(out, STRLIT("</ul>"));
     }
 
+#ifdef ENABLE_ALLOCATOR
     /* Heap Usage */
     {
         AllocStats stats;
@@ -158,6 +159,7 @@ static void _FormatWebPage(
             stats.numAllocs,
             stats.numAllocs);
     }
+#endif
 
     /* Files */
     {

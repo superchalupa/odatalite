@@ -1,8 +1,10 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
+PKGCONFIG_CPPFLAGS = $(addprefix -D,$(PKGCONFIG_DEFINES))
+
 # preprocessor flags only: include dirs (-I...) and defines (-Dxxx)
 # dev can *add* flags using "make CPPFLAGS=..."
-AM_CPPFLAGS = -D_GNU_SOURCE
+AM_CPPFLAGS = -D_GNU_SOURCE $(PKGCONFIG_CPPFLAGS)
 
 # Linker flags
 # dev can *add* flags using "make LDFLAGS=..."

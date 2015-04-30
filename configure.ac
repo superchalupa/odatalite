@@ -111,6 +111,24 @@ AC_ARG_ENABLE(check-provider,
     [wantcheck=$enableval], [wantcheck=no])
 AM_CONDITIONAL(BUILD_CHECK_PROVIDER, [test "$wantcheck" = "yes"])
 
+
+# configuration of odatalite compilation
+AC_ARG_ENABLE(allocator,
+    AS_HELP_STRING(--enable-allocator,Enable wrappers around system malloc/free to enable allocation stats. default: disabled),
+    [want_allocator=$enableval], [want_allocator=no])
+
+AS_IF([test "x$want_allocator" != xno],
+[
+    AM_CONDITIONAL(ENABLE_ALLOCATOR, true)
+    AC_DEFINE(ODATALITE_ENABLE_ALLOCATOR,[],[Use allocation wrappers])
+    PKGCONFIG_DEFINES="$PKGCONFIG_DEFINES ODATALITE_ENABLE_ALLOCATOR"
+], [
+    AM_CONDITIONAL(ENABLE_ALLOCATOR, false)
+])
+
+AC_SUBST([PKGCONFIG_DEFINES])
+
+
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O

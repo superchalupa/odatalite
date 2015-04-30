@@ -79,16 +79,12 @@ char* Strdup(const char* str);
 
 #else /* defined(ENABLE_ALLOCATOR) */
 
+#include <stdlib.h>
 #define Malloc malloc
 #define Calloc calloc
 #define Realloc realloc
 #define Free free
-
-INLINE char* Strdup(const char* str)
-{
-    extern char* strdup(const char* str);
-    return strdup(str);
-}
+#define Strdup strdup
 
 #endif /* defined(ENABLE_ALLOCATOR) */
 

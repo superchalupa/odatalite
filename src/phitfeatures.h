@@ -60,7 +60,6 @@
 */
 
 /* #define ENABLE_STATIC_BUFFERS */
-#define ENABLE_ALLOCATOR
 #ifndef ENABLE_LOGGING
   #define ENABLE_LOGGING
 #endif
@@ -92,7 +91,6 @@
 */
 
 #if defined(FAST)
-# undef ENABLE_ALLOCATOR
 # undef ENABLE_SOCKTRACE
 /*# undef ENABLE_DEBUG*/
 # undef ENABLE_PAM_FORKING
@@ -110,7 +108,6 @@
 
 #if defined(LEAN)
 /*# undef ENABLE_STATIC_BUFFERS*/
-# undef ENABLE_ALLOCATOR
 # undef ENABLE_LOGGING
 # undef ENABLE_SPEED_OPTIMIZATIONS
 # undef ENABLE_PAM_AUTH
@@ -135,7 +132,6 @@
 
 #if defined(PRODUCTION)
 /*# undef ENABLE_STATIC_BUFFERS*/
-/*# undef ENABLE_ALLOCATOR*/
 /*# undef ENABLE_LOGGING*/
 # undef ENABLE_SPEED_OPTIMIZATIONS
 /*# undef ENABLE_PAM_AUTH*/
