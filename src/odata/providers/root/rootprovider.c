@@ -81,12 +81,12 @@ static void _Get(
 
   /* TODO: These belong in the general odata handler.
            Needs the following info: 
-           ServiceRoot: /rest/v1
+           ServiceRoot: /redfish/v1
            SchemaVersion: 0.96.0
    */
   if (!count)
   {
-    OL_Object_AddString(obj, "@odata.id", "/rest/v1");
+    OL_Object_AddString(obj, "@odata.id", "/redfish/v1");
     OL_Object_AddString(obj, "@odata.type", "#ServiceRoot.0.96.0.ServiceRoot");
     OL_Object_AddString(obj, "Modified", "2013-01-31T23:45:04+00:00");
     OL_Object_AddString(obj, "RedfishVersion", "0.96.0");

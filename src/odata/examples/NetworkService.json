@@ -1,5 +1,5 @@
 {
-    "@odata.context": "http://service/rest/v1/$metadata#NetworkServices",
+    "@odata.context": "http://service/redfish/v1/$metadata#NetworkServices",
     "value": [
         {
             "@odata.editLink": "NetworkServices/1",

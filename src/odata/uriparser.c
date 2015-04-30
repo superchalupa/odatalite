@@ -752,7 +752,7 @@ OL_Result URIFormatContextURL(
     }
 
     if ((self->segments.size == 1) && !strcmp(self->segments.data[0].name, "odata"))
-    { // Special case for /rest/v1/odata
+    { // Special case for /redfish/v1/odata
       return OL_Result_Ok;
     }
 

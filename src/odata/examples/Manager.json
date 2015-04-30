@@ -1,5 +1,5 @@
 {
-    "@odata.context": "http://service/rest/v1/$metadata#Managers/$entity",
+    "@odata.context": "http://service/redfish/v1/$metadata#Managers/$entity",
     "@odata.editLink": "Managers/1",
     "Name": "Manager",
     "Modified": "2012-03-07T14:44",
