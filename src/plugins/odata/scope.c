@@ -628,9 +628,9 @@ static OL_Result _Scope_SendResult(
     self->postResult++;
 
     PHIT_Context_SetPluginData(context, NULL);
-    ScopeCache_Put(self_);
-
     OL_Scope_DEBUG(self_, "Leave.SendResult\n");
+
+    ScopeCache_Put(self_);
 
     return OL_Result_Ok;
 }
